@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import ScoreLabel from './ScoreLabel';
+import HealthLabel from './HealthLabel';
 import BombSpawner from './BombSpawner';
 import skyAsset from '../../assets/sky.png';
 import platformAsset from '../../assets/platform.png';
@@ -18,6 +19,7 @@ class GameScene extends Phaser.Scene {
     this.player = undefined;
     this.cursors = undefined;
     this.scoreLabel = undefined;
+    this.healthLabel = undefined;
     this.stars = undefined;
     this.bombSpawner = undefined;
     this.gameOver = false;
@@ -37,15 +39,16 @@ class GameScene extends Phaser.Scene {
 
   create() {
     this.add.image(400, 300, 'sky');
-    const platforms = this.createPlatforms();
+    // const platforms = this.createPlatforms();
     this.player = this.createPlayer();
     this.stars = this.createStars();
     this.scoreLabel = this.createScoreLabel(16, 16, 0);
+    this.healthLabel = this.createHealthLabel(500, 16, 100);
     this.bombSpawner = new BombSpawner(this, BOMB_KEY);
     const bombsGroup = this.bombSpawner.group;
-    this.physics.add.collider(this.stars, platforms);
-    this.physics.add.collider(this.player, platforms);
-    this.physics.add.collider(bombsGroup, platforms);
+    // this.physics.add.collider(this.stars, platforms);
+    // this.physics.add.collider(this.player, platforms);
+    // this.physics.add.collider(bombsGroup, platforms);
     this.physics.add.collider(this.player, bombsGroup, this.hitBomb, null, this);
     this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -55,9 +58,16 @@ class GameScene extends Phaser.Scene {
   }
 
   update() {
+    
+
     if (this.gameOver) {
       return;
     }
+
+    if (Phaser.Math.Between(0, 40) === 1) {
+      this.bombSpawner.spawn();
+    }
+
 
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-160);
@@ -65,16 +75,21 @@ class GameScene extends Phaser.Scene {
     } else if (this.cursors.right.isDown) {
       this.player.setVelocityX(160);
       this.player.anims.play('right', true);
+    } else if (this.cursors.down.isDown) {
+      this.player.setVelocityY(160);
+    } else if (this.cursors.up.isDown) {
+      this.player.setVelocityY(-160);
     } else {
       this.player.setVelocityX(0);
+      this.player.setVelocityY(0);
       this.player.anims.play('turn');
     }
 
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-330);
-    }
+    Phaser.Actions.Call(this.bombSpawner.group.getChildren(), (bomb) => this.physics.moveToObject(bomb, this.player, 30));
+    
   }
 
+  /*
   createPlatforms() {
     const platforms = this.physics.add.staticGroup();
 
@@ -83,14 +98,15 @@ class GameScene extends Phaser.Scene {
       .setScale(2)
       .refreshBody();
 
-    platforms.create(600, 400, GROUND_KEY);
+    platforms.create(800, 400, GROUND_KEY);
     platforms.create(50, 250, GROUND_KEY);
     platforms.create(750, 220, GROUND_KEY);
     return platforms;
   }
+  */
 
   createPlayer() {
-    const player = this.physics.add.sprite(100, 450, DUDE_KEY);
+    const player = this.physics.add.sprite(400, 400, DUDE_KEY);
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
     /* The 'left' animation uses frames 0, 1, 2 and 3 and runs at 10 frames per second.
@@ -149,21 +165,33 @@ class GameScene extends Phaser.Scene {
   createScoreLabel(x, y, score) {
     const style = { fontSize: '32px', fill: '#000' };
     const label = new ScoreLabel(this, x, y, score, style);
-    console.log('score:', label);
+    this.add.existing(label);
+
+    return label;
+  }
+
+  createHealthLabel(x, y, health) {
+    const style = { fontSize: '32px', fill: '#000' };
+    const label = new HealthLabel(this, x, y, health, style);
     this.add.existing(label);
 
     return label;
   }
 
   hitBomb(player) {
-    this.scoreLabel.setText(`GAME OVER : ( \nYour Score = ${this.scoreLabel.score}`);
-    this.physics.pause();
+    // this.scoreLabel.setText(`GAME OVER : ( \nYour Score = ${this.scoreLabel.score}`);
+    this.healthLabel.add(-1);
 
-    player.setTint(0xff0000);
+    if(this.healthLabel.health === 0){
+      this.physics.pause();
 
-    player.anims.play('turn');
-
-    this.gameOver = true;
+      player.setTint(0xff0000);
+  
+      player.anims.play('turn');
+  
+      this.gameOver = true;
+    }
+    
   }
 }
 
