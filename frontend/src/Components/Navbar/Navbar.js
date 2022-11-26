@@ -13,7 +13,7 @@ const Navbar = () => {
   const navbar = `
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Add your brand here</a>
+          <a class="navbar-brand" href="#">Survivor</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -34,8 +34,14 @@ const Navbar = () => {
                 <a class="nav-link" href="#" data-uri="/game">Game</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" data-uri="/new">New Page</a>
-              </li>                        
+                <a class="nav-link" href="#" data-uri="/login">Login</a>
+              </li>   
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-uri="/register">Register</a>
+              </li>  
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-uri="/rankings">Rankings</a>
+              </li>                          
             </ul>
           </div>
         </div>
