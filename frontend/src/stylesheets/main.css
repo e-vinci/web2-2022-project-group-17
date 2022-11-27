@@ -1,0 +1,18 @@
+.leaderboard {
+  max-width: 500px;
+  border: 1px solid;
+}
+
+.leaderboard-header {
+  background-color: #ff7500;
+  color: white;
+}
+
+.leaderboard-table {
+  background-color: #16181e;
+  color: white;
+}
+
+.leaderboard-tbody tr:nth-child(2n) {
+  background-color: #1f232c;
+}

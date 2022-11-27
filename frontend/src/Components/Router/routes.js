@@ -3,7 +3,7 @@ import HomePage from '../Pages/HomePage';
 import NewPage from '../Pages/NewPage';
 import LoginPage from '../Pages/LoginPage';
 import RegisterPage from '../Pages/RegisterPage';
-import RankingsPage from '../Pages/RankingsPage';
+import LeaderboardPage from '../Pages/LeaderboardPage';
 
 const routes = {
   '/': HomePage,
@@ -11,7 +11,7 @@ const routes = {
   '/new': NewPage,
   '/login': LoginPage,
   '/register': RegisterPage,
-  '/rankings': RankingsPage,
+  '/leaderboard': LeaderboardPage,
 };
 
 export default routes;

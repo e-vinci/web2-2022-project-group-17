@@ -40,7 +40,7 @@ const Navbar = () => {
                 <a class="nav-link" href="#" data-uri="/register">Register</a>
               </li>  
               <li class="nav-item">
-                <a class="nav-link" href="#" data-uri="/rankings">Rankings</a>
+                <a class="nav-link" href="#" data-uri="/leaderboard">Leaderboard</a>
               </li>                          
             </ul>
           </div>
