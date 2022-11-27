@@ -4,6 +4,8 @@ const logger = require('morgan');
 
 const usersRouter = require('./routes/users');
 const pizzaRouter = require('./routes/pizzas');
+const authsRouter = require('./routes/auths');
+const leaderboardRouter = require('./routes/leaderboard');
 
 const app = express();
 
@@ -14,5 +16,7 @@ app.use(cookieParser());
 
 app.use('/users', usersRouter);
 app.use('/pizzas', pizzaRouter);
+app.use('/auths', authsRouter);
+app.use('/leaderboard', leaderboardRouter)
 
 module.exports = app;

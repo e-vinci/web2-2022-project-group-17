@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:3000
+
+### read all scores
+GET {{baseUrl}}/leaderboard
+
+### add Jason's score
+POST {{baseUrl}}/leaderboard
+Content-Type: application/json
+
+{
+  "nickname": "Jason",
+  "score": 500
+}
+
+### add Jaques's score
+POST {{baseUrl}}/leaderboard
+Content-Type: application/json
+
+{
+  "nickname": "Jaques",
+  "score": 600
+}
