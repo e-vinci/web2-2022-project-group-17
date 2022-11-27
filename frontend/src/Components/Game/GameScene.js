@@ -2,16 +2,19 @@ import Phaser from 'phaser';
 import ScoreLabel from './ScoreLabel';
 import HealthLabel from './HealthLabel';
 import BombSpawner from './BombSpawner';
+import BulletSpawner from './BulletSpawner';
 import skyAsset from '../../assets/sky.png';
 import platformAsset from '../../assets/platform.png';
 import starAsset from '../../assets/star.png';
 import bombAsset from '../../assets/bomb.png';
+import bulletAsset from '../../assets/bullet.png';
 import dudeAsset from '../../assets/dude.png';
 
 const GROUND_KEY = 'ground';
 const DUDE_KEY = 'dude';
 const STAR_KEY = 'star';
 const BOMB_KEY = 'bomb';
+const BULLET_KEY = 'bullet';
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -22,20 +25,25 @@ class GameScene extends Phaser.Scene {
     this.healthLabel = undefined;
     this.stars = undefined;
     this.bombSpawner = undefined;
+    this.bulletSpawner = undefined;
     this.gameOver = false;
+    this.frame = 0;
   }
+
 
   preload() {
     this.load.image('sky', skyAsset);
     this.load.image(GROUND_KEY, platformAsset);
     this.load.image(STAR_KEY, starAsset);
     this.load.image(BOMB_KEY, bombAsset);
+    this.load.image(BULLET_KEY, bulletAsset);
 
     this.load.spritesheet(DUDE_KEY, dudeAsset, {
       frameWidth: 32,
       frameHeight: 48,
     });
   }
+
 
   create() {
     this.add.image(400, 300, 'sky');
@@ -46,47 +54,72 @@ class GameScene extends Phaser.Scene {
     this.healthLabel = this.createHealthLabel(500, 16, 100);
     this.bombSpawner = new BombSpawner(this, BOMB_KEY);
     const bombsGroup = this.bombSpawner.group;
+
+    this.bulletSpawner = new BulletSpawner(this, BULLET_KEY);
+
+    const bulletsGroup = this.bulletSpawner.group;
+
+
     // this.physics.add.collider(this.stars, platforms);
     // this.physics.add.collider(this.player, platforms);
     // this.physics.add.collider(bombsGroup, platforms);
     this.physics.add.collider(this.player, bombsGroup, this.hitBomb, null, this);
     this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+    this.physics.add.overlap(bombsGroup, bulletsGroup, this.bulletHitBomb, null, this);
     this.cursors = this.input.keyboard.createCursorKeys();
 
     /* The Collider takes two objects and tests for collision and performs separation against them.
     Note that we could call a callback in case of collision... */
+
   }
 
-  update() {
-    
 
+  update() {
     if (this.gameOver) {
       return;
     }
 
-    if (Phaser.Math.Between(0, 40) === 1) {
+    this.scoreLabel.add(1);
+    
+  
+    this.frame += 1;
+
+
+    // Random chance of zombie spawn
+    if (this.frame % 100 === 0) {
       this.bombSpawner.spawn();
     }
 
 
+
+
+    if (this.cursors.space.isDown) {
+      this.fireBullet();
+    }
+
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-160);
       this.player.anims.play('left', true);
-    } else if (this.cursors.right.isDown) {
+    }
+    if (this.cursors.right.isDown) {
       this.player.setVelocityX(160);
       this.player.anims.play('right', true);
-    } else if (this.cursors.down.isDown) {
+    }
+    if (this.cursors.down.isDown) {
       this.player.setVelocityY(160);
-    } else if (this.cursors.up.isDown) {
+    }
+    if (this.cursors.up.isDown) {
       this.player.setVelocityY(-160);
-    } else {
+    }
+    if (!this.cursors.left.isDown && !this.cursors.right.isDown && !this.cursors.down.isDown && !this.cursors.up.isDown) {
       this.player.setVelocityX(0);
       this.player.setVelocityY(0);
       this.player.anims.play('turn');
     }
 
-    Phaser.Actions.Call(this.bombSpawner.group.getChildren(), (bomb) => this.physics.moveToObject(bomb, this.player, 30));
-    
+    Phaser.Actions.Call(this.bombSpawner.group.getChildren(), (bomb) =>
+      this.physics.moveToObject(bomb, this.player, 30),
+    );
   }
 
   /*
@@ -149,6 +182,10 @@ class GameScene extends Phaser.Scene {
     return stars;
   }
 
+  fireBullet() {
+    this.bulletSpawner.spawn(this.player.x, this.player.y);
+  }
+
   collectStar(player, star) {
     star.disableBody(true, true);
     this.scoreLabel.add(10);
@@ -160,6 +197,13 @@ class GameScene extends Phaser.Scene {
     }
 
     this.bombSpawner.spawn(player.x);
+  }
+
+  bulletHitBomb(bomb, bullet) {
+    bomb.destroy();
+    bullet.destroy();
+
+    this.scoreLabel.add(100);
   }
 
   createScoreLabel(x, y, score) {
@@ -179,20 +223,21 @@ class GameScene extends Phaser.Scene {
   }
 
   hitBomb(player) {
-    // this.scoreLabel.setText(`GAME OVER : ( \nYour Score = ${this.scoreLabel.score}`);
     this.healthLabel.add(-1);
 
-    if(this.healthLabel.health === 0){
+    if (this.healthLabel.health === 0) {
+      this.scoreLabel.setText(`GAME OVER : ( \nYour Score = ${this.scoreLabel.score}`);
       this.physics.pause();
 
       player.setTint(0xff0000);
-  
+
       player.anims.play('turn');
-  
+
       this.gameOver = true;
     }
-    
   }
+
+
 }
 
 export default GameScene;
