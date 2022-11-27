@@ -15,7 +15,7 @@ module.exports = {
   devtool: 'eval-source-map',
   devServer: {
     static: {
-      directory: path.join(__dirname, 'dist')
+      directory: path.join(__dirname, 'dist'),
     },
     port: 8080,
     host: 'localhost',
@@ -73,6 +73,18 @@ module.exports = {
                 },
               ],
             ],
+          },
+        },
+      },
+      {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        include: path.resolve(__dirname, './node_modules/bootstrap-icons/font/fonts'),
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'webfonts',
+            publicPath: '../webfonts',
           },
         },
       },

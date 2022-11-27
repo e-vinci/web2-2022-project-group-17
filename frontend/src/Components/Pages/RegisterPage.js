@@ -1,4 +1,6 @@
 import { clearPage, renderPageTitle } from '../../utils/render';
+import { setAuthenticatedUser } from '../../utils/auths';
+import Navigate from '../Router/Navigate';
 
 const RegisterPage = () => {
   clearPage();
@@ -30,6 +32,39 @@ function renderRegisterForm() {
   form.appendChild(password);
   form.appendChild(submit);
   main.appendChild(form);
+  form.addEventListener('submit', onRegister);
+}
+
+async function onRegister(e) {
+  e.preventDefault();
+
+  const username = document.querySelector('#username').value;
+  const password = document.querySelector('#password').value;
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      username,
+      password
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  }
+
+  const response = await fetch('/api/auths/register', options);
+
+  if (!response.ok) {
+    throw new Error(`fetch error::auths/login : ${response.status} : ${response.statusText}`);
+  }
+  const authenticatedUser = await response.json();
+
+  /* eslint-disable no-console */
+  console.log('Newly registered & authenticated user : ', authenticatedUser);
+
+  setAuthenticatedUser(authenticatedUser);
+
+  Navigate('/');
 }
 
 export default RegisterPage;

@@ -1,46 +1,26 @@
 import { clearPage } from '../../utils/render';
 import mainCharacterImage from '../../img/maincharacter.png';
+import { getAllScores } from '../../models/scores';
 
-const SCORES = [
-  {
-    id: 1,
-    nickname: 'Denis',
-    score: 400,
-  },
-  {
-    id: 2,
-    nickname: 'Thomas',
-    score: 500,
-  },
-  
-  {
-    id: 3,
-    nickname: 'Jason',
-    score: 450,
-  }
-  
-];
-
-const LeaderboardPage = () => {
+const LeaderboardPage = async () => {
   clearPage();
   const main = document.querySelector('main');
   const rankingsWrapper = document.createElement('div');
 
-  const sortedScores = SCORES.sort((a,b) => b.score - a.score);
+  const scores = await getAllScores();
+
+  const sortedScores = scores.sort((a,b) => b.score - a.score);
 
   const scoresAsHtmlTable = getScoresAsString(sortedScores);
 
   rankingsWrapper.innerHTML = scoresAsHtmlTable;
   main.appendChild(rankingsWrapper);
-  renderMainCharacterImage(mainCharacterImage);
+
+  await renderMainCharacterImage(mainCharacterImage);
   
 };
 
 function getScoresAsString(scores) {
-  if (scores?.length === undefined || scores.length === 0) {
-    return '<p class="p-5">No scores yet : (</p>';
-  }
-
   let htmlScoresTable = 
   `<div class="leaderboard table-responsive mx-auto my-5 rounded shadow-sm">
     <header class="leaderboard-header rounded-top">
@@ -49,18 +29,22 @@ function getScoresAsString(scores) {
     <table class="table leaderboard-table">
     <thead>
       <tr>
-        <th>Rank</th>
+        <th class="text-center">Rank</th>
         <th class="text-info" scope="col">Nickname</th>
         <th class="text-info text-end" scope="col">Score</th>
       </tr>
     </thead>
     <tbody class="leaderboard-tbody">`;
+  
+  if (scores?.length === undefined || scores.length === 0) {
+    return htmlScoresTable;
+  }
 
   let rank = 1;
   scores.forEach((element) => {
     htmlScoresTable += `
     <tr>
-      <td> ${rank}</td>
+      <td class="text-center"> ${rank}</td>
       <td class="nickname fw-bold text-white">${element.nickname}</td>
       <td class="score text-white text-break text-end"> ${element.score}</a></td>
     </tr>
@@ -77,7 +61,6 @@ function renderMainCharacterImage(mainCharacterUrl) {
   image.height = 200;
   const header = document.querySelector('.leaderboard-header');
   header.appendChild(image);
-} 
-
+}
 
 export default LeaderboardPage;

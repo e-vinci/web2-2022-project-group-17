@@ -7,22 +7,22 @@ const jsonDbPath = path.join(__dirname + '/../data/scores.json');
 const defaultScores = [
   {
     id: 1,
-    username: 'Denis',
+    nickname: 'Denis',
     score: 300,
   },
   {
     id: 2,
-    username: 'Thomas',
+    nickname: 'Thomas',
     score: 350,
   },
   {
     id: 3,
-    username: 'Daniel',
+    nickname: 'Daniel',
     score: 200,
   },
   {
     id: 4,
-    username: 'Jean',
+    nickname: 'Jean',
     score: 100,
   },
 ];

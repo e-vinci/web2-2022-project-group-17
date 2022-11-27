@@ -1,12 +1,9 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const path = require('node:path');
 const { parse, serialize } = require('../utils/json');
 
-const jwtSecret = 'survivor';
+const jwtSecret = 'ilovemypizza!';
 const lifetimeJwt = 24 * 60 * 60 * 1000; // in ms : 24 * 60 * 60 * 1000 = 24h
-
-const saltRounds = 10;
 
 const jsonDbPath = path.join(__dirname, '/../data/users.json');
 
@@ -14,16 +11,14 @@ const defaultUsers = [
   {
     id: 1,
     username: 'admin',
-    password: bcrypt.hashSync('admin', saltRounds),
+    password: 'admin',
   },
 ];
 
-async function login(username, password) {
+function login(username, password) {
   const userFound = readOneUserFromUsername(username);
   if (!userFound) return undefined;
-
-  const passwordMatch = await bcrypt.compare(password, userFound.password);
-  if (!passwordMatch) return undefined;
+  if (userFound.password !== password) return undefined;
 
   const token = jwt.sign(
     { username }, // session data added to the payload (payload : part 2 of a JWT)
@@ -39,11 +34,11 @@ async function login(username, password) {
   return authenticatedUser;
 }
 
-async function register(username, password) {
+function register(username, password) {
   const userFound = readOneUserFromUsername(username);
   if (userFound) return undefined;
 
-  await createOneUser(username, password);
+  createOneUser(username, password);
 
   const token = jwt.sign(
     { username }, // session data added to the payload (payload : part 2 of a JWT)
@@ -67,15 +62,13 @@ function readOneUserFromUsername(username) {
   return users[indexOfUserFound];
 }
 
-async function createOneUser(username, password) {
+function createOneUser(username, password) {
   const users = parse(jsonDbPath, defaultUsers);
-
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
 
   const createdUser = {
     id: getNextId(),
     username,
-    password: hashedPassword,
+    password,
   };
 
   users.push(createdUser);
@@ -99,3 +92,4 @@ module.exports = {
   register,
   readOneUserFromUsername,
 };
+

@@ -1,10 +1,10 @@
 @baseUrl = http://localhost:3000
 
 ### read all scores
-GET {{baseUrl}}/leaderboard
+GET {{baseUrl}}/scores
 
 ### add Jason's score
-POST {{baseUrl}}/leaderboard
+POST {{baseUrl}}/scores
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### add Jaques's score
-POST {{baseUrl}}/leaderboard
+POST {{baseUrl}}/scores
 Content-Type: application/json
 
 {
