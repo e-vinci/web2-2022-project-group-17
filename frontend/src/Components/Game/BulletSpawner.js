@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import Phaser from 'phaser';
+// import Phaser from 'phaser';
 
 export default class BulletSpawner {
     /**
@@ -16,13 +16,15 @@ export default class BulletSpawner {
         return this._group;
     }
 
+    // Spawns bullets in a radial way centered on x,y
     spawn(x, y) {
-        const bullet = this._group.create(x, y, this.key);
-        bullet.setVelocity(Phaser.Math.Between(-100,100),Phaser.Math.Between(-100,100));
-        bullet.setBounce(1);
-        // With this line removed, do the bullets destroy after leaving the scene?
-        // bullet.setCollideWorldBounds(true);
+        const numberOfBullets = 10;
+        for (let i = 0; i < numberOfBullets ; i+=1) {
+            const bullet = this._group.create(x, y, this.key);
+            bullet.setVelocityX(Math.sin(i/numberOfBullets*2*Math.PI)*100);
+            bullet.setVelocityY(Math.cos(i/numberOfBullets*2*Math.PI)*100);
+        }
 
-        return bullet;
+        // TODO: make sure bullets destroy after leaving scene
     }
 }

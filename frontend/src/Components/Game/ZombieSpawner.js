@@ -1,13 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import Phaser from 'phaser';
 
-export default class BombSpawner {
+export default class ZombieSpawner {
   /**
    * @param {Phaser.Scene} scene
    */
-  constructor(scene, bombKey = 'bomb') {
+  constructor(scene, zombieKey = 'zombie') {
     this.scene = scene;
-    this.key = bombKey;
+    this.key = zombieKey;
 
     this._group = this.scene.physics.add.group();
   }
@@ -22,11 +22,10 @@ export default class BombSpawner {
     const x = possibleSpawns[random][0];
     const y = possibleSpawns[random][1];
 
-    const bomb = this._group.create(x, y, this.key);
-    bomb.setBounce(1);
-    bomb.setCollideWorldBounds(true);
-    // bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-
-    return bomb;
+    const zombie = this._group.create(x, y, this.key);
+    zombie.setBounce(1);
+    zombie.setCollideWorldBounds(true);
+  
+    return zombie;
   }
 }
