@@ -1,23 +1,24 @@
 import Phaser from 'phaser';
 
-const formatHealth = (health) => `Health: ${health}`;
 
-export default class HealthLabel extends Phaser.GameObjects.Text {
+export default class HealthBar extends Phaser.GameObjects.Graphics {
   constructor(scene, x, y, health, style) {
-    super(scene, x, y, formatHealth(health), style);
+    super(scene, x, y, health, style);
     this.health = health;
   }
+
 
   setHealth(health) {
     this.health = health;
     this.updateHealthText();
   }
 
-  add(points) {
-    this.setHealth(this.health + points);
+  add(health) {
+    const newHealth = this.health + health > 100 ? 100 : this.health + health;
+    this.setHealth(newHealth);
   }
 
   updateHealthText() {
-    this.setText(formatHealth(this.health));
+    this.setText((this.health));
   }
 }

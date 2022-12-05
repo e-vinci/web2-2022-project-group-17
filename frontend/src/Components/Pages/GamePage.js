@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import GameScene from '../Game/GameScene';
+import UIStart from '../Game/UIStart';
+import UIGameOver from '../Game/UIGameOver';
 
 let game;
 
@@ -22,7 +24,7 @@ const GamePage = () => {
         debug: false,
       },
     },
-    scene: [GameScene],
+    scene: [UIStart, GameScene, UIGameOver],
     //  parent DOM element into which the canvas created by the renderer will be injected.
     parent: 'gameDiv',
   };

@@ -1,8 +1,8 @@
 const path = require('node:path');
-const { parse, serialize } = require('../utils/json');
 const { escape } = require('node:querystring');
+const { parse, serialize } = require('../utils/json');
 
-const jsonDbPath = path.join(__dirname + '/../data/scores.json');
+const jsonDbPath = path.join(`${__dirname  }/../data/scores.json`);
 
 const defaultScores = [
   {

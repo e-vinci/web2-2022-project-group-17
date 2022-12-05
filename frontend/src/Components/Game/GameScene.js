@@ -1,21 +1,24 @@
 import Phaser from 'phaser';
 import ScoreLabel from './ScoreLabel';
-import HealthLabel from './HealthLabel';
 import ZombieSpawner from './ZombieSpawner';
 import BulletSpawner from './BulletSpawner';
 import BonusSpawner from './BonusSpawner';
+import GemSpawner from './GemSpawner';
 import bonusAsset from '../../assets/bonus.png';
-import skyAsset from '../../assets/sky.png';
-import platformAsset from '../../assets/platform.png';
+import backgroundAsset from '../../assets/background.png';
 import zombieAsset from '../../assets/zombie.png';
 import bulletAsset from '../../assets/bullet.png';
 import dudeAsset from '../../assets/dude.png';
+import gemAsset from '../../assets/gem.png';
+import damageSoundAsset from '../../assets/sounds/damage.mp3';
 
-const GROUND_KEY = 'ground';
+
 const DUDE_KEY = 'dude';
 const ZOMBIE_KEY = 'zombie';
 const BULLET_KEY = 'bullet';
 const BONUS_KEY = 'bonus';
+const GEM_KEY = 'gem';
+const DAMAGE_SOUND_KEY = 'damagesound';
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -23,22 +26,25 @@ class GameScene extends Phaser.Scene {
     this.player = undefined;
     this.cursors = undefined;
     this.scoreLabel = undefined;
-    this.healthLabel = undefined;
     this.zombieSpawner = undefined;
     this.bulletSpawner = undefined;
     this.bonusSpawner = undefined;
-    this.gameOver = false;
-    this.frame = 0;
+    this.gemSpawner = undefined;
+    this.healthBar = undefined;
+    // this.gameOver = false;
+    this.frame = undefined;
+    this.health = undefined;
+    this.damageSound = undefined;
   }
 
 
   preload() {
-    this.load.image('sky', skyAsset);
-    this.load.image(GROUND_KEY, platformAsset);
+    this.load.image('background', backgroundAsset);
     this.load.image(ZOMBIE_KEY, zombieAsset);
     this.load.image(BULLET_KEY, bulletAsset);
     this.load.image(BONUS_KEY, bonusAsset);
-
+    this.load.image(GEM_KEY, gemAsset);
+    this.load.audio(DAMAGE_SOUND_KEY, damageSoundAsset);
     this.load.spritesheet(DUDE_KEY, dudeAsset, {
       frameWidth: 32,
       frameHeight: 48,
@@ -47,53 +53,71 @@ class GameScene extends Phaser.Scene {
 
 
   create() {
-    this.add.image(400, 300, 'sky');
-    // const platforms = this.createPlatforms();
+    this.add.image(400, 300, 'background');
     this.player = this.createPlayer();
-    this.scoreLabel = this.createScoreLabel(16, 16, 0);
-    this.healthLabel = this.createHealthLabel(500, 16, 100);
+    this.scoreLabel = this.createScoreLabel(40, 20, 0);
     this.zombieSpawner = new ZombieSpawner(this, ZOMBIE_KEY);
     const zombiesGroup = this.zombieSpawner.group;
     this.bulletSpawner = new BulletSpawner(this, BULLET_KEY);
     const bulletsGroup = this.bulletSpawner.group;
     this.bonusSpawner = new BonusSpawner(this, BONUS_KEY);
     const bonusGroup = this.bonusSpawner.group;
+    this.gemSpawner = new GemSpawner(this, GEM_KEY);
+    const gemsGroup = this.gemSpawner.group;
+    this.healthBar = this.add.graphics();
+
+    this.health = 100;
+    this.frame = 0;
 
 
-    // this.physics.add.collider(this.player, platforms);
-    // this.physics.add.collider(zombiesGroup, platforms);
-    this.physics.add.collider(this.player, zombiesGroup, this.hitZombie, null, this);
-    this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+    this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
     this.physics.add.overlap(zombiesGroup, bulletsGroup, this.bulletHitZombie, null, this);
     this.physics.add.overlap(this.player, bonusGroup, this.collectBonus, null, this);
+    this.physics.add.overlap(this.player, gemsGroup, this.collectGem, null, this);
     this.cursors = this.input.keyboard.createCursorKeys();
+
+    this.damageSound = this.sound.add(DAMAGE_SOUND_KEY,
+      {
+        mute: false,
+        volume: 1,
+        rate: 1,
+        detune: 0,
+        seek: 0,
+        loop: false,
+        delay: 0
+      }
+    );
+
   }
 
 
+
   update() {
+    /*
     if (this.gameOver) {
       return;
     }
-
-
+    */
     this.frame += 1;
+    this.updateHealthBar();
 
-
-    // Zombie spawns every 100 frames
+    // Spawn more and more zombies over time
     if (this.frame % 100 === 0) {
-      this.zombieSpawner.spawn();
+      for (let i = 0; i < this.frame / 1000; i += 1) {
+        this.zombieSpawner.spawn();
+      }
     }
 
-    // Bonus spawn every 1000 frames
+    // Health bonus spawn every 1000 frames
     if (this.frame % 1000 === 0) {
       this.bonusSpawner.spawn();
     }
 
-
-
-    if (this.cursors.space.isDown) {
+    // Bullets activate every 250 frames
+    if (this.frame % 250 === 0) {
       this.fireBullet();
     }
+
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-160);
       this.player.anims.play('left', true);
@@ -119,21 +143,22 @@ class GameScene extends Phaser.Scene {
     );
   }
 
-  /*
-  createPlatforms() {
-    const platforms = this.physics.add.staticGroup();
 
-    platforms
-      .create(400, 568, GROUND_KEY)
-      .setScale(2)
-      .refreshBody();
-
-    platforms.create(800, 400, GROUND_KEY);
-    platforms.create(50, 250, GROUND_KEY);
-    platforms.create(750, 220, GROUND_KEY);
-    return platforms;
+  updateHealthBar(){
+    let barColor = 0x00ff00;
+    if(this.health < 66 && this.health > 33){
+      barColor = 0xffaa00;
+    }
+    else if(this.health <= 33){
+      barColor = 0xff0d00;
+    }
+    const barLength = 40 * this.health / 100;
+    this.healthBar.clear();
+    this.healthBar.lineStyle(1, 0x000000, 1);
+    this.healthBar.strokeRoundedRect(this.player.x - 20, this.player.y + 30, 40, 11, 3);
+    this.healthBar.fillStyle(barColor, 1);
+    this.healthBar.fillRect(this.player.x - 19, this.player.y + 31, barLength - 1, 9);
   }
-  */
 
   createPlayer() {
     const player = this.physics.add.sprite(400, 400, DUDE_KEY);
@@ -172,51 +197,77 @@ class GameScene extends Phaser.Scene {
 
   collectBonus(player, bonus) {
     bonus.destroy();
-    this.healthLabel.add(20);
+    this.health += 20;
+  }
+
+  collectGem(player, gem) {
+    gem.destroy();
+    this.scoreLabel.add(50);
   }
 
   bulletHitZombie(zombie, bullet) {
     zombie.destroy();
     bullet.destroy();
-
-    this.scoreLabel.add(100);
+    this.gemSpawner.spawn(zombie.x, zombie.y);
   }
 
   createScoreLabel(x, y, score) {
-    const style = { fontSize: '32px', fill: '#000' };
+    const style = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' };
     const label = new ScoreLabel(this, x, y, score, style);
     this.add.existing(label);
 
     return label;
   }
 
-  createHealthLabel(x, y, health) {
-    const style = { fontSize: '32px', fill: '#000' };
-    const label = new HealthLabel(this, x, y, health, style);
-    this.add.existing(label);
 
-    return label;
-  }
+  receiveDamage() {
+    this.damageSound.play();
+    // player.setTint(0xff0000); comment setTint pour seulement quelques frames?
+    this.health -= 1;
 
-  hitZombie(player) {
-    this.healthLabel.add(-1);
-
-    // End the game if player has no health
-    if (this.healthLabel.health <= 0) {
-      this.scoreLabel.setText(`GAME OVER : ( \nYour Score = ${this.scoreLabel.score}`);
-      this.physics.pause();
-      player.setTint(0xff0000);
-      player.anims.play('turn');
-      this.gameOver = true;
+    if (this.health <= 0) {
+      this.gameOver();
     }
   }
 
+  gameOver(){
+    this.registerScore("testPlayer");
+
+      this.scoreLabel.setText(`GAME OVER : ( \nYour Score = ${this.scoreLabel.score}`);
+      // this.physics.pause();
+    
+      // this.gameOver = true;
+      
+      this.scene.start('game-over');
+  }
+
+  async registerScore(nickname) {
+    const { score } = this.scoreLabel;
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        nickname,
+        score
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }
+
+    const response = await fetch('/api/scores/', options);
+    if (!response.ok) {
+      throw new Error(`fetch error:: : ${response.status} : ${response.statusText}`);
+    }
+
+  }
+
+  // TODO : display leaderboard directly in game at the end
   displayLeaderboard() {
     const text = this.add.text(350, 250, '', { font: '32px Courier', fill: '#000000' });
-        text.setText([
-            'Name: ',
-            'Score: '
-        ]);
+    text.setText([
+      'Name: ',
+      'Score: '
+    ]);
   }
 
 }

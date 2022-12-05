@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
   orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
   */
   const scores = readAllScores();
-  orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
+  const orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
   return res.json(orderedLeaderboard);
 });
 
