@@ -10,6 +10,8 @@ import zombieAsset from '../../assets/zombie.png';
 import bulletAsset from '../../assets/bullet.png';
 import dudeAsset from '../../assets/dude.png';
 import gemAsset from '../../assets/gem.png';
+import XPbarAsset from '../../assets/XPbar.png';
+import XPcontainerAsset from '../../assets/XPcontainer.png';
 import damageSoundAsset from '../../assets/sounds/damage.mp3';
 
 
@@ -34,6 +36,8 @@ class GameScene extends Phaser.Scene {
     // this.gameOver = false;
     this.frame = undefined;
     this.health = undefined;
+    this.gems = undefined;
+    this.XPbar = undefined;
     this.damageSound = undefined;
   }
 
@@ -44,6 +48,8 @@ class GameScene extends Phaser.Scene {
     this.load.image(BULLET_KEY, bulletAsset);
     this.load.image(BONUS_KEY, bonusAsset);
     this.load.image(GEM_KEY, gemAsset);
+    this.load.image('XPcontainer', XPcontainerAsset);
+    this.load.image('XPbar', XPbarAsset);
     this.load.audio(DAMAGE_SOUND_KEY, damageSoundAsset);
     this.load.spritesheet(DUDE_KEY, dudeAsset, {
       frameWidth: 32,
@@ -66,8 +72,18 @@ class GameScene extends Phaser.Scene {
     const gemsGroup = this.gemSpawner.group;
     this.healthBar = this.add.graphics();
 
+    // XP bar
+    const XPcontainer = this.add.sprite(400,40, "XPcontainer");
+    this.XPbar = this.add.sprite(XPcontainer.x + 0, XPcontainer.y, "XPbar");
+    this.XPMask = this.add.sprite(this.XPbar.x, this.XPbar.y, "XPbar");
+    this.XPMask.visible = false;
+    this.XPbar.mask = new Phaser.Display.Masks.BitmapMask(this, this.XPMask);
+    this.XPbar.x -= 250;
+    
+
     this.health = 100;
     this.frame = 0;
+    this.gems = 0;
 
 
     this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
@@ -101,19 +117,15 @@ class GameScene extends Phaser.Scene {
     this.frame += 1;
     this.updateHealthBar();
 
-    // Spawn more and more zombies over time
+    // Spawn objects and enemies
     if (this.frame % 100 === 0) {
       for (let i = 0; i < this.frame / 1000; i += 1) {
         this.zombieSpawner.spawn();
       }
     }
-
-    // Health bonus spawn every 1000 frames
     if (this.frame % 1000 === 0) {
       this.bonusSpawner.spawn();
     }
-
-    // Bullets activate every 250 frames
     if (this.frame % 250 === 0) {
       this.fireBullet();
     }
@@ -141,6 +153,7 @@ class GameScene extends Phaser.Scene {
     Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
       this.physics.moveToObject(zombie, this.player, 30),
     );
+
   }
 
 
@@ -203,6 +216,7 @@ class GameScene extends Phaser.Scene {
   collectGem(player, gem) {
     gem.destroy();
     this.scoreLabel.add(50);
+    this.XPbar.x += 10;
   }
 
   bulletHitZombie(zombie, bullet) {
