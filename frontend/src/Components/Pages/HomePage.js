@@ -1,5 +1,5 @@
 import anime from 'animejs/lib/anime.es';
-import { clearPage } from '../../utils/render';
+import { clearPage, renderImage } from '../../utils/render';
 import { isAuthenticated } from '../../utils/auths';
 import Navigate from '../Router/Navigate';
 
@@ -18,17 +18,23 @@ const HomePage = () => {
       <h1 class="title1 mb-3">Zombie Survivors</h1>
       <h6 class="title2 mb-5">Il n'y a nulle part où se cacher. Essayez de survivre toute la nuit 
       parmi des hordes des zombies qui arrivent sur vous, <br>avant que la mort ne vous rattrape.</h6>
-      <a href="#" class="btn btn-danger play-now-btn"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</a>
+      <div class="home-buttons d-flex">
+        <a href="#" class="btn btn-danger play-now-btn"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</a>
+        <a href="#" class="btn btn-primary how-to-play-button"><i class="fa-solid fa-question me-2"></i> Découvrir les règles du jeu</a>
+      </div>
+      
+      
     </div>
     <div class="zombie-img-div"></div>
   </section>
   <section class="how-to-play-section">
+    <h1 class="text-center">Règles</h1>
     <div class="how-to-play-content">
       <div class="box3 rounded shadow">
         <div class="arrow-rules-img-div text-center mt-3">
         </div>
         <div class="text-center my-3">
-          <p>Utilisez les flèches directionnelles pour déplacer.<br> Le personnage s'occupera de tirer automatiquement</p>
+          <p class="fw-bold">Utiliser les flèches directionnelles pour déplacer.<br> Le personnage s'occupera de tirer automatiquement</p>
         </div>
       </div>
       <div class="box1 rounded shadow">
@@ -42,7 +48,7 @@ const HomePage = () => {
         <div class="gem-rules-img-div text-center mt-3">
         </div>
         <div class="text-center mt-3">
-          <p>Ramassez les crystaux laissés par les zombies vaincus pour améliorer votre arme une fois la barre chargée</p>
+          <p>Ramasser les crystaux laissés par les zombies vaincus pour améliorer votre arme une fois la barre chargée</p>
         </div>
       </div>
       
@@ -60,7 +66,7 @@ const HomePage = () => {
   `
   main.innerHTML = homePage;
 
-  renderImage(zombieImage, 'zombieImage', 500, '.zombie-img-div' );
+  renderImage(zombieImage, 'zombieImage', 500, '.zombie-img-div');
   renderImage(arrowKeysImage , 'arrowKeyImage', 50, '.arrow-rules-img-div');
   renderImage(gemImage, 'gemImage', 50, '.gem-rules-img-div');
   renderImage(zombie2Image, 'zombie2Image', 50, '.zombie2-img-div');
@@ -85,7 +91,7 @@ const HomePage = () => {
   });
 
   anime({
-    targets: '.play-now-btn',
+    targets: '.home-buttons',
     translateX: 150,
     duration: 2200,
     delay: 400,
@@ -124,17 +130,14 @@ const HomePage = () => {
     }
   });
 
+
+  const button = document.querySelector('.how-to-play-button');
+  const howToPlaySection = document.querySelector('#how-to-play-section');
+  button.addEventListener('click', () => {
+        howToPlaySection.scrollIntoView();
+  });
+
 }; 
-
-
-function renderImage(url, className, height, div) {
-  const image = document.createElement('img');
-  image.className = className;
-  image.src = url;
-  image.height = height;
-  const imageWrapper = document.querySelector(div);
-  imageWrapper.append(image);
-}
 
 
 export default HomePage;

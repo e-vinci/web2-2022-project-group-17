@@ -1,6 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import { Navbar as BootstrapNavbar } from 'bootstrap';
 import { isAuthenticated } from '../../utils/auths';
+import { renderImage } from '../../utils/render';
+import logoImage from '../../img/logo.png';
+import Navigate from '../Router/Navigate';
 
 /**
  * Render the Navbar which is styled by using Bootstrap
@@ -14,7 +17,10 @@ const Navbar = () => {
   const nonAuthenticatedUserNavbar = `
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid navbar-container">
-          <a class="navbar-brand" href="#" data-uri="/">ZOMBIE SURVIVORS</a>
+          <a class="navbar-brand d-flex align-items-center" href="#" data-uri="/">
+            <div class="logo ms-3 me-1"></div>
+            ZOMBIE SURVIVORS
+          </a>
           <button
             class="navbar-toggler"
             type="button"
@@ -27,7 +33,7 @@ const Navbar = () => {
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav fs-5 me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link left-item ms-5 p-0" href="#" data-uri="/game">Jeu</a>
               </li>
@@ -50,7 +56,11 @@ const Navbar = () => {
   const authenticatedUserNavbar = `
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid navbar-container">
-          <a class="navbar-brand" href="#" data-uri="/">Zombie Survivors</a>
+          
+          <a class="navbar-brand d-flex align-items-center" href="#" data-uri="/">
+            <div class="logo ms-3 me-1"></div>
+            Zombie Survivors
+          </a>
           <button
             class="navbar-toggler"
             type="button"
@@ -63,7 +73,7 @@ const Navbar = () => {
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav fs-5 me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link left-item ms-5 p-0" href="#" data-uri="/game">Jeu</a>
               </li>
@@ -81,7 +91,14 @@ const Navbar = () => {
       </nav>
   `
   navbarWrapper.innerHTML = isAuthenticated() ? authenticatedUserNavbar : nonAuthenticatedUserNavbar;
-  
+
+  renderImage(logoImage,'logo-img-div', 40, '.logo');
+
+  const logo = document.querySelector('.logo');
+  logo.addEventListener('click', (e) => {
+    e.preventDefault();
+    Navigate('/');
+  })
 };
 
 
