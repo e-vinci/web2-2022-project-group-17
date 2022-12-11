@@ -1,7 +1,8 @@
 import { clearPage} from '../../utils/render';
 import { setAuthenticatedUser } from '../../utils/auths';
-
+import Navbar from '../Navbar/Navbar';
 import Navigate from '../Router/Navigate';
+
 
 const LoginPage = () => {
   clearPage();
@@ -11,9 +12,9 @@ const LoginPage = () => {
 function renderLoginForm() {
   const main = document.querySelector('main');
   const loginWrapper = document.createElement('div');
-  loginWrapper.className = 'd-flex flex-column align-items-center'
+  loginWrapper.className = 'intro-section d-flex justify-content-center align-items-center'
   const formWrapper = document.createElement('div');
-  formWrapper.className = 'border w-25 d-flex flex-column align-items-center';
+  formWrapper.className = 'formWrapper border w-25 d-flex flex-column align-items-center rounded';
   const formTop = document.createElement('div');
   formTop.className = 'form-top w-100';
   const formTopDiv = document.createElement('div');
@@ -31,7 +32,7 @@ function renderLoginForm() {
   const usernameLabel = document.createElement('label');
   usernameLabel.className = 'form-label ps-4';
   usernameLabel.htmlFor = 'nickname';
-  usernameLabel.innerHTML = 'Nickname';
+  usernameLabel.innerHTML = "Nom d'utilisateur";
 
   const inputGroup1 = document.createElement('div');
   inputGroup1.className = 'input-group mb-3 px-4';
@@ -44,7 +45,7 @@ function renderLoginForm() {
   const username = document.createElement('input');
   username.type = 'text';
   username.id = 'username';
-  username.placeholder = 'nickname';
+  username.placeholder = "nom d'utilisateur";
   username.required = true;
   username.className = 'form-control';
 
@@ -53,7 +54,7 @@ function renderLoginForm() {
   const passwordLabel = document.createElement('label');
   passwordLabel.className = 'form-label ps-4';
   passwordLabel.htmlFor = 'password';
-  passwordLabel.innerHTML = 'Password';
+  passwordLabel.innerHTML = 'Mot de passe';
 
   const inputGroup2 = document.createElement('div');
   inputGroup2.className = 'input-group mb-3 px-4';
@@ -66,17 +67,21 @@ function renderLoginForm() {
   password.type = 'password';
   password.id = 'password';
   password.required = true;
-  password.placeholder = 'password';
+  password.placeholder = 'mot de passe';
   password.className = 'form-control';
 
 
   const submitDiv = document.createElement('div');
   submitDiv.className = 'submitDiv text-center';
   const submit = document.createElement('input');
-  submit.value = 'Login';
+  submit.value = 'Se connecter';
   submit.type = 'submit';
   submit.className = 'btn btn-success';
 
+  const alreadyHasDiv = document.createElement('div');
+  alreadyHasDiv.className = 'text-center';
+  alreadyHasDiv.innerHTML = `<p>Pas encore de compte? <a href="#">Inscrivez-vous maintenant.</a></p>`
+  
   inputGroup1Span.appendChild(inputGroup1I);
   inputGroup1.appendChild(inputGroup1Span);
   inputGroup1.appendChild(username);
@@ -96,6 +101,7 @@ function renderLoginForm() {
   form.appendChild(submitDiv);
 
   formBottom.appendChild(form);
+  formBottom.appendChild(alreadyHasDiv);
 
   formTopDiv.appendChild(formTopTitle);
   formTop.appendChild(formTopDiv);
@@ -105,6 +111,13 @@ function renderLoginForm() {
   loginWrapper.appendChild(formWrapper);
   main.appendChild(loginWrapper);
   form.addEventListener('submit', onLogin)
+
+  alreadyHasDiv.addEventListener('click', (e) => {
+    e.preventDefault();
+    Navigate('/register');
+  })
+
+  
 }
 
 async function onLogin(e) {
@@ -134,8 +147,8 @@ async function onLogin(e) {
   console.log('Newly registered & authenticated user : ', authenticatedUser);
 
   setAuthenticatedUser(authenticatedUser);
-
-  Navigate('/');
+  Navbar();
+  Navigate('/game');
 }
 
 export default LoginPage;

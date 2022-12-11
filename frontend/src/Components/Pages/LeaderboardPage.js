@@ -6,6 +6,7 @@ const LeaderboardPage = async () => {
   clearPage();
   const main = document.querySelector('main');
   const rankingsWrapper = document.createElement('div');
+  rankingsWrapper.classList.add('intro-section', 'd-flex', 'flex-row', 'align-items-center');
 
   const scores = await getAllScores();
 
@@ -22,7 +23,7 @@ const LeaderboardPage = async () => {
 
 function getScoresAsString(scores) {
   let htmlScoresTable = 
-  `<div class="leaderboard table-responsive mx-auto my-5 rounded shadow-sm">
+  `<div class="leaderboard table-responsive mx-auto rounded shadow-sm">
     <header class="leaderboard-header rounded-top">
       <h1 class="text-uppercase text-center">Leaderboard</h1>
     </header>

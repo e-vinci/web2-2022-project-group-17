@@ -1,5 +1,165 @@
+@import url("https://fonts.googleapis.com/css2?family=Proxima+Nova");
+
+main {
+  height: 100%;
+  min-height:100vh;
+}
+
+.navbar, .navbar-container {
+  padding: 0;
+  background-color: #1F1E3D;
+}
+
+.navbar-brand {
+  margin: 10px;
+  color:#FFE500;
+  font-weight: bolder;
+  font-family: "Proxima Nova";
+  font-style: italic;
+  font-size: 1.5em;
+  text-shadow: 0px 1px;
+}
+
+.navbar-brand:hover, .navbar-brand:visited, .navbar-brand:focus {
+  color: #FFE500;
+}
+
+.left-item {
+  
+  color: white;
+  position: relative;
+   
+}
+
+.left-item:hover, .left-item:visited, .left-item:active, .left-item:focus {
+  color: white;
+}
+
+.left-item::after {
+  content: "";
+  position: absolute;
+  height: 0;
+  width: 100%;
+  left: 0;
+  bottom: -20px;
+  background-color: #FFE500;
+  transition: 0.1s;
+  
+}
+
+.left-item:hover::after {
+  height: 3px;
+}
+
+.auth-btn {
+  border: 1px solid black;
+  border-radius: 20px;
+  color: white;
+}
+
+.auth-btn:hover, .auth-btn:visited, .auth-btn:active, .auth-btn:focus {
+  color: white;
+}
+
+
+.intro-section {
+  height: 100%;
+  width: 100%;
+  min-height: 100vh;
+  background: radial-gradient(#43425f, 20%,#292849);
+  
+  color: white;
+}
+
+.home-content {
+  padding: 250px;
+}
+
+
+
+
+
+
+.navbar-nav:nth-child(3) {
+  margin-left: 150px;
+}
+
+.play-now-btn:hover {
+  transform: scale(1.1);
+  transition: 0.4s;
+}
+.image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.zombieImage {
+  height: 100%;
+}
+
+.home-content > * {
+  opacity: 0;
+}
+
+.how-to-play-section {
+  height: 100%;
+  width: 100%;
+  min-height: 50vh;
+  background: radial-gradient(#42425e, 20%,#1F1E3D);
+  color: white;
+}
+
+.how-to-play-content {
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.how-to-play-content > * {
+  opacity: 1;
+}
+
+
+.box1 {
+  height: 100%;
+  width: 25%;
+  background-color: #69668b;
+}
+.box2 {
+  height: 100%;
+  width: 25%;
+  background-color: red;
+}
+.box3 {
+  height: 100%;
+  width: 25%;
+  background-color: green;
+}
+
+.instructions-section {
+  height: 100%;
+  width: 100%;
+  min-height: 50vh;
+  background: radial-gradient(#43425f, 20%,#292849);
+  color: white;
+}
+
+.instructions-content > * {
+  opacity: 0;
+}
+
+.end-section {
+  height: 100%;
+  width: 100%;
+  min-height: 50vh;
+  background: radial-gradient(#43425f, 20%,#292849);
+  color: white;
+}
+
+
 .leaderboard {
-  max-width: 500px;
+  height: 90%;
+  width: 500px;
   border: 1px solid;
 }
 
@@ -15,4 +175,21 @@
 
 .leaderboard-tbody tr:nth-child(2n) {
   background-color: #1f232c;
+}
+
+
+.formWrapper {
+  background-color: white;
+}
+
+.formWrapper > * {
+  color: black;
+}
+
+
+footer {
+  height: 5vh;
+  background-color: #282847;
+  color: white;
+  text-align: center;
 }

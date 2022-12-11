@@ -7,8 +7,10 @@ let game;
 
 const GamePage = () => {
   const phaserGame = `
-<div id="gameDiv" class="d-flex justify-content-center my-3">
-</div>`;
+  <div class="gameWrapper intro-section d-flex justify-content-center align-items-center">
+    <div id="gameDiv" class="d-flex justify-content-center mb-5">
+    </div>
+  </div>`;
 
   const main = document.querySelector('main');
   main.innerHTML = phaserGame;
