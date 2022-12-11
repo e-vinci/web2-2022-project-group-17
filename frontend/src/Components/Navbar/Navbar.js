@@ -40,7 +40,7 @@ const Navbar = () => {
                 <a class="btn btn-primary nav-link auth-btn" href="#" data-uri="/login">Connexion</a>
               </li>   
               <li class="nav-item ms-3">
-                <a class="btn btn-primary nav-link auth-btn" href="#" data-uri="/register">S'enregistrer</a>
+                <a class="btn btn-primary nav-link auth-btn me-3" href="#" data-uri="/register">S'enregistrer</a>
               </li>                         
             </ul>
           </div>
@@ -65,15 +65,15 @@ const Navbar = () => {
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link" href="#" data-uri="/game">Jeu</a>
+                <a class="nav-link left-item ms-5 p-0" href="#" data-uri="/game">Jeu</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" data-uri="/leaderboard">Classement</a>
+                <a class="nav-link left-item ms-5 p-0" href="#" data-uri="/leaderboard">Classement</a>
               </li>                        
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link auth-btn" href="#" data-uri="/logout">Logout</a>
+                <a class="btn btn-danger nav-link auth-btn me-3" href="#" data-uri="/logout">Logout</a>
               </li>                        
             </ul>
           </div>

@@ -25,7 +25,7 @@ const HomePage = () => {
         <div>
           <p>*pas encore d'image*</p>
         </div>
-        <div>
+        <div class="text-center">
           <p>Tuer les zombies pour augmenter votre score</p>
         </div>
       </div>
@@ -33,12 +33,12 @@ const HomePage = () => {
         <div>
           <p>*pas encore d'image*</p>
         </div>
-        <div>
+        <div class="text-center">
           <p>Ramassez les crystaux laissés par les zombies vaincus pour améliorer votre arme une fois la barre chargée</p>
         </div>
       </div>
       <div class="box3 rounded">
-        <div>
+        <div class="text-center">
           <p>*pas encore d'image*</p>
         </div>
         <div>
