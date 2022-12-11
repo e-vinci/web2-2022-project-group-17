@@ -54,3 +54,33 @@ Content-Type: application/json
     "username":"guest",
     "password":"guest"
 }
+
+### Create the user with unmatched passwords
+POST {{baseUrl}}/auths/register
+Content-Type: application/json
+
+{
+    "username":"sdfsdf",
+    "password":"12345",
+    "password2":"1234"
+}
+
+### Create the user with password shorter than 4
+POST {{baseUrl}}/auths/register
+Content-Type: application/json
+
+{
+    "username":"sdfsdf",
+    "password":"123",
+    "password2":"123"
+}
+
+### Create the user with username containing special characters
+POST {{baseUrl}}/auths/register
+Content-Type: application/json
+
+{
+    "username":"sdfsdg@",
+    "password":"1234",
+    "password2":"1234"
+}

@@ -1,5 +1,4 @@
 const path = require('node:path');
-const { escape } = require('node:querystring');
 const { parse, serialize } = require('../utils/json');
 
 const jsonDbPath = path.join(`${__dirname  }/../data/scores.json`);
@@ -49,6 +48,7 @@ function addOneScore(nickname, score) {
   return newScore;
 }
 
+/*
 function updateOneScore(nickname, scoreToBeUpdated) {
   const scores = parse(jsonDbPath, defaultScores);
   const foundIndex = scores.findIndex((score) => score.nickname === nickname);
@@ -60,10 +60,11 @@ function updateOneScore(nickname, scoreToBeUpdated) {
   }
 
   serialize(jsonDbPath, scores);
+  return;
 }
+*/
 
 module.exports = {
   readAllScores,
-  addOneScore,
-  updateOneScore,
+  addOneScore
 }

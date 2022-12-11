@@ -17,7 +17,7 @@ const LeaderboardPage = async () => {
   rankingsWrapper.innerHTML = scoresAsHtmlTable;
   main.appendChild(rankingsWrapper);
 
-  await renderMainCharacterImage(mainCharacterImage);
+  renderMainCharacterImage(mainCharacterImage);
   
 };
 
