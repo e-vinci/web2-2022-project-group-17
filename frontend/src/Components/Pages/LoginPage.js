@@ -20,7 +20,7 @@ function renderLoginForm() {
   const formTopDiv = document.createElement('div');
   const formTopTitle = document.createElement('h1');
   formTopDiv.className = 'text-center';
-  formTopTitle.innerHTML = 'Login';
+  formTopTitle.innerHTML = 'Connexion';
 
   const formBottom = document.createElement('div');
   formBottom.className = 'form-bottom border-top w-100';
@@ -69,7 +69,6 @@ function renderLoginForm() {
   password.required = true;
   password.placeholder = 'mot de passe';
   password.className = 'form-control';
-
 
   const submitDiv = document.createElement('div');
   submitDiv.className = 'submitDiv text-center';

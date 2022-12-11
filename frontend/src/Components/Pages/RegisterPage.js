@@ -69,6 +69,26 @@ function renderRegisterForm() {
   password.placeholder = 'mot de passe';
   password.className = 'form-control';
 
+  const formGroup3 = document.createElement('div');
+  const password2Label = document.createElement('label');
+  password2Label.className = 'form-label ps-4';
+  password2Label.htmlFor = 'passwordConfirmation';
+  password2Label.innerHTML = 'Mot de passe de confirmation';
+
+  const inputGroup3 = document.createElement('div');
+  inputGroup3.className = 'input-group mb-3 px-4';
+  const inputGroup3Span = document.createElement('span');
+  inputGroup3Span.className = 'input-group-text';
+  const inputGroup3I = document.createElement('i');
+  inputGroup3I.className = 'bi bi-key-fill';
+
+  const password2 = document.createElement('input');
+  password2.type = 'password';
+  password2.id = 'password2';
+  password2.required = true;
+  password2.placeholder = 'mot de passe de confirmation';
+  password2.className = 'form-control';
+
 
   const submitDiv = document.createElement('div');
   submitDiv.className = 'submitDiv text-center';
@@ -93,10 +113,17 @@ function renderRegisterForm() {
   formGroup2.appendChild(passwordLabel);
   formGroup2.appendChild(inputGroup2);
 
+  inputGroup3Span.appendChild(inputGroup3I);
+  inputGroup3.appendChild(inputGroup3Span);
+  inputGroup3.appendChild(password2);
+  formGroup3.appendChild(password2Label);
+  formGroup3.appendChild(inputGroup3);
+
   submitDiv.appendChild(submit);
 
   form.appendChild(formGroup1);
   form.appendChild(formGroup2);
+  form.appendChild(formGroup3);
   form.appendChild(submitDiv);
 
   formBottom.appendChild(form);
@@ -121,12 +148,14 @@ async function onRegister(e) {
 
   const username = document.querySelector('#username').value;
   const password = document.querySelector('#password').value;
+  const password2 = document.querySelector('#password2').value;
 
   const options = {
     method: 'POST',
     body: JSON.stringify({
       username,
-      password
+      password,
+      password2
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -134,8 +163,13 @@ async function onRegister(e) {
   }
 
   const response = await fetch('/api/auths/register', options);
+  
 
   if (!response.ok) {
+    const formBottom = document.querySelector('.form-bottom');
+    const errorDiv = document.createElement('div');
+    errorDiv.innerHTML = `${response.errors}`;
+    formBottom.appendChild(errorDiv);
     throw new Error(`fetch error::auths/login : ${response.status} : ${response.statusText}`);
   }
   const authenticatedUser = await response.json();

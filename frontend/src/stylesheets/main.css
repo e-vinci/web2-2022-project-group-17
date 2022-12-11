@@ -88,7 +88,7 @@ main {
   transform: scale(1.1);
   transition: 0.4s;
 }
-.image {
+.zombie-img-div {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -107,12 +107,16 @@ main {
   min-height: 50vh;
   background: radial-gradient(#42425e, 20%,#1F1E3D);
   color: white;
+  display: flex;
+  flex-direction: column;
 }
 
 .how-to-play-content {
   height: 100%;
   display: flex;
   justify-content: space-around;
+  align-items: center;
+  flex-grow: 1;
 }
 
 .how-to-play-content > * {

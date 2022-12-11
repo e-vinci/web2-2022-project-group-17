@@ -1,9 +1,12 @@
 import anime from 'animejs/lib/anime.es';
 import { clearPage } from '../../utils/render';
-import zombieImage from '../../img/zombie.png';
 import { isAuthenticated } from '../../utils/auths';
 import Navigate from '../Router/Navigate';
 
+import zombieImage from '../../img/zombie.png';
+import arrowKeysImage from '../../img/arrowkeys.png'
+import gemImage from '../../img/gem.png';
+import zombie2Image from '../../img/zombie2.png'
 
 const HomePage = () => {
   clearPage();
@@ -17,34 +20,32 @@ const HomePage = () => {
       parmi des hordes des zombies qui arrivent sur vous, <br>avant que la mort ne vous rattrape.</h6>
       <a href="#" class="btn btn-danger play-now-btn"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</a>
     </div>
-    <div class="image"></div>
+    <div class="zombie-img-div"></div>
   </section>
   <section class="how-to-play-section">
     <div class="how-to-play-content">
-      <div class="box1 rounded shadow">
-        <div>
-          <p>*pas encore d'image*</p>
+      <div class="box3 rounded shadow">
+        <div class="arrow-rules-img-div text-center mt-3">
         </div>
-        <div class="text-center">
+        <div class="text-center my-3">
+          <p>Utilisez les flèches directionnelles pour déplacer.<br> Le personnage s'occupera de tirer automatiquement</p>
+        </div>
+      </div>
+      <div class="box1 rounded shadow">
+        <div class="zombie2-img-div text-center mt-3">
+        </div>
+        <div class="text-center mt-3">
           <p>Tuer les zombies pour augmenter votre score</p>
         </div>
       </div>
-      <div class="box2 rounded">
-        <div>
-          <p>*pas encore d'image*</p>
+      <div class="box2 rounded shadow">
+        <div class="gem-rules-img-div text-center mt-3">
         </div>
-        <div class="text-center">
+        <div class="text-center mt-3">
           <p>Ramassez les crystaux laissés par les zombies vaincus pour améliorer votre arme une fois la barre chargée</p>
         </div>
       </div>
-      <div class="box3 rounded">
-        <div class="text-center">
-          <p>*pas encore d'image*</p>
-        </div>
-        <div>
-          <p>Utilisez les flèches directionnelles pour déplacer. Le personnage quant à lui tire automatiquement</p>
-        </div>
-      </div>
+      
     </div>
   </section>
   <section class="instructions-section">
@@ -59,8 +60,12 @@ const HomePage = () => {
   `
   main.innerHTML = homePage;
 
-  renderImage(zombieImage);
+  renderImage(zombieImage, 'zombieImage', 500, '.zombie-img-div' );
+  renderImage(arrowKeysImage , 'arrowKeyImage', 50, '.arrow-rules-img-div');
+  renderImage(gemImage, 'gemImage', 50, '.gem-rules-img-div');
+  renderImage(zombie2Image, 'zombie2Image', 50, '.zombie2-img-div');
 
+  
   anime({
     targets: '.title1',
     translateX: 150,
@@ -122,15 +127,14 @@ const HomePage = () => {
 }; 
 
 
-function renderImage(url) {
+function renderImage(url, className, height, div) {
   const image = document.createElement('img');
-  image.className = "zombieImage";
+  image.className = className;
   image.src = url;
-  image.height = 500;
-  const imageWrapper = document.querySelector('.image');
+  image.height = height;
+  const imageWrapper = document.querySelector(div);
   imageWrapper.append(image);
 }
-
 
 
 export default HomePage;

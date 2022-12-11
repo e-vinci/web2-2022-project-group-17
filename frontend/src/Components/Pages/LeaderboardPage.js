@@ -25,13 +25,13 @@ function getScoresAsString(scores) {
   let htmlScoresTable = 
   `<div class="leaderboard table-responsive mx-auto rounded shadow-sm">
     <header class="leaderboard-header rounded-top">
-      <h1 class="text-uppercase text-center">Leaderboard</h1>
+      <h1 class="text-uppercase text-center">Classement</h1>
     </header>
     <table class="table leaderboard-table">
     <thead>
       <tr>
-        <th class="text-center">Rank</th>
-        <th class="text-info" scope="col">Nickname</th>
+        <th class="text-center">Rang</th>
+        <th class="text-info" scope="col">Nom d'utilisateur</th>
         <th class="text-info text-end" scope="col">Score</th>
       </tr>
     </thead>
