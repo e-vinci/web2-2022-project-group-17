@@ -272,12 +272,12 @@ class GameScene extends Phaser.Scene {
 
   levelUp() {
     this.XPbar.x -= 240;
-    this.level += 1;
-    this.levelDisplay.setText(`LEVEL ${this.level}`);
+    this.playerStats.level += 1;
+    this.levelDisplay.setText(`LEVEL ${this.playerStats.level}`);
     this.physics.pause();
-    // TODO : pause time to stop timer events
     this.time.paused = true;
 
+    // Display level up options
     this.levelUpText.setVisible(true);
     // First option : gain 1 fireball
     this.option1Image.setVisible(true);
@@ -331,14 +331,12 @@ class GameScene extends Phaser.Scene {
     const style = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' };
     const label = new ScoreLabel(this, x, y, score, style);
     this.add.existing(label);
-
     return label;
   }
 
 
   receiveDamage() {
     this.damageSound.play();
-    // player.setTint(0xff0000); comment setTint pour seulement quelques frames?
     this.playerStats.health -= 1;
 
     if (this.playerStats.health <= 0) {
