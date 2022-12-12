@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 
-
 export default class StartUI extends Phaser.Scene {
     constructor() {
         super('game-start');

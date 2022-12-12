@@ -13,6 +13,7 @@ import gemAsset from '../../assets/gem.png';
 import XPbarAsset from '../../assets/XPbar.png';
 import XPcontainerAsset from '../../assets/XPcontainer.png';
 import damageSoundAsset from '../../assets/sounds/damage.mp3';
+// import { getAuthenticatedUser } from '../../utils/auths';
 
 
 const DUDE_KEY = 'dude';
@@ -21,6 +22,8 @@ const BULLET_KEY = 'bullet';
 const BONUS_KEY = 'bonus';
 const GEM_KEY = 'gem';
 const DAMAGE_SOUND_KEY = 'damagesound';
+
+
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -34,7 +37,6 @@ class GameScene extends Phaser.Scene {
     this.gemSpawner = undefined;
     this.healthBar = undefined;
     // this.gameOver = false;
-    this.frame = undefined;
     this.health = undefined;
     this.gems = undefined;
     this.XPbar = undefined;
@@ -73,18 +75,35 @@ class GameScene extends Phaser.Scene {
     this.healthBar = this.add.graphics();
 
     // XP bar
-    const XPcontainer = this.add.sprite(400,40, "XPcontainer");
-    this.XPbar = this.add.sprite(XPcontainer.x + 0, XPcontainer.y, "XPbar");
+    const XPcontainer = this.add.sprite(400, 20, "XPcontainer");
+    this.XPbar = this.add.sprite(XPcontainer.x, XPcontainer.y, "XPbar");
     this.XPMask = this.add.sprite(this.XPbar.x, this.XPbar.y, "XPbar");
     this.XPMask.visible = false;
     this.XPbar.mask = new Phaser.Display.Masks.BitmapMask(this, this.XPMask);
     this.XPbar.x -= 250;
-    
+
+    // Displays current XP level
+    const styleLevelDisplay = { fontSize: '13px', fontStyle: 'bold', fontFamily: 'Arial', fill: '#FFFFFF' };
+    this.levelDisplay = this.add.text(375, 14, "LEVEL 0", styleLevelDisplay);
+
+    // Displays player's name
+    // this.nickname = getAuthenticatedUser().username;
+    const stylePlayerName = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' }
+    this.nameDisplay = this.add.text(575, 14, `Player : ${this.nickname}`, stylePlayerName);
+
+
+    const zombieSpawnEvent = new Phaser.Time.TimerEvent({ delay: 5000, loop: true, callback: this.spawnZombies, callbackScope: this });
+    const fireBulletEvent = new Phaser.Time.TimerEvent({ delay: 4000, loop: true, callback: this.fireBullet, callbackScope: this });
+    const bonusSpawnEvent = new Phaser.Time.TimerEvent({ delay: 10000, loop: true, callback: this.spawnBonus, callbackScope: this });
+    this.time.addEvent(zombieSpawnEvent);
+    this.time.addEvent(fireBulletEvent);
+    this.time.addEvent(bonusSpawnEvent);
+
 
     this.health = 100;
-    this.frame = 0;
-    this.gems = 0;
-
+    this.level = 0;
+    this.xp = 0;
+    this.zombiesInLastWave = 0;
 
     this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
     this.physics.add.overlap(zombiesGroup, bulletsGroup, this.bulletHitZombie, null, this);
@@ -92,43 +111,16 @@ class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, gemsGroup, this.collectGem, null, this);
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.damageSound = this.sound.add(DAMAGE_SOUND_KEY,
-      {
-        mute: false,
-        volume: 1,
-        rate: 1,
-        detune: 0,
-        seek: 0,
-        loop: false,
-        delay: 0
-      }
-    );
+
+    this.damageSound = this.sound.add(DAMAGE_SOUND_KEY);
 
   }
 
 
 
   update() {
-    /*
-    if (this.gameOver) {
-      return;
-    }
-    */
-    this.frame += 1;
     this.updateHealthBar();
 
-    // Spawn objects and enemies
-    if (this.frame % 100 === 0) {
-      for (let i = 0; i < this.frame / 1000; i += 1) {
-        this.zombieSpawner.spawn();
-      }
-    }
-    if (this.frame % 1000 === 0) {
-      this.bonusSpawner.spawn();
-    }
-    if (this.frame % 250 === 0) {
-      this.fireBullet();
-    }
 
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-160);
@@ -156,13 +148,24 @@ class GameScene extends Phaser.Scene {
 
   }
 
+  spawnZombies() {
+    this.zombiesInLastWave += 1;
+    for (let i = 0; i < this.zombiesInLastWave; i += 1) {
+      this.zombieSpawner.spawn();
+    }
+  }
 
-  updateHealthBar(){
+  spawnBonus() {
+    this.bonusSpawner.spawn();
+  }
+
+
+  updateHealthBar() {
     let barColor = 0x00ff00;
-    if(this.health < 66 && this.health > 33){
+    if (this.health < 66 && this.health > 33) {
       barColor = 0xffaa00;
     }
-    else if(this.health <= 33){
+    else if (this.health <= 33) {
       barColor = 0xff0d00;
     }
     const barLength = 40 * this.health / 100;
@@ -210,13 +213,23 @@ class GameScene extends Phaser.Scene {
 
   collectBonus(player, bonus) {
     bonus.destroy();
-    this.health += 20;
+    this.health = this.health + 20 > 100 ? 100 : this.health + 20;
   }
 
   collectGem(player, gem) {
     gem.destroy();
     this.scoreLabel.add(50);
+    this.gainXP();
+  }
+
+  gainXP() {
     this.XPbar.x += 10;
+    this.xp += 10;
+    if (this.xp % 240 === 0) {
+      this.XPbar.x -= 240;
+      this.level += 1;
+      this.levelDisplay.setText(`LEVEL ${this.level}`);
+    }
   }
 
   bulletHitZombie(zombie, bullet) {
@@ -244,19 +257,20 @@ class GameScene extends Phaser.Scene {
     }
   }
 
-  gameOver(){
-    this.registerScore("testPlayer");
+  gameOver() {
+    this.registerScore();
 
-      this.scoreLabel.setText(`GAME OVER : ( \nYour Score = ${this.scoreLabel.score}`);
-      // this.physics.pause();
-    
-      // this.gameOver = true;
-      
-      this.scene.start('game-over');
+    this.scoreLabel.setText(`GAME OVER : ( \nYour Score = ${this.scoreLabel.score}`);
+    this.physics.pause();
+
+    // this.gameOver = true;
+
+    this.scene.start('game-over');
   }
 
-  async registerScore(nickname) {
+  async registerScore() {
     const { score } = this.scoreLabel;
+    const { nickname } = this.nickname;
     const options = {
       method: 'POST',
       body: JSON.stringify({
@@ -273,15 +287,6 @@ class GameScene extends Phaser.Scene {
       throw new Error(`fetch error:: : ${response.status} : ${response.statusText}`);
     }
 
-  }
-
-  // TODO : display leaderboard directly in game at the end
-  displayLeaderboard() {
-    const text = this.add.text(350, 250, '', { font: '32px Courier', fill: '#000000' });
-    text.setText([
-      'Name: ',
-      'Score: '
-    ]);
   }
 
 }

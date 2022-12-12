@@ -1,6 +1,7 @@
 import { clearPage } from '../../utils/render';
 import mainCharacterImage from '../../img/maincharacter.png';
 import { getAllScores } from '../../models/scores';
+// import { getAuthenticatedUser } from '../../utils/auths';
 
 const LeaderboardPage = async () => {
   clearPage();
@@ -20,6 +21,8 @@ const LeaderboardPage = async () => {
   renderMainCharacterImage(mainCharacterImage);
   
 };
+
+
 
 function getScoresAsString(scores) {
   let htmlScoresTable = 
