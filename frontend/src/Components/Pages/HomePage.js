@@ -15,12 +15,11 @@ const HomePage = () => {
   const homePage = `
   <section class="intro-section"> 
     <div class="home-content" data-aos="fade-right" data-aos-mirror="true">
-      <h1 class="title1 mb-3" data-aos="fade-right" data-aos-duration=1500 data-aos-mirror="true">Zombie Survivors</h1>
-      <h6 class="title2 mb-5" data-aos="fade-right" data-aos-delay=200 data-aos-duration=1500 data-aos-mirror="true">Il n'y a nulle part où se cacher. Essayez de survivre toute la nuit 
-      parmi des hordes des zombies qui arrivent sur vous, <br>avant que la mort ne vous rattrape.</h6>
+      <h1 class="title1 mb-4" data-aos="fade-right" data-aos-duration=1500 data-aos-mirror="true">Zombie Survivors</h1>
+      <h5 class="mb-5" data-aos="fade-right" data-aos-delay=200 data-aos-duration=1500 data-aos-mirror="true">Un jeu mélangeant des éléments rogue-like à de la survie.</h6>
       <div class="home-buttons d-flex" data-aos="fade-right" data-aos-delay=350 data-aos-duration=1500 data-aos-mirror="true">
-        <a href="#" class="btn btn-danger play-now-btn me-3"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</a>
-        <a href="#" id="how-to-play-button" class="btn btn-primary how-to-play-button"><i class="fa-solid fa-question me-2"></i> Découvrir les règles du jeu</a>
+        <a href="#" class="btn btn-warning play-now-btn me-4"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</a>
+        <a href="#" id="how-to-play-button" class="btn btn-light how-to-play-button"><i class="fa-solid fa-question me-2"></i> Découvrir les règles du jeu</a>
       </div>
       
       
@@ -28,27 +27,29 @@ const HomePage = () => {
     <div class="zombie-img-div"></div>
   </section>
   <section id="how-to-play-section" class="how-to-play-section">
-    <h1 class="text-center">Règles</h1>
+    <h1 class="text-center mb-3">Règles</h1>
+    <h5 class="title2 text-center" data-aos="fade-in" data-aos-offset=90 data-aos-delay=200 data-aos-duration=1500 data-aos-mirror="true">Il n'y a nulle part où se cacher. Essayez de survivre toute la nuit 
+      parmi des hordes de zombies qui arrivent en continue sur vous...  <br> jusqu'à ce que la mort vous rattrape.</h5>
     <div class="how-to-play-content">
       <div class="box3 rounded shadow" data-aos="flip-right" data-aos-mirror="true">
         <div class="arrow-rules-img-div text-center mt-3">
         </div>
         <div class="text-center my-3">
-          <p class="fw-bold">Utiliser les flèches directionnelles pour déplacer.<br> Le personnage s'occupera de tirer automatiquement</p>
+          <p class="fw-bold">Utiliser les flèches directionnelles pour vous déplacer.<br> Le personnage s'occupera de tirer automatiquement.</p>
         </div>
       </div>
       <div class="box1 rounded shadow" data-aos="flip-down" data-aos-mirror="true">
         <div class="zombie2-img-div text-center mt-3">
         </div>
         <div class="text-center mt-3">
-          <p>Tuer les zombies pour augmenter votre score</p>
+          <p>Tuer les zombies pour augmenter votre score.</p>
         </div>
       </div>
       <div class="box2 rounded shadow" data-aos="flip-left" data-aos-mirror="true">
         <div class="gem-rules-img-div text-center mt-3">
         </div>
         <div class="text-center mt-3">
-          <p>Ramasser les crystaux laissés par les zombies vaincus pour améliorer votre arme une fois la barre chargée</p>
+          <p>Ramasser les crystaux laissés par les zombies vaincus pour améliorer votre arme une fois la barre chargée.</p>
         </div>
       </div>
       
@@ -56,9 +57,8 @@ const HomePage = () => {
   </section>
   <section class="instructions-section">
     <div class="instructions-content" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
-      <h1 class="title3 mb-3">Test animationOnScroll</h1>
-      <h6 class="title4 mb-5">Il n'y a nulle part où se cacher. Essayez de survivre toute la nuit 
-      parmi des hordes des zombies qui arrivent sur vous, <br>avant que la mort ne vous rattrape.</h6>
+      <h1 class="title3 mb-3">Conseil pour débutants: </h1>
+      <h6 class="title4 mb-5">Prenez votre temps pour ramasser les gemmes, ils ne disapparaitront pas</h6>
     </div>
   </section>
   <section class="end-section">
