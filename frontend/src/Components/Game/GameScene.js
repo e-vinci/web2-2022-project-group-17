@@ -8,7 +8,9 @@ import bonusAsset from '../../assets/bonus.png';
 import backgroundAsset from '../../assets/background.png';
 import zombieAsset from '../../assets/zombie.png';
 import bulletAsset from '../../assets/bullet.png';
-import dudeAsset from '../../assets/dude.png';
+// import dudeAsset from '../../assets/dude.png';
+import maincharacterAsset from '../../assets/maincharacter.png';
+import maincharactersprites from '../../assets/maincharactersprites.json';
 import gemAsset from '../../assets/gem.png';
 import XPbarAsset from '../../assets/XPbar.png';
 import XPcontainerAsset from '../../assets/XPcontainer.png';
@@ -19,7 +21,9 @@ import option3Asset from '../../assets/option3.png';
 // import { getAuthenticatedUser } from '../../utils/auths';
 
 
-const DUDE_KEY = 'dude';
+
+
+// const DUDE_KEY = 'dude';
 const ZOMBIE_KEY = 'zombie';
 const BULLET_KEY = 'bullet';
 const BONUS_KEY = 'bonus';
@@ -59,10 +63,13 @@ class GameScene extends Phaser.Scene {
     this.load.image('option2', option2Asset);
     this.load.image('option3', option3Asset);
     this.load.audio(DAMAGE_SOUND_KEY, damageSoundAsset);
+    /*
     this.load.spritesheet(DUDE_KEY, dudeAsset, {
       frameWidth: 32,
       frameHeight: 48,
     });
+    */
+    this.load.atlas('maincharacter', maincharacterAsset, maincharactersprites);
 
   }
 
@@ -156,20 +163,22 @@ class GameScene extends Phaser.Scene {
 
     if (this.cursors.left.isDown && !this.cursors.right.isDown) {
       this.player.setVelocityX(-this.playerStats.speed);
-      this.player.anims.play('left', true);
+      this.player.anims.play('walk-left', true);
     }
     else if (this.cursors.right.isDown && !this.cursors.left.isDown) {
       this.player.setVelocityX(this.playerStats.speed);
-      this.player.anims.play('right', true);
+      this.player.anims.play('walk-right', true);
     }
     else {
-      this.player.anims.play('turn');
+      this.player.anims.stop();
     }
     if (this.cursors.down.isDown && !this.cursors.up.isDown) {
       this.player.setVelocityY(this.playerStats.speed);
+      this.player.anims.play('walk-down', true);
     }
     else if (this.cursors.up.isDown && !this.cursors.down.isDown) {
       this.player.setVelocityY(-this.playerStats.speed);
+      this.player.anims.play('walk-up', true);
     }
 
     if (this.cursors.space.isDown) {
@@ -211,12 +220,66 @@ class GameScene extends Phaser.Scene {
   }
 
   createPlayer() {
+    const player = this.physics.add.sprite(400, 400, 'maincharacter');
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+
+    this.anims.create({
+      key: 'walk-down',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'walkdown',
+        end: 9,
+        zeroPad: 2,
+      }),
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'walk-up',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'walkup',
+        end: 9,
+        zeroPad: 2,
+      }),
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'walk-left',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'walkleft',
+        end: 9,
+        zeroPad: 2,
+      }),
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'walk-right',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'walkright',
+        end: 9,
+        zeroPad: 2,
+      }),
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'standing',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'standing',
+        end: 1,
+        zeroPad: 2,
+      }),
+      repeat: -1,
+    });
+    return player;
+  }
+  /*
+  createPlayer() {
     const player = this.physics.add.sprite(400, 400, DUDE_KEY);
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
     /* The 'left' animation uses frames 0, 1, 2 and 3 and runs at 10 frames per second.
     The 'repeat -1' value tells the animation to loop.
     */
+  /*  
     this.anims.create({
       key: 'left',
       frames: this.anims.generateFrameNumbers(DUDE_KEY, { start: 0, end: 3 }),
@@ -240,7 +303,7 @@ class GameScene extends Phaser.Scene {
     return player;
   }
 
-
+  */
 
   fireBullet() {
     this.bulletSpawner.spawn(this.player.x, this.player.y, this.playerStats.numberOfBullets);
