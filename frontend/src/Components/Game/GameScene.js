@@ -161,24 +161,36 @@ class GameScene extends Phaser.Scene {
 
     this.player.setVelocity(0);
 
-    if (this.cursors.left.isDown && !this.cursors.right.isDown) {
+    
+    if (this.cursors.left.isDown) {
       this.player.setVelocityX(-this.playerStats.speed);
       this.player.anims.play('walk-left', true);
     }
-    else if (this.cursors.right.isDown && !this.cursors.left.isDown) {
+    if (this.cursors.right.isDown) {
       this.player.setVelocityX(this.playerStats.speed);
       this.player.anims.play('walk-right', true);
     }
-    else {
-      this.player.anims.stop();
-    }
-    if (this.cursors.down.isDown && !this.cursors.up.isDown) {
+    if (this.cursors.down.isDown) {
       this.player.setVelocityY(this.playerStats.speed);
       this.player.anims.play('walk-down', true);
     }
-    else if (this.cursors.up.isDown && !this.cursors.down.isDown) {
+    if (this.cursors.up.isDown) {
       this.player.setVelocityY(-this.playerStats.speed);
       this.player.anims.play('walk-up', true);
+    }
+    if (this.cursors.up.isDown && this.cursors.down.isDown) {
+      this.player.setVelocityY(0);
+    }
+    if (this.cursors.left.isDown && this.cursors.right.isDown) {
+      this.player.setVelocityX(0);
+    }
+    if (
+      !this.cursors.left.isDown &&
+      !this.cursors.right.isDown &&
+      !this.cursors.down.isDown &&
+      !this.cursors.up.isDown
+    ) {
+      this.player.anims.stop();
     }
 
     if (this.cursors.space.isDown) {
