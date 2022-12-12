@@ -281,6 +281,52 @@ class GameScene extends Phaser.Scene {
       }),
       repeat: -1,
     });
+    this.anims.create({
+      key: 'sword-slash-up',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'swordup',
+        end: 6,
+        zeroPad: 2,
+      }),
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'sword-slash-left',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'swordleft',
+        end: 6,
+        zeroPad: 2,
+      }),
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'sword-slash-right',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'swordright',
+        end: 6,
+        zeroPad: 2,
+      }),
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'sword-slash-down',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'sworddown',
+        end: 6,
+        zeroPad: 2,
+      }),
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'death',
+      frames: this.anims.generateFrameNames('maincharacter', {
+        prefix: 'dead',
+        end: 6,
+        zeroPad: 2,
+      }),
+      repeat: 0,
+    });
     return player;
   }
   /*
@@ -415,7 +461,8 @@ class GameScene extends Phaser.Scene {
     this.playerStats.health -= 1;
 
     if (this.playerStats.health <= 0) {
-      this.gameOver();
+      this.player.anims.play('death', true);
+      // this.gameOver();
     }
   }
 
