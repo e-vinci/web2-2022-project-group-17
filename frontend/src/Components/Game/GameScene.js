@@ -95,9 +95,11 @@ class GameScene extends Phaser.Scene {
     const zombieSpawnEvent = new Phaser.Time.TimerEvent({ delay: 5000, loop: true, callback: this.spawnZombies, callbackScope: this });
     const fireBulletEvent = new Phaser.Time.TimerEvent({ delay: 4000, loop: true, callback: this.fireBullet, callbackScope: this });
     const bonusSpawnEvent = new Phaser.Time.TimerEvent({ delay: 10000, loop: true, callback: this.spawnBonus, callbackScope: this });
+    const whipEvent = new Phaser.Time.TimerEvent({delay : 3000, loop: true});
     this.time.addEvent(zombieSpawnEvent);
     this.time.addEvent(fireBulletEvent);
     this.time.addEvent(bonusSpawnEvent);
+    this.time.addEvent(whipEvent);
 
 
     this.health = 100;
@@ -120,28 +122,39 @@ class GameScene extends Phaser.Scene {
 
   update() {
     this.updateHealthBar();
+    
+    // eslint-disable-next-line no-console
+    // console.log(`LEFT: ${  this.cursors.left.isDown}`, `RIGHT: ${  this.cursors.right.isDown}`,`UP: ${  this.cursors.up.isDown}`,`DOWN: ${  this.cursors.down.isDown}`);
 
+    this.player.setVelocityX(0);
+    this.player.setVelocityY(0);
+    let animation = 'turn';
 
-    if (this.cursors.left.isDown) {
-      this.player.setVelocityX(-160);
-      this.player.anims.play('left', true);
+    if (this.cursors.left.isDown && !this.cursors.right.isDown) {
+      this.player.setVelocityX(-150);
+      animation = 'left';
     }
-    if (this.cursors.right.isDown) {
-      this.player.setVelocityX(160);
-      this.player.anims.play('right', true);
+    if (this.cursors.right.isDown && !this.cursors.left.isDown) {
+      this.player.setVelocityX(150);
+      animation = 'right';
     }
-    if (this.cursors.down.isDown) {
-      this.player.setVelocityY(160);
+    if (this.cursors.down.isDown && !this.cursors.up.isDown) {
+      this.player.setVelocityY(150);
     }
-    if (this.cursors.up.isDown) {
-      this.player.setVelocityY(-160);
+    if (this.cursors.up.isDown && !this.cursors.down.isDown) {
+      this.player.setVelocityY(-150);
     }
-    if (!this.cursors.left.isDown && !this.cursors.right.isDown && !this.cursors.down.isDown && !this.cursors.up.isDown) {
-      this.player.setVelocityX(0);
-      this.player.setVelocityY(0);
+
+    if(animation === 'turn'){
       this.player.anims.play('turn');
     }
-
+    else if (animation === 'left'){
+      this.player.anims.play('left', true);
+    }
+    else{
+      this.player.anims.play('right', true);
+    }
+    
     Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
       this.physics.moveToObject(zombie, this.player, 30),
     );
@@ -226,10 +239,16 @@ class GameScene extends Phaser.Scene {
     this.XPbar.x += 10;
     this.xp += 10;
     if (this.xp % 240 === 0) {
-      this.XPbar.x -= 240;
-      this.level += 1;
-      this.levelDisplay.setText(`LEVEL ${this.level}`);
+      this.levelUp();
     }
+  }
+
+  levelUp() {
+    this.XPbar.x -= 240;
+    this.level += 1;
+    this.levelDisplay.setText(`LEVEL ${this.level}`);
+    this.physics.pause();
+    
   }
 
   bulletHitZombie(zombie, bullet) {
