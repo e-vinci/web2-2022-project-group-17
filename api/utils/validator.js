@@ -12,7 +12,7 @@ function checkRegistrationFields(data) {
     errors.username = "Un nom d'utilisateur ne peut contenir que des lettres et chiffres";
     isValid = false;
   }
-  if (validator.isLength(data.username, { min: 3, max: 12})) {
+  if (!validator.isLength(data.username, { min: 3, max: 12})) {
     errors.username = "Un nom d'utilisateur doit être d'une longueur comprise entre 3 et 12 charactères";
     isValid = false;
   }
