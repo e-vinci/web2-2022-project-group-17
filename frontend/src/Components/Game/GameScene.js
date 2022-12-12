@@ -134,14 +134,9 @@ class GameScene extends Phaser.Scene {
 
 
 
-
-    this.health = 100;
-    this.level = 0;
-    this.xp = 0;
+    this.playerStats = {health: 100, level : 0, xp : 0, numberOfBullets : 0, pointsOfRegeneration : 0, speed : 100};
     this.zombiesInLastWave = 0;
-    this.numberOfBullets = 1;
-    this.pointsOfRegeneration = 0;
-    this.playerSpeed = 100;
+    
 
     this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
     this.physics.add.overlap(zombiesGroup, bulletsGroup, this.bulletHitZombie, null, this);
@@ -151,11 +146,7 @@ class GameScene extends Phaser.Scene {
 
 
     this.damageSound = this.sound.add(DAMAGE_SOUND_KEY);
-
-
-
   }
-
 
 
   update() {
@@ -164,21 +155,21 @@ class GameScene extends Phaser.Scene {
     this.player.setVelocity(0);
 
     if (this.cursors.left.isDown && !this.cursors.right.isDown) {
-      this.player.setVelocityX(-this.playerSpeed);
+      this.player.setVelocityX(-this.playerStats.speed);
       this.player.anims.play('left', true);
     }
     else if (this.cursors.right.isDown && !this.cursors.left.isDown) {
-      this.player.setVelocityX(this.playerSpeed);
+      this.player.setVelocityX(this.playerStats.speed);
       this.player.anims.play('right', true);
     }
     else {
       this.player.anims.play('turn');
     }
     if (this.cursors.down.isDown && !this.cursors.up.isDown) {
-      this.player.setVelocityY(this.playerSpeed);
+      this.player.setVelocityY(this.playerStats.speed);
     }
     else if (this.cursors.up.isDown && !this.cursors.down.isDown) {
-      this.player.setVelocityY(-this.playerSpeed);
+      this.player.setVelocityY(-this.playerStats.speed);
     }
 
     if (this.cursors.space.isDown) {
@@ -205,13 +196,13 @@ class GameScene extends Phaser.Scene {
 
   updateHealthBar() {
     let barColor = 0x00ff00;
-    if (this.health < 66 && this.health > 33) {
+    if (this.playerStats.health < 66 && this.playerStats.health > 33) {
       barColor = 0xffaa00;
     }
-    else if (this.health <= 33) {
+    else if (this.playerStats.health <= 33) {
       barColor = 0xff0d00;
     }
-    const barLength = 40 * this.health / 100;
+    const barLength = 40 * this.playerStats.health / 100;
     this.healthBar.clear();
     this.healthBar.lineStyle(1, 0x000000, 1);
     this.healthBar.strokeRoundedRect(this.player.x - 20, this.player.y + 30, 40, 11, 3);
@@ -252,13 +243,13 @@ class GameScene extends Phaser.Scene {
 
 
   fireBullet() {
-    this.bulletSpawner.spawn(this.player.x, this.player.y, this.numberOfBullets);
+    this.bulletSpawner.spawn(this.player.x, this.player.y, this.playerStats.numberOfBullets);
   }
 
 
   collectBonus(player, bonus) {
     bonus.destroy();
-    this.health = this.health + 20 > 100 ? 100 : this.health + 20;
+    this.playerStats.health = this.playerStats.health + 20 > 100 ? 100 : this.playerStats.health + 20;
   }
 
   collectGem(player, gem) {
@@ -269,14 +260,14 @@ class GameScene extends Phaser.Scene {
 
   gainXP() {
     this.XPbar.x += 10;
-    this.xp += 10;
-    if (this.xp % 240 === 0) {
+    this.playerStats.xp += 10;
+    if (this.playerStats.xp % 240 === 0) {
       this.levelUp();
     }
   }
 
   regenHealth() {
-    this.health += this.pointsOfRegeneration;
+    this.playerStats.health += this.playerStats.pointsOfRegeneration;
   }
 
   levelUp() {
@@ -292,21 +283,21 @@ class GameScene extends Phaser.Scene {
     this.option1Image.setVisible(true);
     this.option1Image.setInteractive();
     this.option1Image.on('pointerdown', () => {
-      this.numberOfBullets += 1;
+      this.playerStats.numberOfBullets += 1;
       this.resumeGame();
     });
     // Second option : gain health regeneration
     this.option2Image.setVisible(true);
     this.option2Image.setInteractive();
     this.option2Image.on('pointerdown', () => {
-      this.healthRegen += 1;
+      this.playerStats.pointsOfRegeneration += 1;
       this.resumeGame();
     });
     // Third option : increase speed by 5%
     this.option3Image.setVisible(true);
     this.option3Image.setInteractive();
     this.option3Image.on('pointerdown', () => {
-      this.playerSpeed *= 1.05;
+      this.playerStats.speed *= 1.05;
       this.resumeGame();
     });
   }
@@ -348,9 +339,9 @@ class GameScene extends Phaser.Scene {
   receiveDamage() {
     this.damageSound.play();
     // player.setTint(0xff0000); comment setTint pour seulement quelques frames?
-    this.health -= 1;
+    this.playerStats.health -= 1;
 
-    if (this.health <= 0) {
+    if (this.playerStats.health <= 0) {
       this.gameOver();
     }
   }
