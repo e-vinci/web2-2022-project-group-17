@@ -76,15 +76,11 @@ main {
 }
 
 
-
-
-
-
 .navbar-nav:nth-child(3) {
   margin-left: 150px;
 }
 
-.play-now-btn:hover {
+.play-now-btn:hover, .how-to-play-button:hover {
   transform: scale(1.1);
   transition: 0.4s;
 }
@@ -98,7 +94,7 @@ main {
 }
 
 .home-content > * {
-  opacity: 0;
+  opacity: 1;
 }
 
 .how-to-play-section {
@@ -149,7 +145,7 @@ main {
 }
 
 .instructions-content > * {
-  opacity: 0;
+  opacity: 1;
 }
 
 .end-section {

@@ -7,9 +7,16 @@ import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import '@fortawesome/fontawesome-free/js/brands'
 
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 import Navbar from './Components/Navbar/Navbar';
 import Router from './Components/Router/Router';
 import Footer from './Components/Footer/Footer';
+
+
+
+AOS.init();
 
 Navbar();
 

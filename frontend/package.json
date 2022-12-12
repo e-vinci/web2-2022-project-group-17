@@ -31,12 +31,11 @@
     "@fortawesome/fontawesome-free": "^6.2.1",
     "@popperjs/core": "^2.9.2",
     "animejs": "^3.2.1",
+    "aos": "^3.0.0-beta.6",
     "bootstrap": "^5.0.1",
     "bootstrap-icons": "^1.10.2",
     "clean-webpack-plugin": "^4.0.0",
     "phaser": "^3.55.2",
-    "scroll-to-element": "^2.0.3",
-    "scrollmagic": "^2.0.8",
     "terser-webpack-plugin": "^5.3.6",
     "webpack-merge": "^5.8.0"
   }

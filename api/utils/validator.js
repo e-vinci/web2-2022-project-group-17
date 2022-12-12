@@ -12,12 +12,16 @@ function checkRegistrationFields(data) {
     errors.username = "Un nom d'utilisateur ne peut contenir que des lettres et chiffres";
     isValid = false;
   }
+  if (validator.isLength(data.username, { min: 3, max: 12})) {
+    errors.username = "Un nom d'utilisateur doit être d'une longueur comprise entre 3 et 12 charactères";
+    isValid = false;
+  }
   if (validator.isEmpty(data.password)) {
     errors.password = "Un mot de passe est requis";
     isValid = false;
   }
   if (!validator.isLength(data.password, { min: 4, max: 120 })) {
-    errors.password = "Un mot de passe doit être d'un longueur supérieure à 4";
+    errors.password = "Un mot de passe doit être d'une longueur supérieure à 4";
     isValid = false;
   }
   if (validator.isEmpty(data.password2)) {
