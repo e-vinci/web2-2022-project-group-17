@@ -140,7 +140,7 @@ class GameScene extends Phaser.Scene {
     this.xp = 0;
     this.zombiesInLastWave = 0;
     this.numberOfBullets = 1;
-    this.healthRegen = 0;
+    this.pointsOfRegeneration = 0;
     this.playerSpeed = 100;
 
     this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
@@ -276,7 +276,7 @@ class GameScene extends Phaser.Scene {
   }
 
   regenHealth() {
-    this.health += this.regenHealth;
+    this.health += this.pointsOfRegeneration;
   }
 
   levelUp() {
