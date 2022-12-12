@@ -1,7 +1,7 @@
-import { clearPage } from '../../utils/render';
+import { clearPage, renderImage } from '../../utils/render';
 import mainCharacterImage from '../../img/maincharacter.png';
 import { getAllScores } from '../../models/scores';
-// import { getAuthenticatedUser } from '../../utils/auths';
+import crownImage from '../../img/crown.png';
 
 const LeaderboardPage = async () => {
   clearPage();
@@ -18,7 +18,8 @@ const LeaderboardPage = async () => {
   rankingsWrapper.innerHTML = scoresAsHtmlTable;
   main.appendChild(rankingsWrapper);
 
-  renderMainCharacterImage(mainCharacterImage);
+  renderImage(mainCharacterImage, 'main-character-div', 200, '.leaderboard-header');
+  renderImage(crownImage, 'crown-img-div', 50, '.rank1')
   
 };
 
@@ -33,7 +34,7 @@ function getScoresAsString(scores) {
     <table class="table leaderboard-table">
     <thead>
       <tr>
-        <th class="text-center">Rang</th>
+        <th class="text-info text-center">Rang</th>
         <th class="text-info" scope="col">Nom d'utilisateur</th>
         <th class="text-info text-end" scope="col">Score</th>
       </tr>
@@ -48,9 +49,12 @@ function getScoresAsString(scores) {
   scores.forEach((element) => {
     htmlScoresTable += `
     <tr>
-      <td class="text-center"> ${rank}</td>
-      <td class="nickname fw-bold text-white">${element.nickname}</td>
-      <td class="score text-white text-break text-end"> ${element.score}</a></td>
+      <td class="${isRank1(rank) ? 'fs-1 text-center align-middle p-0' : 'text-center align-middle'}"> ${rank}</td>
+      <td class="nickname fw-bold text-white">
+        <div class=${isRank1(rank) ? "fs-1" : ""}>${element.nickname}<span class="rank1 ms-2"></span></div> 
+        
+      </td>  
+      <td class="${isRank1(rank) ? 'score text-white text-break text-end align-middle fs-1' : 'score text-white text-break text-end align-middle'}"> ${element.score}</a></td>
     </tr>
     `;
     rank += 1;
@@ -59,12 +63,8 @@ function getScoresAsString(scores) {
   return htmlScoresTable;
 }
 
-function renderMainCharacterImage(mainCharacterUrl) {
-  const image = document.createElement('img');
-  image.src = mainCharacterUrl;
-  image.height = 200;
-  const header = document.querySelector('.leaderboard-header');
-  header.appendChild(image);
+function isRank1(rank) {
+  return rank === 1;
 }
 
 export default LeaderboardPage;

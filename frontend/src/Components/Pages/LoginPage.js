@@ -16,7 +16,7 @@ function renderLoginForm() {
   const formWrapper = document.createElement('div');
   formWrapper.className = 'formWrapper border w-25 d-flex flex-column align-items-center rounded';
   const formTop = document.createElement('div');
-  formTop.className = 'form-top w-100';
+  formTop.className = 'form-top w-100 my-2';
   const formTopDiv = document.createElement('div');
   const formTopTitle = document.createElement('h1');
   formTopDiv.className = 'text-center';
@@ -78,7 +78,7 @@ function renderLoginForm() {
   submit.className = 'btn btn-success';
 
   const alreadyHasDiv = document.createElement('div');
-  alreadyHasDiv.className = 'text-center';
+  alreadyHasDiv.className = 'text-center mb-2';
   alreadyHasDiv.innerHTML = `<p>Pas encore de compte? <a href="#">Inscrivez-vous maintenant.</a></p>`
   
   inputGroup1Span.appendChild(inputGroup1I);

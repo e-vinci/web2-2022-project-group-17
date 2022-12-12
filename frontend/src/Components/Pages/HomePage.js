@@ -1,5 +1,5 @@
-import anime from 'animejs/lib/anime.es';
-import { clearPage } from '../../utils/render';
+// import anime from 'animejs/lib/anime.es';
+import { clearPage, renderImage } from '../../utils/render';
 import { isAuthenticated } from '../../utils/auths';
 import Navigate from '../Router/Navigate';
 
@@ -14,45 +14,51 @@ const HomePage = () => {
   
   const homePage = `
   <section class="intro-section"> 
-    <div class="home-content">
-      <h1 class="title1 mb-3">Zombie Survivors</h1>
-      <h6 class="title2 mb-5">Il n'y a nulle part où se cacher. Essayez de survivre toute la nuit 
-      parmi des hordes des zombies qui arrivent sur vous, <br>avant que la mort ne vous rattrape.</h6>
-      <a href="#" class="btn btn-danger play-now-btn"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</a>
+    <div class="home-content" data-aos="fade-right" data-aos-mirror="true">
+      <h1 class="title1 mb-4" data-aos="fade-right" data-aos-duration=1500 data-aos-mirror="true">Zombie Survivors</h1>
+      <h5 class="mb-5" data-aos="fade-right" data-aos-delay=200 data-aos-duration=1500 data-aos-mirror="true">Un jeu mélangeant des éléments rogue-like à de la survie.</h6>
+      <div class="home-buttons d-flex" data-aos="fade-right" data-aos-delay=350 data-aos-duration=1500 data-aos-mirror="true">
+        <a href="#" class="btn btn-warning play-now-btn me-4"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</a>
+        <a href="#" id="how-to-play-button" class="btn btn-light how-to-play-button"><i class="fa-solid fa-question me-2"></i> Découvrir les règles du jeu</a>
+      </div>
+      
+      
     </div>
     <div class="zombie-img-div"></div>
   </section>
-  <section class="how-to-play-section">
+  <section id="how-to-play-section" class="how-to-play-section">
+    <h1 class="text-center mb-3">Règles</h1>
+    <h5 class="title2 text-center" data-aos="fade-in" data-aos-offset=90 data-aos-delay=200 data-aos-duration=1500 data-aos-mirror="true">Il n'y a nulle part où se cacher. Essayez de survivre toute la nuit 
+      parmi des hordes de zombies qui arrivent en continue sur vous...  <br> jusqu'à ce que la mort vous rattrape.</h5>
     <div class="how-to-play-content">
-      <div class="box3 rounded shadow">
+      <div class="box3 rounded shadow" data-aos="flip-right" data-aos-mirror="true">
         <div class="arrow-rules-img-div text-center mt-3">
         </div>
         <div class="text-center my-3">
-          <p>Utilisez les flèches directionnelles pour déplacer.<br> Le personnage s'occupera de tirer automatiquement</p>
+          <p class="fw-bold">Utiliser les flèches directionnelles pour vous déplacer.<br> Le personnage s'occupera de tirer automatiquement.</p>
         </div>
       </div>
-      <div class="box1 rounded shadow">
+      <div class="box1 rounded shadow" data-aos="flip-down" data-aos-mirror="true">
         <div class="zombie2-img-div text-center mt-3">
         </div>
         <div class="text-center mt-3">
-          <p>Tuer les zombies pour augmenter votre score</p>
+          <p>Tuer les zombies pour augmenter votre score.</p>
         </div>
       </div>
-      <div class="box2 rounded shadow">
+      <div class="box2 rounded shadow" data-aos="flip-left" data-aos-mirror="true">
         <div class="gem-rules-img-div text-center mt-3">
         </div>
         <div class="text-center mt-3">
-          <p>Ramassez les crystaux laissés par les zombies vaincus pour améliorer votre arme une fois la barre chargée</p>
+          <p>Ramasser les crystaux laissés par les zombies vaincus pour améliorer votre arme une fois la barre chargée.</p>
         </div>
       </div>
       
     </div>
   </section>
   <section class="instructions-section">
-    <div class="instructions-content">
-      <h1 class="title3 mb-3">Test animationOnScroll</h1>
-      <h6 class="title4 mb-5">Il n'y a nulle part où se cacher. Essayez de survivre toute la nuit 
-      parmi des hordes des zombies qui arrivent sur vous, <br>avant que la mort ne vous rattrape.</h6>
+    <div class="instructions-content" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
+      <h1 class="title3 mb-3">Conseil pour débutants: </h1>
+      <h6 class="title4 mb-5">Prenez votre temps pour ramasser les gemmes, ils ne disapparaitront pas</h6>
     </div>
   </section>
   <section class="end-section">
@@ -60,11 +66,14 @@ const HomePage = () => {
   `
   main.innerHTML = homePage;
 
-  renderImage(zombieImage, 'zombieImage', 500, '.zombie-img-div' );
+  renderImage(zombieImage, 'zombieImage', 500, '.zombie-img-div');
   renderImage(arrowKeysImage , 'arrowKeyImage', 50, '.arrow-rules-img-div');
   renderImage(gemImage, 'gemImage', 50, '.gem-rules-img-div');
   renderImage(zombie2Image, 'zombie2Image', 50, '.zombie2-img-div');
 
+
+
+  /*
   
   anime({
     targets: '.title1',
@@ -85,7 +94,7 @@ const HomePage = () => {
   });
 
   anime({
-    targets: '.play-now-btn',
+    targets: '.home-buttons',
     translateX: 150,
     duration: 2200,
     delay: 400,
@@ -112,7 +121,7 @@ const HomePage = () => {
     animation3.seek((scrollPercent / 100) * animation3.duration);
   };
 
-
+  */
 
   const playNowButton = document.querySelector('.play-now-btn');
   playNowButton.addEventListener('click', (e) => {
@@ -124,17 +133,17 @@ const HomePage = () => {
     }
   });
 
+
+  const button = document.querySelector('#how-to-play-button');
+  const howToPlaySection = document.querySelector('#how-to-play-section');
+
+  button.addEventListener('click', (e) => {
+    e.preventDefault();
+    howToPlaySection.scrollIntoView();
+  });
+
+
 }; 
-
-
-function renderImage(url, className, height, div) {
-  const image = document.createElement('img');
-  image.className = className;
-  image.src = url;
-  image.height = height;
-  const imageWrapper = document.querySelector(div);
-  imageWrapper.append(image);
-}
 
 
 export default HomePage;
