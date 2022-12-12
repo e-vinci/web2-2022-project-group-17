@@ -13,6 +13,9 @@ import gemAsset from '../../assets/gem.png';
 import XPbarAsset from '../../assets/XPbar.png';
 import XPcontainerAsset from '../../assets/XPcontainer.png';
 import damageSoundAsset from '../../assets/sounds/damage.mp3';
+import option1Asset from '../../assets/option1.png';
+import option2Asset from '../../assets/option2.png';
+import option3Asset from '../../assets/option3.png';
 // import { getAuthenticatedUser } from '../../utils/auths';
 
 
@@ -52,11 +55,15 @@ class GameScene extends Phaser.Scene {
     this.load.image(GEM_KEY, gemAsset);
     this.load.image('XPcontainer', XPcontainerAsset);
     this.load.image('XPbar', XPbarAsset);
+    this.load.image('option1', option1Asset);
+    this.load.image('option2', option2Asset);
+    this.load.image('option3', option3Asset);
     this.load.audio(DAMAGE_SOUND_KEY, damageSoundAsset);
     this.load.spritesheet(DUDE_KEY, dudeAsset, {
       frameWidth: 32,
       frameHeight: 48,
     });
+
   }
 
 
@@ -74,7 +81,8 @@ class GameScene extends Phaser.Scene {
     const gemsGroup = this.gemSpawner.group;
     this.healthBar = this.add.graphics();
 
-    // XP bar
+
+    // Display XP bar
     const XPcontainer = this.add.sprite(400, 20, "XPcontainer");
     this.XPbar = this.add.sprite(XPcontainer.x, XPcontainer.y, "XPbar");
     this.XPMask = this.add.sprite(this.XPbar.x, this.XPbar.y, "XPbar");
@@ -82,30 +90,58 @@ class GameScene extends Phaser.Scene {
     this.XPbar.mask = new Phaser.Display.Masks.BitmapMask(this, this.XPMask);
     this.XPbar.x -= 250;
 
-    // Displays current XP level
+    // Display current XP level
     const styleLevelDisplay = { fontSize: '13px', fontStyle: 'bold', fontFamily: 'Arial', fill: '#FFFFFF' };
     this.levelDisplay = this.add.text(375, 14, "LEVEL 0", styleLevelDisplay);
 
-    // Displays player's name
+    // Display player's name
     // this.nickname = getAuthenticatedUser().username;
     const stylePlayerName = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' }
     this.nameDisplay = this.add.text(575, 14, `Player : ${this.nickname}`, stylePlayerName);
 
 
-    const zombieSpawnEvent = new Phaser.Time.TimerEvent({ delay: 5000, loop: true, callback: this.spawnZombies, callbackScope: this });
-    const fireBulletEvent = new Phaser.Time.TimerEvent({ delay: 4000, loop: true, callback: this.fireBullet, callbackScope: this });
-    const bonusSpawnEvent = new Phaser.Time.TimerEvent({ delay: 10000, loop: true, callback: this.spawnBonus, callbackScope: this });
-    const whipEvent = new Phaser.Time.TimerEvent({delay : 3000, loop: true});
+    const healthRegenEvent = new Phaser.Time.TimerEvent({ delay: 3000, loop: true, callback: this.regenHealth, callbackScope: this });
+    const zombieSpawnEvent = new Phaser.Time.TimerEvent({ delay: 7500, loop: true, callback: this.spawnZombies, callbackScope: this });
+    const fireBulletEvent = new Phaser.Time.TimerEvent({ delay: 3500, loop: true, callback: this.fireBullet, callbackScope: this });
+    const bonusSpawnEvent = new Phaser.Time.TimerEvent({ delay: 15000, loop: true, callback: this.spawnBonus, callbackScope: this });
+    // const flameEvent = new Phaser.Time.TimerEvent({delay : 3000, loop: true, callback: this.flameAttack, callbackScope: this});
+    this.time.addEvent(healthRegenEvent);
     this.time.addEvent(zombieSpawnEvent);
     this.time.addEvent(fireBulletEvent);
     this.time.addEvent(bonusSpawnEvent);
-    this.time.addEvent(whipEvent);
+    // this.time.addEvent(flameEvent);
+
+
+    // Level up text
+    const centerX = this.scale.width * 0.5;
+    const centerY = this.scale.height * 0.5;
+    this.levelUpText = this.add.text(centerX, centerY - 100, 'LEVEL UP !',
+      {
+        fontSize: '52px',
+        color: '#ffffff',
+        fontStyle: 'bold'
+      }
+    ).setOrigin(0.5);
+    this.levelUpText.setVisible(false);
+
+    // Level up options
+    this.option1Image = this.add.image(200, 300, 'option1');
+    this.option1Image.setVisible(false);
+    this.option2Image = this.add.image(350, 300, 'option2');
+    this.option2Image.setVisible(false);
+    this.option3Image = this.add.image(500, 300, 'option3');
+    this.option3Image.setVisible(false);
+
+
 
 
     this.health = 100;
     this.level = 0;
     this.xp = 0;
     this.zombiesInLastWave = 0;
+    this.numberOfBullets = 1;
+    this.healthRegen = 0;
+    this.playerSpeed = 100;
 
     this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
     this.physics.add.overlap(zombiesGroup, bulletsGroup, this.bulletHitZombie, null, this);
@@ -116,47 +152,41 @@ class GameScene extends Phaser.Scene {
 
     this.damageSound = this.sound.add(DAMAGE_SOUND_KEY);
 
+
+
   }
 
 
 
   update() {
     this.updateHealthBar();
-    
-    // eslint-disable-next-line no-console
-    // console.log(`LEFT: ${  this.cursors.left.isDown}`, `RIGHT: ${  this.cursors.right.isDown}`,`UP: ${  this.cursors.up.isDown}`,`DOWN: ${  this.cursors.down.isDown}`);
 
-    this.player.setVelocityX(0);
-    this.player.setVelocityY(0);
-    let animation = 'turn';
+    this.player.setVelocity(0);
 
     if (this.cursors.left.isDown && !this.cursors.right.isDown) {
-      this.player.setVelocityX(-150);
-      animation = 'left';
-    }
-    if (this.cursors.right.isDown && !this.cursors.left.isDown) {
-      this.player.setVelocityX(150);
-      animation = 'right';
-    }
-    if (this.cursors.down.isDown && !this.cursors.up.isDown) {
-      this.player.setVelocityY(150);
-    }
-    if (this.cursors.up.isDown && !this.cursors.down.isDown) {
-      this.player.setVelocityY(-150);
-    }
-
-    if(animation === 'turn'){
-      this.player.anims.play('turn');
-    }
-    else if (animation === 'left'){
+      this.player.setVelocityX(-this.playerSpeed);
       this.player.anims.play('left', true);
     }
-    else{
+    else if (this.cursors.right.isDown && !this.cursors.left.isDown) {
+      this.player.setVelocityX(this.playerSpeed);
       this.player.anims.play('right', true);
     }
-    
+    else {
+      this.player.anims.play('turn');
+    }
+    if (this.cursors.down.isDown && !this.cursors.up.isDown) {
+      this.player.setVelocityY(this.playerSpeed);
+    }
+    else if (this.cursors.up.isDown && !this.cursors.down.isDown) {
+      this.player.setVelocityY(-this.playerSpeed);
+    }
+
+    if (this.cursors.space.isDown) {
+      this.levelUp();
+    }
+
     Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
-      this.physics.moveToObject(zombie, this.player, 30),
+      this.physics.moveToObject(zombie, this.player, 25),
     );
 
   }
@@ -219,8 +249,10 @@ class GameScene extends Phaser.Scene {
     return player;
   }
 
+
+
   fireBullet() {
-    this.bulletSpawner.spawn(this.player.x, this.player.y);
+    this.bulletSpawner.spawn(this.player.x, this.player.y, this.numberOfBullets);
   }
 
 
@@ -243,12 +275,49 @@ class GameScene extends Phaser.Scene {
     }
   }
 
+  regenHealth() {
+    this.health += this.regenHealth;
+  }
+
   levelUp() {
     this.XPbar.x -= 240;
     this.level += 1;
     this.levelDisplay.setText(`LEVEL ${this.level}`);
     this.physics.pause();
-    
+    // TODO : pause time to stop timer events
+    this.time.paused = true;
+
+    this.levelUpText.setVisible(true);
+    // First option : gain 1 fireball
+    this.option1Image.setVisible(true);
+    this.option1Image.setInteractive();
+    this.option1Image.on('pointerdown', () => {
+      this.numberOfBullets += 1;
+      this.resumeGame();
+    });
+    // Second option : gain health regeneration
+    this.option2Image.setVisible(true);
+    this.option2Image.setInteractive();
+    this.option2Image.on('pointerdown', () => {
+      this.healthRegen += 1;
+      this.resumeGame();
+    });
+    // Third option : increase speed by 5%
+    this.option3Image.setVisible(true);
+    this.option3Image.setInteractive();
+    this.option3Image.on('pointerdown', () => {
+      this.playerSpeed *= 1.05;
+      this.resumeGame();
+    });
+  }
+
+  resumeGame() {
+    this.option1Image.setVisible(false);
+    this.option2Image.setVisible(false);
+    this.option3Image.setVisible(false);
+    this.levelUpText.setVisible(false);
+    this.physics.resume();
+    this.time.paused = false;
   }
 
   bulletHitZombie(zombie, bullet) {
@@ -256,6 +325,16 @@ class GameScene extends Phaser.Scene {
     bullet.destroy();
     this.gemSpawner.spawn(zombie.x, zombie.y);
   }
+
+  /*
+  flameAttack(){
+    Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
+      Math.abs(zombie.x - this.player.x) < 100 && Math.abs(zombie.y - this.player.y ) < 30 ? zombie.destroy() : null
+    );
+    this.player.anims.play('flameRight');
+  }
+  */
+
 
   createScoreLabel(x, y, score) {
     const style = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' };

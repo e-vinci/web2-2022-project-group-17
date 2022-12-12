@@ -16,15 +16,11 @@ export default class BulletSpawner {
         return this._group;
     }
 
-    // Spawns bullets in a radial way centered on x,y
-    spawn(x, y) {
-        const numberOfBullets = 10;
+    spawn(x, y, numberOfBullets) {
         for (let i = 0; i < numberOfBullets ; i+=1) {
             const bullet = this._group.create(x, y, this.key);
             bullet.setVelocityX(Math.sin(i/numberOfBullets*2*Math.PI)*100);
             bullet.setVelocityY(Math.cos(i/numberOfBullets*2*Math.PI)*100);
         }
-
-        // TODO: make sure bullets destroy after leaving scene
     }
 }
