@@ -155,15 +155,16 @@ class GameScene extends Phaser.Scene {
         color: '#ffffff',
         fontStyle: 'bold',
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setScrollFactor(0);
     this.levelUpText.setVisible(false);
 
     // Level up options
-    this.option1Image = this.add.image(200, 300, 'option1');
+    this.option1Image = this.add.image(200, 300, 'option1').setScrollFactor(0);
     this.option1Image.setVisible(false);
-    this.option2Image = this.add.image(350, 300, 'option2');
+    this.option2Image = this.add.image(350, 300, 'option2').setScrollFactor(0);
     this.option2Image.setVisible(false);
-    this.option3Image = this.add.image(500, 300, 'option3');
+    this.option3Image = this.add.image(500, 300, 'option3').setScrollFactor(0);
     this.option3Image.setVisible(false);
 
     this.playerStats = {
@@ -233,14 +234,8 @@ class GameScene extends Phaser.Scene {
         this.player.setVelocityX(this.playerStats.speed);
       }
     }
-    /*
-    if (this.cursors.up.isDown && this.cursors.down.isDown) {
-      this.player.setVelocityY(0);
-    }
-    if (this.cursors.left.isDown && this.cursors.right.isDown) {
-      this.player.setVelocityX(0);
-    }
-    */
+    
+
 
     if (!moving) {
       this.player.anims.stop();
@@ -428,16 +423,15 @@ class GameScene extends Phaser.Scene {
   */
 
   fireBullet() {
+    if (this.zombieSpawner.group.getChildren().length !== 0) {
     const bullets = this.bulletSpawner.spawn(
       this.player.x,
       this.player.y,
       this.playerStats.numberOfBullets,
     );
     bullets.forEach((bullet) => {
-      if (this.zombieSpawner.group.getChildren().length !== 0) {
-        this.physics.moveToObject(bullet, this.zombieSpawner.group.getChildren()[0], 100);
-      }
-    });
+        this.physics.moveToObject(bullet, this.zombieSpawner.group.getChildren()[0], 300);
+    })};
   }
 
   collectBonus(player, bonus) {
@@ -550,7 +544,7 @@ class GameScene extends Phaser.Scene {
 
   async registerScore() {
     const { score } = this.scoreLabel;
-    const { username } = this.username;
+    const { username } = this;
     const options = {
       method: 'POST',
       body: JSON.stringify({
