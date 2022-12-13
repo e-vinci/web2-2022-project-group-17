@@ -5,7 +5,7 @@ import BulletSpawner from './BulletSpawner';
 import BonusSpawner from './BonusSpawner';
 import GemSpawner from './GemSpawner';
 import bonusAsset from '../../assets/bonus.png';
-import backgroundAsset from '../../assets/background.png';
+// import backgroundAsset from '../../assets/background.png';
 import zombieAsset from '../../assets/zombie.png';
 import bulletAsset from '../../assets/bullet.png';
 // import dudeAsset from '../../assets/dude.png';
@@ -17,7 +17,9 @@ import XPcontainerAsset from '../../assets/XPcontainer.png';
 import damageSoundAsset from '../../assets/sounds/damage.mp3';
 import option1Asset from '../../assets/option1.png';
 import option2Asset from '../../assets/option2.png';
-import option3Asset from '../../assets/option3.png';
+import option3Asset from '../../assets/option3.png'; 
+import tilesAssets from '../../assets/tileset.png';
+import mapJSON from '../../assets/map.json';
 import { getAuthenticatedUser } from '../../utils/auths';
 
 // const DUDE_KEY = 'dude';
@@ -46,12 +48,13 @@ class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', backgroundAsset);
+    this.load.image('background', tilesAssets);
+    this.load.tilemapTiledJSON('map', mapJSON);
     this.load.image(ZOMBIE_KEY, zombieAsset);
     this.load.image(BULLET_KEY, bulletAsset);
     this.load.image(BONUS_KEY, bonusAsset);
     this.load.image(GEM_KEY, gemAsset);
-    this.load.image('XPcontainer', XPcontainerAsset);
+    this.load.image('XPcontainer', XPcontainerAsset);  
     this.load.image('XPbar', XPbarAsset);
     this.load.image('option1', option1Asset);
     this.load.image('option2', option2Asset);
@@ -67,7 +70,15 @@ class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(400, 300, 'background');
+    const mapLevel = this.add.tilemap('map');
+    const tileset = mapLevel.addTilesetImage('tileset', 'background');
+    // eslint-disable-next-line no-unused-vars
+    const backgroundLayer = mapLevel.createLayer('Tile Layer 1', tileset);
+    this.physics.world.setBounds( 0, 0, 2302, 2302);
+    // const map = this.make.tilemap({ key: 'map', tileHeight: 16, tileWidth: 16});
+    // const tileset = map.addTilesetImage('tileset ', 'tiles', 16, 16);
+    // eslint-disable-next-line no-unused-vars
+    // const layer = map.createLayer('top', tileset, 0, 0);
     this.player = this.createPlayer();
     this.scoreLabel = this.createScoreLabel(40, 20, 0).setScrollFactor(0);
     this.zombieSpawner = new ZombieSpawner(this, ZOMBIE_KEY);
@@ -98,7 +109,7 @@ class GameScene extends Phaser.Scene {
     this.levelDisplay = this.add.text(375, 14, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
 
     // Display player's name
-    this.nickname = getAuthenticatedUser().username;
+    this.username = getAuthenticatedUser().username;
     const stylePlayerName = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' };
     this.nameDisplay = this.add
       .text(575, 14, `Player : ${this.username}`, stylePlayerName)
@@ -281,7 +292,7 @@ class GameScene extends Phaser.Scene {
       key: 'walk-down',
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'walkdown',
-        end: 9,
+        end: 8,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -291,7 +302,7 @@ class GameScene extends Phaser.Scene {
       key: 'walk-up',
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'walkup',
-        end: 9,
+        end: 8,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -301,7 +312,7 @@ class GameScene extends Phaser.Scene {
       key: 'walk-left',
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'walkleft',
-        end: 9,
+        end: 8,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -311,7 +322,7 @@ class GameScene extends Phaser.Scene {
       key: 'walk-right',
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'walkright',
-        end: 9,
+        end: 8,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -321,7 +332,7 @@ class GameScene extends Phaser.Scene {
       key: 'standing',
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'standing',
-        end: 1,
+        end: 0,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -331,7 +342,7 @@ class GameScene extends Phaser.Scene {
       key: 'sword-swing-up',
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'swordup',
-        end: 6,
+        end: 5,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -342,7 +353,7 @@ class GameScene extends Phaser.Scene {
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'swordleft',
         start: 0,
-        end: 6,
+        end: 5,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -353,7 +364,7 @@ class GameScene extends Phaser.Scene {
       key: 'sword-swing-right',
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'swordright',
-        end: 6,
+        end: 5,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -363,7 +374,7 @@ class GameScene extends Phaser.Scene {
       key: 'sword-swing-down',
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'sworddown',
-        end: 6,
+        end: 5,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -373,7 +384,7 @@ class GameScene extends Phaser.Scene {
       key: 'death',
       frames: this.anims.generateFrameNames('maincharacter', {
         prefix: 'dead',
-        end: 6,
+        end: 5,
         zeroPad: 2,
       }),
       frameRate: 15,
@@ -539,11 +550,11 @@ class GameScene extends Phaser.Scene {
 
   async registerScore() {
     const { score } = this.scoreLabel;
-    const { nickname } = this.nickname;
+    const { username } = this.username;
     const options = {
       method: 'POST',
       body: JSON.stringify({
-        nickname,
+        username,
         score,
       }),
       headers: {

@@ -47,11 +47,11 @@ export default class UIGameOver extends Phaser.Scene {
         const scores = await response.json();
         for(let i = 0; i < 10 ;i+=1){
             this.add.text(270, 225 + 15 * i, i + 1);
-            if(getAuthenticatedUser().username === scores[i].nickname){
-                this.add.text(300, 225 + 15 * i, scores[i].nickname, {color:'red'})
+            if(getAuthenticatedUser().username === scores[i].username){
+                this.add.text(300, 225 + 15 * i, scores[i].username, {color:'red'})
             }
             else{
-                this.add.text(300,225 + 15 * i, scores[i].nickname);
+                this.add.text(300,225 + 15 * i, scores[i].username);
             }
             this.add.text(450, 225 + 15*i, scores[i].score);
         }
