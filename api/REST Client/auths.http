@@ -87,6 +87,5 @@ Content-Type: application/json
     "password2":"1234"
 }
 
-### NOT WORKING
 ### Logout any user
 GET {{baseUrl}}/auths/logout

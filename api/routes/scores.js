@@ -8,14 +8,31 @@ const router = express.Router();
 // const jsonDbPath = path.join(__dirname, '/../data/scores.json');
 
 
-// get all scores
+// get scores
 router.get('/', (req, res) => {
   /*
   const scores = parse(jsonDbPath, SCORES);
   orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
   */
+  const top = req?.query?.top;
   const scores = readAllScores();
-  const orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
+  let orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
+  if(top){
+    orderedLeaderboard = orderedLeaderboard.slice(0, top);
+  }
+  return res.json(orderedLeaderboard);
+});
+
+
+// get scores from user
+router.get('/:user', (req, res) => {
+  /*
+  const scores = parse(jsonDbPath, SCORES);
+  orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
+  */
+  const scores = readAllScores();
+  let orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
+  orderedLeaderboard = orderedLeaderboard.filter(score => score.nickname === req.params.user);
   return res.json(orderedLeaderboard);
 });
 
