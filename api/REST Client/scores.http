@@ -4,12 +4,17 @@
 GET {{baseUrl}}/scores?top=3
 
 
+
+### read all scores
+GET {{baseUrl}}/scores
+
+
 ### add Jason's score
 POST {{baseUrl}}/scores
 Content-Type: application/json
 
 {
-  "nickname": "Jason",
+  "username": "Jason",
   "score": 500
 }
 
@@ -21,6 +26,6 @@ POST {{baseUrl}}/scores
 Content-Type: application/json
 
 {
-  "nickname": "Jaques",
+  "username": "Jaques",
   "score": 600
 }

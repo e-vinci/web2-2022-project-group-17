@@ -18,7 +18,7 @@ import damageSoundAsset from '../../assets/sounds/damage.mp3';
 import option1Asset from '../../assets/option1.png';
 import option2Asset from '../../assets/option2.png';
 import option3Asset from '../../assets/option3.png';
-// import { getAuthenticatedUser } from '../../utils/auths';
+import { getAuthenticatedUser } from '../../utils/auths';
 
 // const DUDE_KEY = 'dude';
 const ZOMBIE_KEY = 'zombie';
@@ -98,10 +98,10 @@ class GameScene extends Phaser.Scene {
     this.levelDisplay = this.add.text(375, 14, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
 
     // Display player's name
-    // this.nickname = getAuthenticatedUser().username;
+    this.nickname = getAuthenticatedUser().username;
     const stylePlayerName = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' };
     this.nameDisplay = this.add
-      .text(575, 14, `Player : ${this.nickname}`, stylePlayerName)
+      .text(575, 14, `Player : ${this.username}`, stylePlayerName)
       .setScrollFactor(0);
 
     const healthRegenEvent = new Phaser.Time.TimerEvent({

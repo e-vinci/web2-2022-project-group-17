@@ -6,22 +6,22 @@ const jsonDbPath = path.join(`${__dirname  }/../data/scores.json`);
 const defaultScores = [
   {
     id: 1,
-    nickname: 'Denis',
+    username: 'Denis',
     score: 300,
   },
   {
     id: 2,
-    nickname: 'Thomas',
+    username: 'Thomas',
     score: 350,
   },
   {
     id: 3,
-    nickname: 'Daniel',
+    username: 'Daniel',
     score: 200,
   },
   {
     id: 4,
-    nickname: 'Jean',
+    username: 'Jean',
     score: 100,
   },
 ];
@@ -33,11 +33,12 @@ function readAllScores() {
   return scores;
 }
 
-function addOneScore(nickname, score) {
+function addOneScore(username, score) {
   const scores = parse(jsonDbPath, defaultScores);
 
   const newScore = {
-    nickname,
+    id: getNextId(),
+    username,
     score,
   };
 
@@ -63,6 +64,15 @@ function updateOneScore(nickname, scoreToBeUpdated) {
   return;
 }
 */
+
+function getNextId() {
+  const scores = parse(jsonDbPath, defaultScores);
+  const lastItemIndex = scores?.length !== 0 ? scores.length - 1 : undefined;
+  if (lastItemIndex === undefined) return 1;
+  const lastId = scores[lastItemIndex]?.id;
+  const nextId = lastId + 1;
+  return nextId;
+}
 
 module.exports = {
   readAllScores,

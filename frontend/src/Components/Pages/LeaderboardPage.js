@@ -51,7 +51,7 @@ function getScoresAsString(scores) {
     <tr>
       <td class="${isRank1(rank) ? 'fs-1 text-center align-middle p-0' : 'text-center align-middle'}"> ${rank}</td>
       <td class="nickname fw-bold text-white">
-        <div class=${isRank1(rank) ? "fs-1" : ""}>${element.nickname}<span class="rank1 ms-2"></span></div> 
+        <div class=${isRank1(rank) ? "fs-1" : ""}>${element.username}<span class="rank1 ms-2"></span></div> 
         
       </td>  
       <td class="${isRank1(rank) ? 'score text-white text-break text-end align-middle fs-1' : 'score text-white text-break text-end align-middle'}"> ${element.score}</a></td>
