@@ -1,7 +1,8 @@
 @baseUrl = http://localhost:3000
 
-### read all scores
-GET {{baseUrl}}/scores
+### read top 3 scores
+GET {{baseUrl}}/scores?top=3
+
 
 ### add Jason's score
 POST {{baseUrl}}/scores
@@ -11,6 +12,9 @@ Content-Type: application/json
   "nickname": "Jason",
   "score": 500
 }
+
+### read Jason's scores
+GET {{baseUrl}}/scores/Jason
 
 ### add Jaques's score
 POST {{baseUrl}}/scores
