@@ -25,7 +25,8 @@ Content-Type: application/json
 
 {
     "username":"manager",
-    "password":"manager"
+    "password":"manager",
+    "password2":"manager"
 }
 
 ### Login the manager user
@@ -43,7 +44,8 @@ Content-Type: application/json
 
 {
     "username":"guest",
-    "password":"guest"
+    "password":"guest",
+    "password2":"guest"
 }
 
 ### Login the guest user
@@ -84,3 +86,7 @@ Content-Type: application/json
     "password":"1234",
     "password2":"1234"
 }
+
+### NOT WORKING
+### Logout any user
+GET {{baseUrl}}/auths/logout
