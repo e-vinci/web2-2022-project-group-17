@@ -32,7 +32,7 @@ router.get('/:user', (req, res) => {
   */
   const scores = readAllScores();
   let orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
-  orderedLeaderboard = orderedLeaderboard.filter(score => score.nickname === req.params.user);
+  orderedLeaderboard = orderedLeaderboard.filter(score => score.username === req.params.user);
   return res.json(orderedLeaderboard);
 });
 
@@ -41,9 +41,9 @@ module.exports = router;
 
 // add score
 router.post('/', (req, res) => {
-  const { nickname } = req.body;
+  const { username } = req.body;
   const { score } = req.body;
 
-  const addedScore = addOneScore(nickname, score);
+  const addedScore = addOneScore(username, score);
   return res.json(addedScore);
 })
