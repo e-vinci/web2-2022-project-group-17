@@ -85,7 +85,10 @@ function renderNavbar() {
               </li>
               <li class="nav-item">
                 <a class="nav-link left-item ms-5 p-0" href="#" data-uri="/leaderboard">Classement</a>
-              </li>                        
+              </li>     
+              <li class="nav-item">
+                <a class="nav-link left-item ms-5 p-0" href="#" data-uri="/bestScores">Mes meilleurs scores</a>
+              </li>                    
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">

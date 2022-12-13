@@ -1,15 +1,16 @@
 import { clearPage, renderImage } from '../../utils/render';
 import mainCharacterImage from '../../img/maincharacter.png';
-import { get20BestScores } from '../../models/scores';
+import { getScoresFromUser } from '../../models/scores';
 import crownImage from '../../img/crown.png';
+import { getAuthenticatedUser } from '../../utils/auths';
 
-const LeaderboardPage = async () => {
+const BestScoresPage = async () => {
   clearPage();
   const main = document.querySelector('main');
   const rankingsWrapper = document.createElement('div');
   rankingsWrapper.classList.add('intro-section', 'd-flex', 'flex-row', 'align-items-center');
 
-  const scores = await get20BestScores();
+  const scores = await getScoresFromUser(getAuthenticatedUser().username);
 
   const sortedScores = scores.sort((a,b) => b.score - a.score);
 
@@ -67,4 +68,4 @@ function isRank1(rank) {
   return rank === 1;
 }
 
-export default LeaderboardPage;
+export default BestScoresPage;
