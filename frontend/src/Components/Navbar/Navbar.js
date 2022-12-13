@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { Navbar as BootstrapNavbar } from 'bootstrap';
-import { isAuthenticated } from '../../utils/auths';
+import { getAuthenticatedUser, isAuthenticated } from '../../utils/auths';
 import { renderImage } from '../../utils/render';
 import logoImage from '../../img/logo.png';
 import Navigate from '../Router/Navigate';
@@ -13,6 +13,12 @@ import Navigate from '../Router/Navigate';
  */
 
 const Navbar = () => {
+  renderNavbar();
+  
+};
+
+function renderNavbar() {
+  getAuthenticatedUser();
   const navbarWrapper = document.querySelector('#navbarWrapper');
   const nonAuthenticatedUserNavbar = `
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -99,7 +105,7 @@ const Navbar = () => {
     e.preventDefault();
     Navigate('/');
   })
-};
+}
 
 
 export default Navbar;
