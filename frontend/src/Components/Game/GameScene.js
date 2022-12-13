@@ -100,7 +100,9 @@ class GameScene extends Phaser.Scene {
     // Display player's name
     // this.nickname = getAuthenticatedUser().username;
     const stylePlayerName = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' };
-    this.nameDisplay = this.add.text(575, 14, `Player : ${this.nickname}`, stylePlayerName).setScrollFactor(0);
+    this.nameDisplay = this.add
+      .text(575, 14, `Player : ${this.nickname}`, stylePlayerName)
+      .setScrollFactor(0);
 
     const healthRegenEvent = new Phaser.Time.TimerEvent({
       delay: 3000,
@@ -179,8 +181,6 @@ class GameScene extends Phaser.Scene {
   update() {
     this.updateHealthBar();
 
-    
-    
     this.player.setVelocity(0);
 
     let moving = false;
@@ -190,40 +190,36 @@ class GameScene extends Phaser.Scene {
       this.player.anims.play('walk-left', true);
       moving = true;
       if (this.cursors.up.isDown) {
-        this.player.setVelocityY(-this.playerStats.speed)
+        this.player.setVelocityY(-this.playerStats.speed);
       } else if (this.cursors.down.isDown) {
-        this.player.setVelocityY(this.playerStats.speed)
+        this.player.setVelocityY(this.playerStats.speed);
       }
-
     } else if (this.cursors.right.isDown) {
       this.player.setVelocityX(this.playerStats.speed);
       this.player.anims.play('walk-right', true);
       moving = true;
       if (this.cursors.up.isDown) {
-        this.player.setVelocityY(-this.playerStats.speed)
+        this.player.setVelocityY(-this.playerStats.speed);
       } else if (this.cursors.down.isDown) {
-        this.player.setVelocityY(this.playerStats.speed)
+        this.player.setVelocityY(this.playerStats.speed);
       }
-
     } else if (this.cursors.down.isDown) {
       this.player.setVelocityY(this.playerStats.speed);
       this.player.anims.play('walk-down', true);
       moving = true;
       if (this.cursors.left.isDown) {
-        this.player.setVelocityX(-this.playerStats.speed)
+        this.player.setVelocityX(-this.playerStats.speed);
       } else if (this.cursors.right.isDown) {
-        this.player.setVelocityX(this.playerStats.speed)
+        this.player.setVelocityX(this.playerStats.speed);
       }
-
-
     } else if (this.cursors.up.isDown) {
       this.player.setVelocityY(-this.playerStats.speed);
       this.player.anims.play('walk-up', true);
       moving = true;
       if (this.cursors.left.isDown) {
-        this.player.setVelocityX(-this.playerStats.speed)
+        this.player.setVelocityX(-this.playerStats.speed);
       } else if (this.cursors.right.isDown) {
-        this.player.setVelocityX(this.playerStats.speed)
+        this.player.setVelocityX(this.playerStats.speed);
       }
     }
     /*
@@ -238,7 +234,7 @@ class GameScene extends Phaser.Scene {
     if (!moving) {
       this.player.anims.stop();
     }
-    
+
     if (this.cursors.space.isDown) {
       this.levelUp();
     }
@@ -421,7 +417,16 @@ class GameScene extends Phaser.Scene {
   */
 
   fireBullet() {
-    this.bulletSpawner.spawn(this.player.x, this.player.y, this.playerStats.numberOfBullets);
+    const bullets = this.bulletSpawner.spawn(
+      this.player.x,
+      this.player.y,
+      this.playerStats.numberOfBullets,
+    );
+    bullets.forEach((bullet) => {
+      if (this.zombieSpawner.group.getChildren().length !== 0) {
+        this.physics.moveToObject(bullet, this.zombieSpawner.group.getChildren()[0], 100);
+      }
+    });
   }
 
   collectBonus(player, bonus) {

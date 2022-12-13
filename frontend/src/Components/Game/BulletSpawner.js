@@ -17,10 +17,13 @@ export default class BulletSpawner {
     }
 
     spawn(x, y, numberOfBullets) {
+        const bullets = [];
         for (let i = 0; i < numberOfBullets ; i+=1) {
             const bullet = this._group.create(x, y, this.key);
             bullet.setVelocityX(Math.sin(i/numberOfBullets*2*Math.PI)*100);
             bullet.setVelocityY(Math.cos(i/numberOfBullets*2*Math.PI)*100);
+            bullets.push(bullet);
         }
+        return bullets;
     }
 }
