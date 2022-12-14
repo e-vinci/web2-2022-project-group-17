@@ -1,12 +1,14 @@
 import Phaser from 'phaser';
 import ScoreLabel from './ScoreLabel';
 import ZombieSpawner from './ZombieSpawner';
-import BulletSpawner from './BulletSpawner';
 import BonusSpawner from './BonusSpawner';
+import BulletSpawner from './BulletSpawner';
+import BossSpawner from './BossSpawner';
 import GemSpawner from './GemSpawner';
 import bonusAsset from '../../assets/bonus.png';
 // import backgroundAsset from '../../assets/background.png';
 import zombieAsset from '../../assets/zombie.png';
+import bossAsset from '../../assets/boss.png';
 import bulletAsset from '../../assets/bullet.png';
 // import dudeAsset from '../../assets/dude.png';
 import maincharacterAsset from '../../assets/maincharacter.png';
@@ -25,6 +27,7 @@ import { getAuthenticatedUser } from '../../utils/auths';
 
 // const DUDE_KEY = 'dude';
 const ZOMBIE_KEY = 'zombie';
+const BOSS_KEY = 'boss';
 const BULLET_KEY = 'bullet';
 const BONUS_KEY = 'bonus';
 const GEM_KEY = 'gem';
@@ -37,6 +40,7 @@ class GameScene extends Phaser.Scene {
     this.cursors = undefined;
     this.scoreLabel = undefined;
     this.zombieSpawner = undefined;
+    this.bossSpawner = undefined;
     this.bulletSpawner = undefined;
     this.bonusSpawner = undefined;
     this.gemSpawner = undefined;
@@ -52,6 +56,7 @@ class GameScene extends Phaser.Scene {
     this.load.image('background', tilesAssets);
     this.load.tilemapTiledJSON('map', mapJSON);
     this.load.image(ZOMBIE_KEY, zombieAsset);
+    this.load.image(BOSS_KEY, bossAsset);
     this.load.image(BULLET_KEY, bulletAsset);
     this.load.image(BONUS_KEY, bonusAsset);
     this.load.image(GEM_KEY, gemAsset);
@@ -85,6 +90,8 @@ class GameScene extends Phaser.Scene {
     this.scoreLabel = this.createScoreLabel(40, 20, 0).setScrollFactor(0);
     this.zombieSpawner = new ZombieSpawner(this, ZOMBIE_KEY);
     const zombiesGroup = this.zombieSpawner.group;
+    this.bossSpawner = new BossSpawner(this, BOSS_KEY);
+    const bossGroup = this.bossSpawner.group;
     this.bulletSpawner = new BulletSpawner(this, BULLET_KEY);
     const bulletsGroup = this.bulletSpawner.group;
     this.bonusSpawner = new BonusSpawner(this, BONUS_KEY);
@@ -129,6 +136,12 @@ class GameScene extends Phaser.Scene {
       callback: this.spawnZombies,
       callbackScope: this,
     });
+    const bossSpawnEvent = new Phaser.Time.TimerEvent({
+      delay: 7500,
+      loop: true,
+      callback: this.spawnBoss,
+      callbackScope: this,
+    });
     const fireBulletEvent = new Phaser.Time.TimerEvent({
       delay: 3500,
       loop: true,
@@ -144,6 +157,7 @@ class GameScene extends Phaser.Scene {
     // const flameEvent = new Phaser.Time.TimerEvent({delay : 3000, loop: true, callback: this.flameAttack, callbackScope: this});
     this.time.addEvent(healthRegenEvent);
     this.time.addEvent(zombieSpawnEvent);
+    this.time.addEvent(bossSpawnEvent);
     this.time.addEvent(fireBulletEvent);
     this.time.addEvent(bonusSpawnEvent);
     // this.time.addEvent(flameEvent);
@@ -178,9 +192,11 @@ class GameScene extends Phaser.Scene {
       speed: 100,
     };
     this.zombiesInLastWave = 0;
-
+    
     this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
+    this.physics.add.collider(this.player, bossGroup, this.receiveDamage, null, this);
     this.physics.add.overlap(zombiesGroup, bulletsGroup, this.bulletHitZombie, null, this);
+    this.physics.add.overlap(bossGroup, bulletsGroup, this.bulletHitBoss, null, this);
     this.physics.add.overlap(this.player, bonusGroup, this.collectBonus, null, this);
     this.physics.add.overlap(this.player, gemsGroup, this.collectGem, null, this);
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -251,6 +267,10 @@ class GameScene extends Phaser.Scene {
     Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
       this.physics.moveToObject(zombie, this.player, 25),
     );
+
+    Phaser.Actions.Call(this.bossSpawner.group.getChildren(), (boss) =>
+      this.physics.moveToObject(boss, this.player, 60),
+    );
   }
 
   spawnZombies() {
@@ -258,6 +278,11 @@ class GameScene extends Phaser.Scene {
     for (let i = 0; i < this.zombiesInLastWave; i += 1) {
       this.zombieSpawner.spawn(this.player.x, this.player.y);
     }
+  }
+
+  spawnBoss() {
+    const boss = this.bossSpawner.spawn(this.player.x, this.player.y);
+    boss.HP = 5;
   }
 
   spawnBonus() {
@@ -426,14 +451,16 @@ class GameScene extends Phaser.Scene {
   */
 
   fireBullet() {
-    if (this.zombieSpawner.group.getChildren().length !== 0) {
+    if (this.zombieSpawner.group.getChildren().length !== 0 || this.bossSpawner.group.getChildren().length !== 0) {
     const bullets = this.bulletSpawner.spawn(
       this.player.x,
       this.player.y,
       this.playerStats.numberOfBullets,
     );
     bullets.forEach((bullet) => {
-        this.physics.moveToObject(bullet, this.zombieSpawner.group.getChildren()[Phaser.Math.Between(0,this.zombieSpawner.group.getChildren().length-1)], 300);
+        let possibleTargets = this.zombieSpawner.group.getChildren();
+        possibleTargets = possibleTargets.concat(this.bossSpawner.group.getChildren());
+        this.physics.moveToObject(bullet, possibleTargets[Phaser.Math.Between(0, possibleTargets.length - 1)], 300);
         this.fireballSound.play(); 
     })};
   }
@@ -510,6 +537,16 @@ class GameScene extends Phaser.Scene {
     zombie.destroy();
     bullet.destroy();
     this.gemSpawner.spawn(zombie.x, zombie.y);
+  }
+
+  bulletHitBoss(boss, bullet) {
+    // eslint-disable-next-line no-param-reassign
+    boss.HP -= 1;
+    if(boss.HP === 0){
+      boss.destroy();
+      this.scoreLabel.add(200);
+    }
+    bullet.destroy();
   }
 
   /*
