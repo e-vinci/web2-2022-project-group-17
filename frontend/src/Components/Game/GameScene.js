@@ -6,11 +6,9 @@ import BulletSpawner from './BulletSpawner';
 import BossSpawner from './BossSpawner';
 import GemSpawner from './GemSpawner';
 import bonusAsset from '../../assets/bonus.png';
-// import backgroundAsset from '../../assets/background.png';
 import zombieAsset from '../../assets/zombie.png';
 import bossAsset from '../../assets/boss.png';
 import bulletAsset from '../../assets/bullet.png';
-// import dudeAsset from '../../assets/dude.png';
 import maincharacterAsset from '../../assets/maincharacter.png';
 import maincharactersprites from '../../assets/maincharactersprites.json';
 import gemAsset from '../../assets/gem.png';
@@ -25,13 +23,14 @@ import tilesAssets from '../../assets/tileset.png';
 import mapJSON from '../../assets/map.json';
 import { getAuthenticatedUser } from '../../utils/auths';
 
-// const DUDE_KEY = 'dude';
+
 const ZOMBIE_KEY = 'zombie';
 const BOSS_KEY = 'boss';
 const BULLET_KEY = 'bullet';
 const BONUS_KEY = 'bonus';
 const GEM_KEY = 'gem';
 const DAMAGE_SOUND_KEY = 'damagesound';
+
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -45,7 +44,6 @@ class GameScene extends Phaser.Scene {
     this.bonusSpawner = undefined;
     this.gemSpawner = undefined;
     this.healthBar = undefined;
-    // this.gameOver = false;
     this.health = undefined;
     this.gems = undefined;
     this.XPbar = undefined;
@@ -88,6 +86,7 @@ class GameScene extends Phaser.Scene {
     // const layer = map.createLayer('top', tileset, 0, 0);
     this.player = this.createPlayer();
     this.scoreLabel = this.createScoreLabel(40, 20, 0).setScrollFactor(0);
+    this.scoreLabel.setDepth(2);
     this.zombieSpawner = new ZombieSpawner(this, ZOMBIE_KEY);
     const zombiesGroup = this.zombieSpawner.group;
     this.bossSpawner = new BossSpawner(this, BOSS_KEY);
@@ -99,14 +98,19 @@ class GameScene extends Phaser.Scene {
     this.gemSpawner = new GemSpawner(this, GEM_KEY);
     const gemsGroup = this.gemSpawner.group;
     this.healthBar = this.add.graphics();
+  
 
     // Display XP bar
     const XPcontainer = this.add.sprite(400, 20, 'XPcontainer').setScrollFactor(0);
+    XPcontainer.setDepth(2);
     this.XPbar = this.add.sprite(XPcontainer.x, XPcontainer.y, 'XPbar').setScrollFactor(0);
     this.XPMask = this.add.sprite(this.XPbar.x, this.XPbar.y, 'XPbar').setScrollFactor(0);
     this.XPMask.visible = false;
     this.XPbar.mask = new Phaser.Display.Masks.BitmapMask(this, this.XPMask);
     this.XPbar.x -= 250;
+    this.XPbar.setDepth(3);
+    this.XPMask.setDepth(3);
+    
 
     // Display current XP level
     const styleLevelDisplay = {
@@ -116,6 +120,7 @@ class GameScene extends Phaser.Scene {
       fill: '#FFFFFF',
     };
     this.levelDisplay = this.add.text(375, 14, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
+    this.levelDisplay.setDepth(4);
 
     // Display player's name
     this.username = getAuthenticatedUser().username;
@@ -123,6 +128,7 @@ class GameScene extends Phaser.Scene {
     this.nameDisplay = this.add
       .text(575, 14, `Player : ${this.username}`, stylePlayerName)
       .setScrollFactor(0);
+    this.nameDisplay.setDepth(2);
 
     const healthRegenEvent = new Phaser.Time.TimerEvent({
       delay: 3000,
@@ -176,11 +182,11 @@ class GameScene extends Phaser.Scene {
     this.levelUpText.setVisible(false);
 
     // Level up options
-    this.option1Image = this.add.image(200, 300, 'option1').setScrollFactor(0);
+    this.option1Image = this.add.image(250, 300, 'option1').setScrollFactor(0);
     this.option1Image.setVisible(false);
-    this.option2Image = this.add.image(350, 300, 'option2').setScrollFactor(0);
+    this.option2Image = this.add.image(400, 300, 'option2').setScrollFactor(0);
     this.option2Image.setVisible(false);
-    this.option3Image = this.add.image(500, 300, 'option3').setScrollFactor(0);
+    this.option3Image = this.add.image(550, 300, 'option3').setScrollFactor(0);
     this.option3Image.setVisible(false);
 
     this.playerStats = {
