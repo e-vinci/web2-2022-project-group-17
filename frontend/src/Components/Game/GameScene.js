@@ -105,14 +105,14 @@ class GameScene extends Phaser.Scene {
     const styleLevelDisplay = {
       fontSize: '13px',
       fontStyle: 'bold',
-      fontFamily: 'Arial',
+      fontFamily: 'Candara, Arial',
       fill: '#FFFFFF',
     };
     this.levelDisplay = this.add.text(375, 14, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
 
     // Display player's name
     this.username = getAuthenticatedUser().username;
-    const stylePlayerName = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' };
+    const stylePlayerName = { fontSize: '32px', fontFamily: 'Candara, Arial', fill: '#000' };
     this.nameDisplay = this.add
       .text(575, 14, `Player : ${this.username}`, stylePlayerName)
       .setScrollFactor(0);
@@ -459,6 +459,9 @@ class GameScene extends Phaser.Scene {
 
   regenHealth() {
     this.playerStats.health += this.playerStats.pointsOfRegeneration;
+    if(this.playerStats.health > 100){
+      this.playerStats.health = 100;
+    }
   }
 
   levelUp() {
@@ -519,7 +522,7 @@ class GameScene extends Phaser.Scene {
   */
 
   createScoreLabel(x, y, score) {
-    const style = { fontSize: '32px', fontFamily: 'Arial', fill: '#000' };
+    const style = { fontSize: '32px', fontFamily: 'Candara, Arial', fill: '#000' };
     const label = new ScoreLabel(this, x, y, score, style);
     this.add.existing(label);
     return label;
