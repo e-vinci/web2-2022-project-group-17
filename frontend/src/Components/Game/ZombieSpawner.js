@@ -17,12 +17,13 @@ export default class ZombieSpawner {
   }
 
   spawn(playerX, playerY) {
-    // const random = Phaser.Math.Between(0,3);
-    // const possibleSpawns = [[playerX-500, Phaser.Math.Between(playerY-500,playerY+500)],[100,Phaser.Math.Between(0,800)],[Phaser.Math.Between(0,1000),15],[Phaser.Math.Between(0,1000),785]];
-    const x = playerX + Phaser.Math.Between(99,101);
-    const y = playerY + 100;
+    const random = Phaser.Math.Between(0,3);
+    const possibleSpawns = [[playerX-500, Phaser.Math.Between(playerY-500,playerY+500)],
+                            [playerX+500, Phaser.Math.Between(playerY-500,playerY+500)],
+                            [Phaser.Math.Between(playerX-500,playerX+500),playerY+500],
+                            [Phaser.Math.Between(playerX-500,playerX+500),playerY-500]];
 
-    const zombie = this._group.create(x, y, this.key);
+    const zombie = this._group.create(possibleSpawns[random][0], possibleSpawns[random][1], this.key);
     zombie.setBounce(1);
     zombie.setCollideWorldBounds(true);
   
