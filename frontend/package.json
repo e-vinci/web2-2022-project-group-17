@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "myJScourse's modern frontend boilerplate to build a phaser game",
   "scripts": {
+    "deploy": "npm run build && gh-pages -d dist",
     "dev": "webpack --mode development --config webpack.config.base.js",
     "build": "webpack --mode production --config webpack.config.prod.js",
     "start": "webpack serve --mode development --config webpack.config.base.js"
@@ -36,6 +37,7 @@
     "bootstrap-icons": "^1.10.2",
     "clean-webpack-plugin": "^4.0.0",
     "phaser": "^3.55.2",
+    "gh-pages": "^4.0.0",
     "terser-webpack-plugin": "^5.3.6",
     "webpack-merge": "^5.8.0"
   }
