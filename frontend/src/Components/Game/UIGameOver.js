@@ -12,8 +12,9 @@ export default class UIGameOver extends Phaser.Scene {
     create() {
         const centerX = this.scale.width * 0.5;
         const centerY = this.scale.height * 0.5;
-        this.add.text(centerX, centerY - 100, 'GAME OVER',
+        this.add.text(centerX, centerY - 150, 'GAME OVER',
             {
+                fontFamily: 'Candara, Arial',
                 fontSize: '52px',
                 color: '#ffffff',
                 fontStyle: 'bold'
@@ -23,6 +24,7 @@ export default class UIGameOver extends Phaser.Scene {
         // Button to restart the game
         const button = this.add.text(centerX, centerY + 100, 'Restart',
             {
+                fontFamily: 'Candara, Arial',
                 fontSize: '32px',
                 color: '#ffffff',
                 fontStyle: 'bold'
