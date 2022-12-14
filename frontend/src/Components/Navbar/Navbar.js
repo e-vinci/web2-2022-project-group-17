@@ -49,10 +49,10 @@ function renderNavbar() {
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="btn btn-primary nav-link auth-btn" href="#" data-uri="/login">Connexion</a>
+                <a class="btn btn-primary nav-link auth-btn px-3" href="#" data-uri="/login">Connexion</a>
               </li>   
               <li class="nav-item ms-3">
-                <a class="btn btn-primary nav-link auth-btn me-3" href="#" data-uri="/register">S'enregistrer</a>
+                <a class="btn btn-primary nav-link auth-btn me-3 px-3" href="#" data-uri="/register">S'enregistrer</a>
               </li>                         
             </ul>
           </div>
@@ -92,7 +92,7 @@ function renderNavbar() {
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="btn btn-danger nav-link auth-btn me-3" href="#" data-uri="/logout">Logout</a>
+                <a class="btn btn-danger nav-link auth-btn me-3 px-3" href="#" data-uri="/logout">Logout</a>
               </li>                        
             </ul>
           </div>
