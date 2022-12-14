@@ -15,6 +15,7 @@ import gemAsset from '../../assets/gem.png';
 import XPbarAsset from '../../assets/XPbar.png';
 import XPcontainerAsset from '../../assets/XPcontainer.png';
 import damageSoundAsset from '../../assets/sounds/damage.mp3';
+import fireballSoundAsset from '../../assets/sounds/fireballsound.mp3';
 import option1Asset from '../../assets/option1.png';
 import option2Asset from '../../assets/option2.png';
 import option3Asset from '../../assets/option3.png'; 
@@ -60,6 +61,7 @@ class GameScene extends Phaser.Scene {
     this.load.image('option2', option2Asset);
     this.load.image('option3', option3Asset);
     this.load.audio(DAMAGE_SOUND_KEY, damageSoundAsset);
+    this.load.audio('fireballSound', fireballSoundAsset);
     /*
     this.load.spritesheet(DUDE_KEY, dudeAsset, {
       frameWidth: 32,
@@ -184,6 +186,7 @@ class GameScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     this.damageSound = this.sound.add(DAMAGE_SOUND_KEY);
+    this.fireballSound = this.sound.add('fireballSound');
 
     this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
     this.cameras.main.startFollow(this.player, true, 0.09, 0.09);
@@ -431,6 +434,7 @@ class GameScene extends Phaser.Scene {
     );
     bullets.forEach((bullet) => {
         this.physics.moveToObject(bullet, this.zombieSpawner.group.getChildren()[0], 300);
+        this.fireballSound.play(); 
     })};
   }
 
@@ -525,8 +529,7 @@ class GameScene extends Phaser.Scene {
     this.damageSound.play();
     this.playerStats.health -= 1;
 
-    if (this.playerStats.health <= 50) {
-      this.player.anims.play('death', 0, 6, true);
+    if (this.playerStats.health <= 0) {
       this.gameOver();
     }
   }
