@@ -256,7 +256,7 @@ class GameScene extends Phaser.Scene {
   spawnZombies() {
     this.zombiesInLastWave += 1;
     for (let i = 0; i < this.zombiesInLastWave; i += 1) {
-      this.zombieSpawner.spawn();
+      this.zombieSpawner.spawn(this.player.x, this.player.y);
     }
   }
 
@@ -433,7 +433,7 @@ class GameScene extends Phaser.Scene {
       this.playerStats.numberOfBullets,
     );
     bullets.forEach((bullet) => {
-        this.physics.moveToObject(bullet, this.zombieSpawner.group.getChildren()[0], 300);
+        this.physics.moveToObject(bullet, this.zombieSpawner.group.getChildren()[Phaser.Math.Between(0,this.zombieSpawner.group.getChildren().length-1)], 300);
         this.fireballSound.play(); 
     })};
   }
@@ -450,8 +450,8 @@ class GameScene extends Phaser.Scene {
   }
 
   gainXP() {
-    this.XPbar.x += 10;
-    this.playerStats.xp += 10;
+    this.XPbar.x += 30;
+    this.playerStats.xp += 30;
     if (this.playerStats.xp % 240 === 0) {
       this.levelUp();
     }
