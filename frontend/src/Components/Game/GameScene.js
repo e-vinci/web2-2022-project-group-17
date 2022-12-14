@@ -446,7 +446,6 @@ class GameScene extends Phaser.Scene {
 
   collectGem(player, gem) {
     gem.destroy();
-    this.scoreLabel.add(50);
     this.gainXP();
   }
 
@@ -504,6 +503,7 @@ class GameScene extends Phaser.Scene {
   }
 
   bulletHitZombie(zombie, bullet) {
+    this.scoreLabel.add(50);
     zombie.destroy();
     bullet.destroy();
     this.gemSpawner.spawn(zombie.x, zombie.y);
