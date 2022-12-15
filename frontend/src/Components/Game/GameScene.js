@@ -79,14 +79,18 @@ class GameScene extends Phaser.Scene {
   create() {
     const mapLevel = this.add.tilemap('map');
     const tileset = mapLevel.addTilesetImage('tileset', 'background');
-    // eslint-disable-next-line no-unused-vars
     const backgroundLayer = mapLevel.createLayer('Tile Layer 1', tileset);
+    backgroundLayer.setCollisionByProperty({collides:true});
+    const backgroundLayer2 = mapLevel.createLayer('Tile Layer 2', tileset);
+    
+    backgroundLayer2.setCollisionByProperty({collides:true});
     this.physics.world.setBounds(0, 0, 2302, 2302);
     // const map = this.make.tilemap({ key: 'map', tileHeight: 16, tileWidth: 16});
     // const tileset = map.addTilesetImage('tileset ', 'tiles', 16, 16);
     // eslint-disable-next-line no-unused-vars
     // const layer = map.createLayer('top', tileset, 0, 0);
     this.player = this.createPlayer();
+    this.physics.add.collider(this.player, backgroundLayer2);
     this.zombieSpawner = new ZombieSpawner(this, ZOMBIE_KEY);
     const zombiesGroup = this.zombieSpawner.group;
     this.bossSpawner = new BossSpawner(this, BOSS_KEY);
