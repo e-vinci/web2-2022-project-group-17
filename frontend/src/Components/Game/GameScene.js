@@ -24,7 +24,7 @@ import option3Asset from '../../assets/option3.png';
 import tilesAssets from '../../assets/tileset.png';
 import flameAsset from '../../assets/flame.png';
 import mapJSON from '../../assets/map.json';
-import { getAuthenticatedUser } from '../../utils/auths';
+import { isAuthenticated, getAuthenticatedUser } from '../../utils/auths';
 
 const ZOMBIE_KEY = 'zombie';
 const BOSS_KEY = 'boss';
@@ -50,6 +50,7 @@ class GameScene extends Phaser.Scene {
     this.XPbar = undefined;
     this.damageSound = undefined;
     this.playerStats = undefined;
+    this.zombiesInLastWave = undefined;
   }
 
   preload() {
@@ -133,7 +134,7 @@ class GameScene extends Phaser.Scene {
       health: 100,
       level: 0,
       xp: 0,
-      numberOfBullets: 1,
+      numberOfBullets: 0,
       pointsOfRegeneration: 0,
       speed: 100,
     };
@@ -255,8 +256,8 @@ class GameScene extends Phaser.Scene {
     this.levelDisplay.setDepth(4);
 
     // Display player's name
-    this.username = getAuthenticatedUser().username;
-    const stylePlayerName = { fontSize: '24px', fontFamily: 'Candara, Arial', fill: '#fff' };
+    this.username = isAuthenticated() ? getAuthenticatedUser().username : "Not connected";
+    const stylePlayerName = { fontSize: '14px', fontFamily: 'Candara, Arial', fill: '#fff' };
     this.nameDisplay = this.add
       .text(625, 20, `Player : ${this.username}`, stylePlayerName)
       .setScrollFactor(0);
@@ -572,7 +573,7 @@ class GameScene extends Phaser.Scene {
       this.playerStats.numberOfBullets += 1;
       this.resumeGame();
     });
-    // Second option : gain health regeneration
+    // Second option : increase health regeneration
     this.option2Image.setVisible(true);
     this.option2Image.setInteractive();
     this.option2Image.on('pointerdown', () => {
