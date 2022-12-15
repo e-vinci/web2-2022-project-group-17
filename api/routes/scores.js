@@ -1,5 +1,6 @@
 const express = require('express');
 // const path = require('node:path');
+const { authorize } = require('../utils/auths'); 
 
 const { readAllScores, addOneScore } = require('../models/scores');
 
@@ -40,7 +41,7 @@ module.exports = router;
 
 
 // add score
-router.post('/', (req, res) => {
+router.post('/', authorize, (req, res) => {
   const { username } = req.body;
   const { score } = req.body;
 
