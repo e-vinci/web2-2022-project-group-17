@@ -13,7 +13,7 @@ function renderRegisterForm() {
   const registerWrapper = document.createElement('div');
   registerWrapper.className = 'intro-section d-flex justify-content-center align-items-center'
   const formWrapper = document.createElement('div');
-  formWrapper.className = 'formWrapper border w-25 d-flex flex-column align-items-center rounded';
+  formWrapper.className = 'formWrapper container border d-flex flex-column align-items-center rounded';
   const formTop = document.createElement('div');
   formTop.className = 'form-top w-100';
   const formTopDiv = document.createElement('div');
@@ -149,6 +149,10 @@ async function onRegister(e) {
   const username = document.querySelector('#username').value;
   const password = document.querySelector('#password').value;
   const password2 = document.querySelector('#password2').value;
+
+  if (password !== password2) {
+    return;
+  }
 
   const options = {
     method: 'POST',

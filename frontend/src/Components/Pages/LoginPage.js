@@ -14,7 +14,7 @@ function renderLoginForm() {
   const loginWrapper = document.createElement('div');
   loginWrapper.className = 'intro-section d-flex justify-content-center align-items-center'
   const formWrapper = document.createElement('div');
-  formWrapper.className = 'formWrapper border w-25 d-flex flex-column align-items-center rounded';
+  formWrapper.className = 'formWrapper container border d-flex flex-column align-items-center rounded';
   const formTop = document.createElement('div');
   formTop.className = 'form-top w-100';
   const formTopDiv = document.createElement('div');

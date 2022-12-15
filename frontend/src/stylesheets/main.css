@@ -73,7 +73,7 @@ main {
 }
 
 .home-content {
-  padding: 250px;
+  padding: 200px;
 }
 
 
@@ -108,34 +108,19 @@ main {
   flex-direction: column;
 }
 
-.how-to-play-content {
-  height: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-grow: 1;
-}
-
-.how-to-play-content > * {
-  opacity: 1;
-}
-
-
 .box1 {
-  height: 100%;
-  width: 25%;
   background-color: #69668b;
 }
+
 .box2 {
-  height: 100%;
-  width: 25%;
-  background-color: red;
-}
-.box3 {
-  height: 100%;
-  width: 25%;
   background-color: green;
 }
+
+.box3 {
+  background-color: red;
+}
+
+
 
 .instructions-section {
   height: 100%;
@@ -194,4 +179,24 @@ footer {
   color: white;
   text-align: center;
   margin-bottom: 10px;
+}
+
+
+@media (max-width: 1000px) {
+  .home-content{
+      padding: 100px;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-content{
+      padding: 20px;
+  }
+}
+
+
+@media (min-width: 768px) {
+  .formWrapper{
+      max-width: 500px;
+  }
 }
