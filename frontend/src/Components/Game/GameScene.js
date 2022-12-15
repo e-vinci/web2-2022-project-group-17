@@ -210,7 +210,7 @@ class GameScene extends Phaser.Scene {
 
     // FOR TESTING PURPOSES
     if (this.cursors.space.isDown) {
-      this.levelUp();
+      this.gainXP();
     }
 
     Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
@@ -232,7 +232,7 @@ class GameScene extends Phaser.Scene {
     this.XPMask = this.add.sprite(this.XPbar.x, this.XPbar.y, 'XPbar').setScrollFactor(0);
     this.XPMask.visible = false;
     this.XPbar.mask = new Phaser.Display.Masks.BitmapMask(this, this.XPMask);
-    this.XPbar.x -= 250;
+    this.XPbar.x -= 240;
     this.XPbar.setDepth(3);
     this.XPMask.setDepth(3);
 
@@ -338,7 +338,7 @@ class GameScene extends Phaser.Scene {
     this.healthBar.lineStyle(1, 0x000000, 1);
     this.healthBar.strokeRoundedRect(this.player.x - 20, this.player.y + 30, 40, 11, 3);
     this.healthBar.fillStyle(barColor, 1);
-    this.healthBar.fillRect(this.player.x - 19, this.player.y + 31, barLength - 1, 9);
+    this.healthBar.fillRect(this.player.x - 19, this.player.y + 31, barLength - 2, 9);
   }
 
   createPlayer() {
@@ -646,7 +646,7 @@ class GameScene extends Phaser.Scene {
   }
 
   createScoreLabel(x, y, score) {
-    const style = { fontSize: '32px', fontFamily: 'Candara, Arial', fill: '#fff' };
+    const style = { fontSize: '28px', fontFamily: 'Candara, Arial', fill: '#fff' };
     const label = new ScoreLabel(this, x, y, score, style);
     this.add.existing(label);
     return label;

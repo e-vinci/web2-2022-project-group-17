@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { getAuthenticatedUser } from '../../utils/auths';
+import { isAuthenticated, getAuthenticatedUser } from '../../utils/auths';
 
 
 export default class UIGameOver extends Phaser.Scene {
@@ -48,16 +48,17 @@ export default class UIGameOver extends Phaser.Scene {
         }
         const scores = await response.json();
         for(let i = 0; i < scores.length ;i+=1){
-            this.add.text(270, 225 + 15 * i, i + 1);
-            if(getAuthenticatedUser().username === scores[i].username){
-                this.add.text(300, 225 + 15 * i, scores[i].username, {color:'red'})
+            this.add.text(270, 200 + 15 * i, i + 1);
+            if(isAuthenticated() && getAuthenticatedUser().username === scores[i].username){
+                this.add.text(310, 200 + 15 * i, scores[i].username, {color:'red'})
             }
             else{
-                this.add.text(300,225 + 15 * i, scores[i].username);
+                this.add.text(310,200 + 15 * i, scores[i].username);
             }
-            this.add.text(450, 225 + 15*i, scores[i].score);
+            this.add.text(450, 200 + 15*i, scores[i].score);
         }
-
       }
+
+
       
 }
