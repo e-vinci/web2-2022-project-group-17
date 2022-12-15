@@ -20,11 +20,11 @@ import fireballSoundAsset from '../../assets/sounds/fireballsound.mp3';
 import scoreBackgroundAsset from '../../assets/scoreBackground.png';
 import option1Asset from '../../assets/option1.png';
 import option2Asset from '../../assets/option2.png';
-import option3Asset from '../../assets/option3.png'; 
+import option3Asset from '../../assets/option3.png';
 import tilesAssets from '../../assets/tileset.png';
+import flameAsset from '../../assets/flame.png';
 import mapJSON from '../../assets/map.json';
 import { getAuthenticatedUser } from '../../utils/auths';
-
 
 const ZOMBIE_KEY = 'zombie';
 const BOSS_KEY = 'boss';
@@ -32,7 +32,6 @@ const BULLET_KEY = 'bullet';
 const BONUS_KEY = 'bonus';
 const GEM_KEY = 'gem';
 const DAMAGE_SOUND_KEY = 'damagesound';
-
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -50,6 +49,7 @@ class GameScene extends Phaser.Scene {
     this.gems = undefined;
     this.XPbar = undefined;
     this.damageSound = undefined;
+    this.playerStats = undefined;
   }
 
   preload() {
@@ -60,7 +60,7 @@ class GameScene extends Phaser.Scene {
     this.load.image(BULLET_KEY, bulletAsset);
     this.load.image(BONUS_KEY, bonusAsset);
     this.load.image(GEM_KEY, gemAsset);
-    this.load.image('XPcontainer', XPcontainerAsset);  
+    this.load.image('XPcontainer', XPcontainerAsset);
     this.load.image('XPbar', XPbarAsset);
     this.load.image('scoreBackground', scoreBackgroundAsset);
     this.load.image('option1', option1Asset);
@@ -69,12 +69,10 @@ class GameScene extends Phaser.Scene {
     this.load.audio(DAMAGE_SOUND_KEY, damageSoundAsset);
     this.load.audio('themeMusic', themeMusicAsset);
     this.load.audio('fireballSound', fireballSoundAsset);
-    /*
-    this.load.spritesheet(DUDE_KEY, dudeAsset, {
-      frameWidth: 32,
-      frameHeight: 48,
+    this.load.spritesheet('flame', flameAsset, {
+      frameWidth: 291,
+      frameHeight: 111,
     });
-    */
     this.load.atlas('maincharacter', maincharacterAsset, maincharactersprites);
   }
 
@@ -83,14 +81,12 @@ class GameScene extends Phaser.Scene {
     const tileset = mapLevel.addTilesetImage('tileset', 'background');
     // eslint-disable-next-line no-unused-vars
     const backgroundLayer = mapLevel.createLayer('Tile Layer 1', tileset);
-    this.physics.world.setBounds( 0, 0, 2302, 2302);
+    this.physics.world.setBounds(0, 0, 2302, 2302);
     // const map = this.make.tilemap({ key: 'map', tileHeight: 16, tileWidth: 16});
     // const tileset = map.addTilesetImage('tileset ', 'tiles', 16, 16);
     // eslint-disable-next-line no-unused-vars
     // const layer = map.createLayer('top', tileset, 0, 0);
     this.player = this.createPlayer();
-    this.scoreLabel = this.createScoreLabel(40, 20, 0).setScrollFactor(0);
-    this.scoreLabel.setDepth(2);
     this.zombieSpawner = new ZombieSpawner(this, ZOMBIE_KEY);
     const zombiesGroup = this.zombieSpawner.group;
     this.bossSpawner = new BossSpawner(this, BOSS_KEY);
@@ -102,79 +98,9 @@ class GameScene extends Phaser.Scene {
     this.gemSpawner = new GemSpawner(this, GEM_KEY);
     const gemsGroup = this.gemSpawner.group;
     this.healthBar = this.add.graphics();
-  
 
-    // Display XP bar
-    const XPcontainer = this.add.sprite(400, 20, 'XPcontainer').setScrollFactor(0);
-    XPcontainer.setDepth(2);
-    this.XPbar = this.add.sprite(XPcontainer.x, XPcontainer.y, 'XPbar').setScrollFactor(0);
-    this.XPMask = this.add.sprite(this.XPbar.x, this.XPbar.y, 'XPbar').setScrollFactor(0);
-    this.XPMask.visible = false;
-    this.XPbar.mask = new Phaser.Display.Masks.BitmapMask(this, this.XPMask);
-    this.XPbar.x -= 250;
-    this.XPbar.setDepth(3);
-    this.XPMask.setDepth(3);
-
-    // Display score background
-    this.add.sprite(110, 36, 'scoreBackground' ).setScrollFactor(0).setDepth(1);
-    this.add.sprite(700,36, 'scoreBackground').setScrollFactor(0).setDepth(1);
-    
-
-    // Display current XP level
-    const styleLevelDisplay = {
-      fontSize: '19px',
-      fontStyle: 'bold',
-      fontFamily: 'Candara, Arial',
-      fill: '#FFFFFF',
-    };
-    this.levelDisplay = this.add.text(375, 11, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
-    this.levelDisplay.setDepth(4);
-
-    // Display player's name
-    this.username = getAuthenticatedUser().username;
-    const stylePlayerName = { fontSize: '24px', fontFamily: 'Candara, Arial', fill: '#fff' };
-    this.nameDisplay = this.add
-      .text(625, 20, `Player : ${this.username}`, stylePlayerName)
-      .setScrollFactor(0);
-    this.nameDisplay.setDepth(2);
-
-    const healthRegenEvent = new Phaser.Time.TimerEvent({
-      delay: 3000,
-      loop: true,
-      callback: this.regenHealth,
-      callbackScope: this,
-    });
-    const zombieSpawnEvent = new Phaser.Time.TimerEvent({
-      delay: 7500,
-      loop: true,
-      callback: this.spawnZombies,
-      callbackScope: this,
-    });
-    const bossSpawnEvent = new Phaser.Time.TimerEvent({
-      delay: 7500,
-      loop: true,
-      callback: this.spawnBoss,
-      callbackScope: this,
-    });
-    const fireBulletEvent = new Phaser.Time.TimerEvent({
-      delay: 3500,
-      loop: true,
-      callback: this.fireBullet,
-      callbackScope: this,
-    });
-    const bonusSpawnEvent = new Phaser.Time.TimerEvent({
-      delay: 15000,
-      loop: true,
-      callback: this.spawnBonus,
-      callbackScope: this,
-    });
-    // const flameEvent = new Phaser.Time.TimerEvent({delay : 3000, loop: true, callback: this.flameAttack, callbackScope: this});
-    this.time.addEvent(healthRegenEvent);
-    this.time.addEvent(zombieSpawnEvent);
-    this.time.addEvent(bossSpawnEvent);
-    this.time.addEvent(fireBulletEvent);
-    this.time.addEvent(bonusSpawnEvent);
-    // this.time.addEvent(flameEvent);
+    this.createUI();
+    this.createEvents();
 
     // Level up text
     const centerX = this.scale.width * 0.5;
@@ -206,7 +132,7 @@ class GameScene extends Phaser.Scene {
       speed: 100,
     };
     this.zombiesInLastWave = 0;
-    
+
     this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
     this.physics.add.collider(this.player, bossGroup, this.receiveDamage, null, this);
     this.physics.add.overlap(zombiesGroup, bulletsGroup, this.bulletHitZombie, null, this);
@@ -218,7 +144,7 @@ class GameScene extends Phaser.Scene {
     this.damageSound = this.sound.add(DAMAGE_SOUND_KEY);
     this.fireballSound = this.sound.add('fireballSound');
     this.themeMusic = this.sound.add('themeMusic');
-    this.themeMusic.play({loop: true});
+    this.themeMusic.play({ loop: true });
 
     this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
     this.cameras.main.startFollow(this.player, true, 0.09, 0.09);
@@ -269,13 +195,12 @@ class GameScene extends Phaser.Scene {
         this.player.setVelocityX(this.playerStats.speed);
       }
     }
-    
-
 
     if (!moving) {
       this.player.anims.stop();
     }
 
+    // FOR TESTING PURPOSES
     if (this.cursors.space.isDown) {
       this.levelUp();
     }
@@ -287,6 +212,95 @@ class GameScene extends Phaser.Scene {
     Phaser.Actions.Call(this.bossSpawner.group.getChildren(), (boss) =>
       this.physics.moveToObject(boss, this.player, 60),
     );
+  }
+
+  createUI() {
+    this.scoreLabel = this.createScoreLabel(40, 20, 0).setScrollFactor(0);
+    this.scoreLabel.setDepth(2);
+    // Display XP bar
+    const XPcontainer = this.add.sprite(400, 20, 'XPcontainer').setScrollFactor(0);
+    XPcontainer.setDepth(2);
+    this.XPbar = this.add.sprite(XPcontainer.x, XPcontainer.y, 'XPbar').setScrollFactor(0);
+    this.XPMask = this.add.sprite(this.XPbar.x, this.XPbar.y, 'XPbar').setScrollFactor(0);
+    this.XPMask.visible = false;
+    this.XPbar.mask = new Phaser.Display.Masks.BitmapMask(this, this.XPMask);
+    this.XPbar.x -= 250;
+    this.XPbar.setDepth(3);
+    this.XPMask.setDepth(3);
+
+    // Display score background
+    this.add
+      .sprite(110, 36, 'scoreBackground')
+      .setScrollFactor(0)
+      .setDepth(1);
+    this.add
+      .sprite(700, 36, 'scoreBackground')
+      .setScrollFactor(0)
+      .setDepth(1);
+
+    // Display current XP level
+    const styleLevelDisplay = {
+      fontSize: '19px',
+      fontStyle: 'bold',
+      fontFamily: 'Candara, Arial',
+      fill: '#FFFFFF',
+    };
+    this.levelDisplay = this.add.text(375, 11, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
+    this.levelDisplay.setDepth(4);
+
+    // Display player's name
+    this.username = getAuthenticatedUser().username;
+    const stylePlayerName = { fontSize: '24px', fontFamily: 'Candara, Arial', fill: '#fff' };
+    this.nameDisplay = this.add
+      .text(625, 20, `Player : ${this.username}`, stylePlayerName)
+      .setScrollFactor(0);
+    this.nameDisplay.setDepth(2);
+  }
+
+  createEvents() {
+    const healthRegenEvent = new Phaser.Time.TimerEvent({
+      delay: 3000,
+      loop: true,
+      callback: this.regenHealth,
+      callbackScope: this,
+    });
+    const zombieSpawnEvent = new Phaser.Time.TimerEvent({
+      delay: 7500,
+      loop: true,
+      callback: this.spawnZombies,
+      callbackScope: this,
+    });
+    const bossSpawnEvent = new Phaser.Time.TimerEvent({
+      delay: 7500,
+      loop: true,
+      callback: this.spawnBoss,
+      callbackScope: this,
+    });
+    const fireBulletEvent = new Phaser.Time.TimerEvent({
+      delay: 3500,
+      loop: true,
+      callback: this.fireBullet,
+      callbackScope: this,
+    });
+    const bonusSpawnEvent = new Phaser.Time.TimerEvent({
+      delay: 15000,
+      loop: true,
+      callback: this.spawnBonus,
+      callbackScope: this,
+    });
+    const flameEvent = new Phaser.Time.TimerEvent({
+      delay: 3000,
+      loop: true,
+      callback: this.flameAttack,
+      callbackScope: this,
+    });
+
+    this.time.addEvent(healthRegenEvent);
+    this.time.addEvent(zombieSpawnEvent);
+    this.time.addEvent(bossSpawnEvent);
+    this.time.addEvent(fireBulletEvent);
+    this.time.addEvent(bonusSpawnEvent);
+    this.time.addEvent(flameEvent);
   }
 
   spawnZombies() {
@@ -466,19 +480,47 @@ class GameScene extends Phaser.Scene {
 
   */
 
+  createFlame() {
+    const flame = this.add.sprite(this.player.x, this.player.y, 'flame');
+
+    this.anims.create({
+      key: 'right',
+      frames: this.anims.generateFrameNumbers('flame', { start: 0, end: 5 }),
+      frameRate: 20,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'left',
+      frames: this.anims.generateFrameNumbers('flame', { start: 6, end: 11 }),
+      frameRate: 20,
+      repeat: -1,
+    });
+
+    return flame;
+  }
+
   fireBullet() {
-    if (this.zombieSpawner.group.getChildren().length !== 0 || this.bossSpawner.group.getChildren().length !== 0) {
-    const bullets = this.bulletSpawner.spawn(
-      this.player.x,
-      this.player.y,
-      this.playerStats.numberOfBullets,
-    );
-    bullets.forEach((bullet) => {
+    if (
+      this.zombieSpawner.group.getChildren().length !== 0 ||
+      this.bossSpawner.group.getChildren().length !== 0
+    ) {
+      const bullets = this.bulletSpawner.spawn(
+        this.player.x,
+        this.player.y,
+        this.playerStats.numberOfBullets,
+      );
+      bullets.forEach((bullet) => {
         let possibleTargets = this.zombieSpawner.group.getChildren();
         possibleTargets = possibleTargets.concat(this.bossSpawner.group.getChildren());
-        this.physics.moveToObject(bullet, possibleTargets[Phaser.Math.Between(0, possibleTargets.length - 1)], 300);
-        this.fireballSound.play(); 
-    })};
+        this.physics.moveToObject(
+          bullet,
+          possibleTargets[Phaser.Math.Between(0, possibleTargets.length - 1)],
+          300,
+        );
+        this.fireballSound.play();
+      });
+    }
   }
 
   collectBonus(player, bonus) {
@@ -502,7 +544,7 @@ class GameScene extends Phaser.Scene {
 
   regenHealth() {
     this.playerStats.health += this.playerStats.pointsOfRegeneration;
-    if(this.playerStats.health > 100){
+    if (this.playerStats.health > 100) {
       this.playerStats.health = 100;
     }
   }
@@ -530,11 +572,11 @@ class GameScene extends Phaser.Scene {
       this.playerStats.pointsOfRegeneration += 1;
       this.resumeGame();
     });
-    // Third option : increase speed by 5%
+    // Third option : increase speed by 10
     this.option3Image.setVisible(true);
     this.option3Image.setInteractive();
     this.option3Image.on('pointerdown', () => {
-      this.playerStats.speed *= 1.05;
+      this.playerStats.speed += 10;
       this.resumeGame();
     });
   }
@@ -558,21 +600,27 @@ class GameScene extends Phaser.Scene {
   bulletHitBoss(boss, bullet) {
     // eslint-disable-next-line no-param-reassign
     boss.HP -= 1;
-    if(boss.HP === 0){
+    if (boss.HP === 0) {
       boss.destroy();
+      for(let i = 0; i < 5; i+=1){
+        this.gemSpawner.spawn(boss.x + Phaser.Math.Between(-15, 15), boss.y + Phaser.Math.Between(-15,15));
+      }
       this.scoreLabel.add(200);
     }
     bullet.destroy();
   }
 
-  /*
-  flameAttack(){
+  flameAttack() {
     Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
-      Math.abs(zombie.x - this.player.x) < 100 && Math.abs(zombie.y - this.player.y ) < 30 ? zombie.destroy() : null
+      Math.abs(zombie.x - this.player.x) < 200 && Math.abs(zombie.y - this.player.y) < 50
+        ? zombie.destroy()
+        : null,
     );
-    this.player.anims.play('flameRight');
+    const flame = this.createFlame();
+    flame.setOrigin(0, 0.5);
+    flame.setX(flame.x + 40);
+    flame.anims.play({ key: 'right', repeat: false, hideOnComplete: true });
   }
-  */
 
   createScoreLabel(x, y, score) {
     const style = { fontSize: '32px', fontFamily: 'Candara, Arial', fill: '#fff' };
@@ -582,10 +630,10 @@ class GameScene extends Phaser.Scene {
   }
 
   receiveDamage() {
-    if(!this.damageSound.isPlaying){
+    if (!this.damageSound.isPlaying) {
       this.damageSound.play();
     }
-    
+
     this.playerStats.health -= 1;
 
     if (this.playerStats.health <= 0) {
