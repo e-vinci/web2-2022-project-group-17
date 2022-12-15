@@ -3,7 +3,7 @@ const express = require('express');
 const { authorize } = require('../utils/auths'); 
 
 const { readAllScores, addOneScore } = require('../models/scores');
-const { authorize } = require('../utils/auths');
+
 
 const router = express.Router();
 
