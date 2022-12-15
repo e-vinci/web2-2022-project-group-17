@@ -15,7 +15,9 @@ import gemAsset from '../../assets/gem.png';
 import XPbarAsset from '../../assets/XPbar.png';
 import XPcontainerAsset from '../../assets/XPcontainer.png';
 import damageSoundAsset from '../../assets/sounds/damage.mp3';
+import themeMusicAsset from '../../assets/sounds/theme.mp3';
 import fireballSoundAsset from '../../assets/sounds/fireballsound.mp3';
+import scoreBackgroundAsset from '../../assets/scoreBackground.png';
 import option1Asset from '../../assets/option1.png';
 import option2Asset from '../../assets/option2.png';
 import option3Asset from '../../assets/option3.png'; 
@@ -60,10 +62,12 @@ class GameScene extends Phaser.Scene {
     this.load.image(GEM_KEY, gemAsset);
     this.load.image('XPcontainer', XPcontainerAsset);  
     this.load.image('XPbar', XPbarAsset);
+    this.load.image('scoreBackground', scoreBackgroundAsset);
     this.load.image('option1', option1Asset);
     this.load.image('option2', option2Asset);
     this.load.image('option3', option3Asset);
     this.load.audio(DAMAGE_SOUND_KEY, damageSoundAsset);
+    this.load.audio('themeMusic', themeMusicAsset);
     this.load.audio('fireballSound', fireballSoundAsset);
     /*
     this.load.spritesheet(DUDE_KEY, dudeAsset, {
@@ -110,23 +114,27 @@ class GameScene extends Phaser.Scene {
     this.XPbar.x -= 250;
     this.XPbar.setDepth(3);
     this.XPMask.setDepth(3);
+
+    // Display score background
+    this.add.sprite(110, 36, 'scoreBackground' ).setScrollFactor(0).setDepth(1);
+    this.add.sprite(700,36, 'scoreBackground').setScrollFactor(0).setDepth(1);
     
 
     // Display current XP level
     const styleLevelDisplay = {
-      fontSize: '13px',
+      fontSize: '19px',
       fontStyle: 'bold',
       fontFamily: 'Candara, Arial',
       fill: '#FFFFFF',
     };
-    this.levelDisplay = this.add.text(375, 14, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
+    this.levelDisplay = this.add.text(375, 11, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
     this.levelDisplay.setDepth(4);
 
     // Display player's name
     this.username = getAuthenticatedUser().username;
-    const stylePlayerName = { fontSize: '32px', fontFamily: 'Candara, Arial', fill: '#000' };
+    const stylePlayerName = { fontSize: '24px', fontFamily: 'Candara, Arial', fill: '#fff' };
     this.nameDisplay = this.add
-      .text(575, 14, `Player : ${this.username}`, stylePlayerName)
+      .text(625, 20, `Player : ${this.username}`, stylePlayerName)
       .setScrollFactor(0);
     this.nameDisplay.setDepth(2);
 
@@ -209,6 +217,8 @@ class GameScene extends Phaser.Scene {
 
     this.damageSound = this.sound.add(DAMAGE_SOUND_KEY);
     this.fireballSound = this.sound.add('fireballSound');
+    this.themeMusic = this.sound.add('themeMusic');
+    this.themeMusic.play({loop: true});
 
     this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
     this.cameras.main.startFollow(this.player, true, 0.09, 0.09);
@@ -565,14 +575,17 @@ class GameScene extends Phaser.Scene {
   */
 
   createScoreLabel(x, y, score) {
-    const style = { fontSize: '32px', fontFamily: 'Candara, Arial', fill: '#000' };
+    const style = { fontSize: '32px', fontFamily: 'Candara, Arial', fill: '#fff' };
     const label = new ScoreLabel(this, x, y, score, style);
     this.add.existing(label);
     return label;
   }
 
   receiveDamage() {
-    this.damageSound.play();
+    if(!this.damageSound.isPlaying){
+      this.damageSound.play();
+    }
+    
     this.playerStats.health -= 1;
 
     if (this.playerStats.health <= 0) {
@@ -583,10 +596,8 @@ class GameScene extends Phaser.Scene {
   gameOver() {
     this.registerScore();
 
-    this.scoreLabel.setText(`GAME OVER : ( \nYour Score = ${this.scoreLabel.score}`);
     this.physics.pause();
-
-    // this.gameOver = true;
+    this.themeMusic.stop();
 
     this.scene.start('game-over');
   }
