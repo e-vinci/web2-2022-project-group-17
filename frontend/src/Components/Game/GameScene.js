@@ -689,7 +689,7 @@ class GameScene extends Phaser.Scene {
       },
     };
 
-    const response = await fetch('/api/scores/', options);
+    const response = await fetch(`${process.env.API_BASE_URL}/scores`, options);
     if (!response.ok) {
       throw new Error(`fetch error:: : ${response.status} : ${response.statusText}`);
     }

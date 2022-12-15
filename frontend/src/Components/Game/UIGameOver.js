@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { isAuthenticated, getAuthenticatedUser } from '../../utils/auths';
+import { get20BestScores } from '../../models/scores';
 
 
 export default class UIGameOver extends Phaser.Scene {
@@ -42,12 +43,8 @@ export default class UIGameOver extends Phaser.Scene {
 
     
     async printScores() {
-        const response = await fetch('/api/scores?top=10');
-        if (!response.ok) {
-          throw new Error(`fetch error:: : ${response.status} : ${response.statusText}`);
-        }
-        const scores = await response.json();
-        for(let i = 0; i < scores.length ;i+=1){
+        const scores = await get20BestScores();
+        for(let i = 0; i < 10 ;i+=1){
             this.add.text(270, 200 + 15 * i, i + 1);
             if(isAuthenticated() && getAuthenticatedUser().username === scores[i].username){
                 this.add.text(310, 200 + 15 * i, scores[i].username, {color:'red'})

@@ -1,6 +1,6 @@
 async function get20BestScores() {
   try {
-    const response = await fetch('/api/scores?top=20');
+    const response = await fetch(`${process.env.API_BASE_URL}/scores?top=20`);
     if (!response.ok) throw new Error(`fetch error:: scores : ${response.status} : ${response.statusText}`);
 
     const scores = await response.json();
@@ -14,7 +14,7 @@ async function get20BestScores() {
 
 async function getScoresFromUser(username) {
   try {
-    const response = await fetch(`/api/scores/${username}`);
+    const response = await fetch(`${process.env.API_BASE_URL}/scores/${username}`);
     if (!response.ok) throw new Error(`fetch error:: scores : ${response.status} : ${response.statusText}`);
 
     const scores = await response.json();
