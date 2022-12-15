@@ -16,17 +16,17 @@ function renderLoginForm() {
   const formWrapper = document.createElement('div');
   formWrapper.className = 'formWrapper border w-25 d-flex flex-column align-items-center rounded';
   const formTop = document.createElement('div');
-  formTop.className = 'form-top w-100 my-2';
+  formTop.className = 'form-top w-100';
   const formTopDiv = document.createElement('div');
   const formTopTitle = document.createElement('h1');
-  formTopDiv.className = 'text-center';
-  formTopTitle.innerHTML = 'Connexion';
+  formTopDiv.className = 'text-center p-3';
+  formTopTitle.innerHTML = 'Connectez-vous pour jouer';
 
   const formBottom = document.createElement('div');
-  formBottom.className = 'form-bottom border-top w-100';
+  formBottom.className = 'form-bottom border-top w-100 p-3';
 
   const form = document.createElement('form');
-  form.className = 'my-3'
+  form.className = 'mb-3'
 
   const formGroup1 = document.createElement('div');
   const usernameLabel = document.createElement('label');

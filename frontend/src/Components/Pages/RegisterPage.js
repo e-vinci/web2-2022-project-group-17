@@ -18,11 +18,11 @@ function renderRegisterForm() {
   formTop.className = 'form-top w-100';
   const formTopDiv = document.createElement('div');
   const formTopTitle = document.createElement('h1');
-  formTopDiv.className = 'formTopDiv text-center';
+  formTopDiv.className = 'formTopDiv text-center p-3';
   formTopTitle.innerHTML = 'Inscription';
 
   const formBottom = document.createElement('div');
-  formBottom.className = 'form-bottom border-top w-100';
+  formBottom.className = 'form-bottom border-top w-100 p-3';
 
   const form = document.createElement('form');
   form.className = 'my-3'
