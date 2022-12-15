@@ -27,10 +27,10 @@ const HomePage = () => {
     <div class="zombie-img-div"></div>
   </section>
   <section id="how-to-play-section" class="how-to-play-section">
-    <h1 class="text-center mb-3">Règles</h1>
+    <h1 class="text-center mb-3 py-5">Règles</h1>
     <h5 class="title2 text-center" data-aos="fade-in" data-aos-offset=90 data-aos-delay=200 data-aos-duration=1500 data-aos-mirror="true">Il n'y a nulle part où se cacher. Essayez de survivre toute la nuit 
       parmi des hordes de zombies qui arrivent en continue sur vous...  <br> jusqu'à ce que la mort vous rattrape.</h5>
-    <div class="how-to-play-content">
+    <div class="how-to-play-content mb-3">
       <div class="box3 rounded shadow" data-aos="flip-right" data-aos-mirror="true">
         <div class="arrow-rules-img-div text-center mt-3">
         </div>

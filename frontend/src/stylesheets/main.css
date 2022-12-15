@@ -3,6 +3,7 @@
 main {
   height: 100%;
   min-height:100vh;
+  background: radial-gradient(#43425f, 20%,#292849);
 }
 
 .navbar, .navbar-container {

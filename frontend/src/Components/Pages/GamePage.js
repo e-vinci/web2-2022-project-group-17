@@ -3,6 +3,7 @@ import GameScene from '../Game/GameScene';
 import UIStart from '../Game/UIStart';
 import UIGameOver from '../Game/UIGameOver';
 
+
 let game;
 
 const GamePage = () => {
@@ -29,6 +30,9 @@ const GamePage = () => {
     scene: [UIStart, GameScene, UIGameOver],
     //  parent DOM element into which the canvas created by the renderer will be injected.
     parent: 'gameDiv',
+    dom: {
+        createContainer: true
+    },
   };
 
   // there could be issues when a game was quit (events no longer working)
