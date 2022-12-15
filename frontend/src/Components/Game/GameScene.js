@@ -102,6 +102,8 @@ class GameScene extends Phaser.Scene {
     this.gemSpawner = new GemSpawner(this, GEM_KEY);
     const gemsGroup = this.gemSpawner.group;
     this.healthBar = this.add.graphics();
+    this.physics.add.collider(this.zombieSpawner.group, backgroundLayer2);
+    this.physics.add.collider(this.bossSpawner.group, backgroundLayer2);
 
     this.createUI();
     this.createEvents();
@@ -263,7 +265,7 @@ class GameScene extends Phaser.Scene {
 
   createEvents() {
     const healthRegenEvent = new Phaser.Time.TimerEvent({
-      delay: 3000,
+      delay: 1000,
       loop: true,
       callback: this.regenHealth,
       callbackScope: this,
@@ -539,9 +541,10 @@ class GameScene extends Phaser.Scene {
   }
 
   gainXP() {
-    this.XPbar.x += 30;
-    this.playerStats.xp += 30;
-    if (this.playerStats.xp % 240 === 0) {
+    this.XPbar.x += 60 / 1.1 ** this.playerStats.level ;
+    this.playerStats.xp += 60 / 1.1 ** this.playerStats.level;
+    if (this.playerStats.xp >= 240) {
+      this.playerStats.xp -= 240;
       this.levelUp();
     }
   }
@@ -617,8 +620,8 @@ class GameScene extends Phaser.Scene {
   flameAttack() {
     Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
       Math.abs(zombie.x - this.player.x) < 200 && Math.abs(zombie.y - this.player.y) < 50
-        ? zombie.destroy()
-        : null,
+        ? zombie.destroy(this.gemSpawner.spawn(zombie.x, zombie.y))
+        : null
     );
     const flame = this.createFlame();
     flame.setOrigin(0, 0.5);
