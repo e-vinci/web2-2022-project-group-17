@@ -72,7 +72,7 @@ const HomePage = () => {
   renderImage(zombieImage, 'zombieImage', 500, '.zombie-img-div');
   renderImage(arrowKeysImage , 'arrowKeyImage', 50, '.arrow-rules-img-div');
   renderImage(gemImage, 'gemImage', 50, '.gem-rules-img-div');
-  renderImage(zombie2Image, 'zombie2Image', 50, '.zombie2-img-div');
+  renderImage(zombie2Image, 'zombie2Image', 60, '.zombie2-img-div');
 
 
 

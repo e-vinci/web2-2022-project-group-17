@@ -12,6 +12,7 @@ export default class ZombieSpawner {
     this._group = this.scene.physics.add.group();
   }
 
+
   get group() {
     return this._group;
   }
@@ -29,4 +30,5 @@ export default class ZombieSpawner {
   
     return zombie;
   }
+  
 }

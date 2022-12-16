@@ -6,7 +6,7 @@ import BulletSpawner from './BulletSpawner';
 import BossSpawner from './BossSpawner';
 import GemSpawner from './GemSpawner';
 import bonusAsset from '../../assets/bonus.png';
-import zombieAsset from '../../assets/zombie.png';
+// import zombieAsset from '../../assets/zombie.png';
 import bossAsset from '../../assets/boss.png';
 import bulletAsset from '../../assets/bullet.png';
 import maincharacterAsset from '../../assets/maincharacter.png';
@@ -24,6 +24,8 @@ import option3Asset from '../../assets/option3.png';
 import tilesAssets from '../../assets/tileset.png';
 import flameAsset from '../../assets/flame.png';
 import mapJSON from '../../assets/map.json';
+import zombiesprites from '../../assets/zombiesprites2.png';
+import zombieJSON from '../../assets/zombieJSON.json';
 import { isAuthenticated, getAuthenticatedUser } from '../../utils/auths';
 
 const ZOMBIE_KEY = 'zombie';
@@ -57,7 +59,7 @@ class GameScene extends Phaser.Scene {
   preload() {
     this.load.image('background', tilesAssets);
     this.load.tilemapTiledJSON('map', mapJSON);
-    this.load.image(ZOMBIE_KEY, zombieAsset);
+    // this.load.image(ZOMBIE_KEY, zombieAsset);
     this.load.image(BOSS_KEY, bossAsset);
     this.load.image(BULLET_KEY, bulletAsset);
     this.load.image(BONUS_KEY, bonusAsset);
@@ -76,6 +78,7 @@ class GameScene extends Phaser.Scene {
       frameHeight: 111,
     });
     this.load.atlas('maincharacter', maincharacterAsset, maincharactersprites);
+    this.load.atlas(ZOMBIE_KEY, zombiesprites, zombieJSON);
   }
 
   create() {
@@ -157,6 +160,8 @@ class GameScene extends Phaser.Scene {
     this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
     this.cameras.main.startFollow(this.player, true, 0.09, 0.09);
     this.cameras.main.setZoom(1);
+
+    this.createAnimsZombie();
   }
 
   update() {
@@ -208,6 +213,11 @@ class GameScene extends Phaser.Scene {
       this.player.anims.stop();
     }
 
+    
+      
+    
+    
+
     // FOR TESTING PURPOSES
     if (this.cursors.space.isDown) {
       this.gainXP();
@@ -220,6 +230,26 @@ class GameScene extends Phaser.Scene {
     Phaser.Actions.Call(this.bossSpawner.group.getChildren(), (boss) =>
       this.physics.moveToObject(boss, this.player, 60),
     );
+
+
+
+
+    const zombieArray = this.zombieSpawner.group.getChildren();
+    for (let i = 0; i < zombieArray.length; i+=1) {
+
+      if (zombieArray[i].body.velocity.x < 0) {
+        zombieArray[i].anims.play('zombie-walk-left', true);
+      } else if (zombieArray[i].body.velocity.x > 0) {
+        zombieArray[i].anims.play('zombie-walk-right', true);
+      } else if (zombieArray[i].body.velocity.y > 0) {
+        zombieArray[i].anims.play('zombie-walk-down', true);
+      } else if (zombieArray[i].body.velocity.y < 0) {
+        zombieArray[i].anims.play('zombie-walk-up', true);
+      } else if (zombieArray[i].body.velocity.x === 0 && zombieArray[i].body.velocity.y === 0) {
+        zombieArray[i].anims.play('zombie-standing');
+      }
+      
+    }   
   }
 
   createUI() {
@@ -339,6 +369,49 @@ class GameScene extends Phaser.Scene {
     this.healthBar.strokeRoundedRect(this.player.x - 20, this.player.y + 30, 40, 11, 3);
     this.healthBar.fillStyle(barColor, 1);
     this.healthBar.fillRect(this.player.x - 19, this.player.y + 31, barLength - 2, 9);
+  }
+
+  createAnimsZombie() {
+    this.anims.create({
+      key: 'zombie-walk-up',
+      frames: this.anims.generateFrameNames(ZOMBIE_KEY, {
+        prefix: 'walkup',
+        end: 8,
+        zeroPad: 2,
+      }),
+      frameRate: 15,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'zombie-walk-left',
+      frames: this.anims.generateFrameNames(ZOMBIE_KEY, {
+        prefix: 'walkleft',
+        end: 8,
+        zeroPad: 2,
+      }),
+      frameRate: 15,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'zombie-walk-down',
+      frames: this.anims.generateFrameNames(ZOMBIE_KEY, {
+        prefix: 'walkdown',
+        end: 8,
+        zeroPad: 2,
+      }),
+      frameRate: 15,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'zombie-walk-right',
+      frames: this.anims.generateFrameNames(ZOMBIE_KEY, {
+        prefix: 'walkright',
+        end: 8,
+        zeroPad: 2,
+      }),
+      frameRate: 15,
+      repeat: -1,
+    });
   }
 
   createPlayer() {

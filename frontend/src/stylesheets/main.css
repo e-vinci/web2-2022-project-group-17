@@ -5,7 +5,7 @@ main {
   min-height:100vh;
   background: radial-gradient(#43425f, 20%,#292849);
 }
-
+/* Navbar */
 .navbar, .navbar-container {
   padding: 0;
   background-color: #1F1E3D;
@@ -62,7 +62,7 @@ main {
   color: white;
 }
 
-
+/* HomePage */
 .intro-section {
   height: 100%;
   width: 100%;
@@ -142,6 +142,8 @@ main {
   color: white;
 }
 
+/* Leaderboard Page */
+
 
 .leaderboard {
   height: 90%;
@@ -172,15 +174,17 @@ main {
   color: black;
 }
 
+/* footer */
 
 footer {
-  min-height: 5vh;
+  min-height: 10vh;
   background-color: #1F1E3D;
   color: white;
   text-align: center;
-  margin-bottom: 10px;
 }
 
+
+/* Media queries */
 
 @media (max-width: 1000px) {
   .home-content{
