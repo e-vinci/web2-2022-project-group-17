@@ -3,6 +3,11 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cookieSession = require('cookie-session');
 const rateLimit = require('express-rate-limit')
+const cors = require('cors');
+
+const corsOptions = {
+  origin: 'http://localhost:8080',
+};
 
 const usersRouter = require('./routes/users');
 const authsRouter = require('./routes/auths');
@@ -34,6 +39,7 @@ app.use(
   }),
 );
 
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -41,6 +47,6 @@ app.use(cookieParser());
 
 app.use('/users', usersRouter);
 app.use('/auths', authsRouter);
-app.use('/scores', scoresRouter)
+app.use('/scores', cors(corsOptions), scoresRouter)
 
 module.exports = app;
