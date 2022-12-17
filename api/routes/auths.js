@@ -5,7 +5,7 @@ const { checkRegistrationFields } = require('../utils/validator');
 const router = express.Router();
 
 /* Register a user */
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const username = req?.body?.username?.length !== 0 ? req.body.username : undefined;
   const password = req?.body?.password?.length !== 0 ? req.body.password : undefined;
 
@@ -15,7 +15,7 @@ router.post('/register', (req, res) => {
     return res.status(400).json({ errors });
   }
 
-  const authenticatedUser = register(username, password);
+  const authenticatedUser = await register(username, password);
 
   if (!authenticatedUser) return res.sendStatus(409); // 409 Conflict
 
