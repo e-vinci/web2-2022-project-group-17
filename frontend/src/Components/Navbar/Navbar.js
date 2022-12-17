@@ -28,7 +28,7 @@ function renderNavbar() {
             ZOMBIE SURVIVORS
           </a>
           <button
-            class="navbar-toggler"
+            class="navbar-toggler navbar-dark me-3"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
@@ -45,14 +45,20 @@ function renderNavbar() {
               </li>
               <li class="nav-item">
                 <a class="nav-link left-item ms-5 p-0" href="#" data-uri="/leaderboard">Classement</a>
-              </li>                        
+              </li>
+              <li class="nav-item">
+                <a class="nav-link left-item ms-5 p-0 auth-btn-mobile" href="#" data-uri="/login">Se connecter</a>
+              </li>        
+              <li class="nav-item">
+                <a class="nav-link left-item ms-5 p-0 auth-btn-mobile" href="#" data-uri="/register">S'inscire</a>
+              </li>                    
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="btn btn-primary nav-link auth-btn px-3" href="#" data-uri="/login">Connexion</a>
+                <a class="btn btn-primary nav-link auth-btn px-3" href="#" data-uri="/login">Se connecter</a>
               </li>   
               <li class="nav-item ms-3">
-                <a class="btn btn-primary nav-link auth-btn me-3 px-3" href="#" data-uri="/register">S'enregistrer</a>
+                <a class="btn btn-primary nav-link auth-btn me-3 px-3" href="#" data-uri="/register">S'inscrire</a>
               </li>                         
             </ul>
           </div>
@@ -68,7 +74,7 @@ function renderNavbar() {
             Zombie Survivors
           </a>
           <button
-            class="navbar-toggler me-3"
+            class="navbar-toggler navbar-dark me-3"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
@@ -76,7 +82,7 @@ function renderNavbar() {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon navbar-dark"></span>
+            <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav fs-5 me-auto mb-2 mb-lg-0">

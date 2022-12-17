@@ -56,6 +56,7 @@ main {
   border: 1px solid black;
   border-radius: 20px;
   color: white;
+  width: 8em;
 }
 
 .auth-btn:hover, .auth-btn:visited, .auth-btn:active, .auth-btn:focus {
@@ -64,6 +65,10 @@ main {
 
 .navbar-nav:nth-child(3) {
   margin-left: 150px;
+}
+
+.auth-btn-mobile {
+  display: none;
 }
 
 .logout-btn-mobile {
@@ -81,9 +86,17 @@ main {
 }
 
 .home-content {
-  padding: 200px;
+  padding-left: 350px;
+  padding-top: 270px;
 }
 
+.play-now-content h1 {
+  font-size: 60px;
+}
+
+.play-now-btn {
+  min-width: 100px;
+}
 
 
 
@@ -91,27 +104,38 @@ main {
   transform: scale(1.1);
   transition: 0.4s;
 }
+
 .zombie-img-div {
   position: absolute;
   bottom: 0;
   right: 0;
 }
+
 .zombieImage {
   height: 100%;
 }
 
-.home-content > * {
-  opacity: 1;
-}
+
 
 .how-to-play-section {
   height: 100%;
   width: 100%;
-  min-height: 50vh;
+  min-height: 600px;
   background: radial-gradient(#42425e, 20%,#1F1E3D);
   color: white;
-  display: flex;
-  flex-direction: column;
+}
+
+.title2 {
+  padding-top: 40px;
+  padding-left: 50px;
+  padding-right: 50px;
+  text-align: center;
+  
+}
+
+.box-row {
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
 .box1 {
@@ -131,20 +155,20 @@ main {
 .instructions-section {
   height: 100%;
   width: 100%;
-  min-height: 50vh;
+  min-height: 1000px;
   background: radial-gradient(#43425f, 20%,#292849);
   color: white;
 }
 
-.instructions-content > * {
-  opacity: 1;
+.instructions-content {
+  padding: 200px;
 }
 
 .end-section {
   height: 100%;
   width: 100%;
-  min-height: 50vh;
-  background: radial-gradient(#43425f, 20%,#292849);
+  min-height: 15vh;
+  background: radial-gradient(#43425f, 20%,#36346E);
   color: white;
 }
 
@@ -196,6 +220,10 @@ main {
 
 .leaderboard-tab.active {
   border-bottom: 4px solid #ffffff;
+}
+
+.rank-header {
+  width: 90px;
 }
 
 /* Register page and login page */
@@ -286,13 +314,58 @@ footer {
 
 /* Media queries */
 
+
+
+@media (max-width: 1300px) {
+  .zombie-img-div {
+    bottom: 30px;
+    right: 30px;
+  }
+  .home-content {
+    padding-left: 300px;
+    padding-top: 250px;
+  }
+  .how-to-play-section {
+    min-height: 650px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .zombie-img-div {
+    position: relative;
+    top: 20px;
+    right: 0;
+  }
+  .home-content {
+    padding-left: 250px;
+    padding-top: 100px;
+  }
+
+  .box-row {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
 @media (max-width: 1000px) {
   .home-content{
-      padding: 100px;
+      padding: 200px;
+  }
+}
+
+@media (max-width: 991px) {
+  .box-text {
+    text-align: center;
+  }
+  .how-to-play-section {
+    min-height: 900px;
   }
 }
 
 @media (max-width: 990px) {
+  .auth-btn-mobile {
+    display: block;
+  }
   .logout-btn-mobile {
     display: block;
   }
@@ -300,13 +373,48 @@ footer {
   .profile-button {
     display: none;
   }
+  .auth-btn {
+    display: none;
+  }
+
+  .home-content{
+    padding: 150px;
+  }
+
+}
+
+
+@media (max-width: 780px) {
+  .home-content{
+    padding: 100px;
+  }
+  .how-to-play-section {
+    min-height: 950px;
+  }
+
+}
+
+@media (max-width: 720px) {
+  .home-content{
+    padding: 50px;
+  }
 
 }
 
 
 @media (max-width: 600px) {
+  .zombie-img-div {
+    top: 10px;
+    right: 0;
+  }
   .home-content{
-      padding: 20px;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 579px) {
+  .how-to-play-section {
+    min-height: 1000px;
   }
 }
 
