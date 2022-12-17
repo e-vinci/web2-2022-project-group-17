@@ -222,7 +222,7 @@ function renderRegisterForm() {
       registerFormGroup1.className = "register-form-group failure";
       usernameSmall.innerHTML = "Veuillez introduire un nom d'utilisateur";
     } else {
-      const response = await fetch(`${process.env.API_BASE_URL}/api/users/${username.value}`);
+      const response = await fetch(`${process.env.API_BASE_URL}/users/${username.value}`);
       if (response.ok) {
         registerFormGroup1.className = "register-form-group failure";
         usernameSmall.innerHTML = "Nom d'utilisateur déjà existant";
