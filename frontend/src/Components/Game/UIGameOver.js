@@ -44,7 +44,8 @@ export default class UIGameOver extends Phaser.Scene {
     
     async printScores() {
         const scores = await get20BestScores();
-        for(let i = 0; i < 10 ;i+=1){
+        const numberOfScoresToDisplay = scores.length > 10 ? 10 : scores.length;
+        for(let i = 0; i < numberOfScoresToDisplay ;i+=1){
             this.add.text(270, 200 + 15 * i, i + 1);
             if(isAuthenticated() && getAuthenticatedUser().username === scores[i].username){
                 this.add.text(310, 200 + 15 * i, scores[i].username, {color:'red'})
