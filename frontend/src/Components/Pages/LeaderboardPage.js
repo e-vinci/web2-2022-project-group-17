@@ -21,7 +21,7 @@ const LeaderboardPage = async () => {
   rankingsWrapper.innerHTML = scoresAsHtmlTable;
   main.appendChild(rankingsWrapper);
 
-  renderImage(leaderboardImage, 'leaderboard-img-div', 200, '.leaderboard-header');
+  renderImage(leaderboardImage, 'leaderboard-img-div', 150, '.leaderboard-header');
   renderImage(crownImage, 'crown-img-div', 50, '.rank1');
 
   const generalButton = document.querySelector('.general-btn');
@@ -56,7 +56,7 @@ function getScoresAsString(scores) {
   let htmlScoresTable = 
   `<div class="leaderboard table-responsive mx-auto rounded shadow-sm my-5">
     <header class="leaderboard-header rounded-top">
-      <h1 class="leaderboard-title text-uppercase text-center">Classement</h1>
+      <h1 class="leaderboard-title text-uppercase text-center">Classement TOP20</h1>
       <ul class="${authenticated ? 'nav justify-content-center leaderboard-options text-uppercase fw-bold' : 'd-none'}">
         <li class="nav-item">
           <a href="#" class="nav-link leaderboard-tab general-btn text-white active">General</a>

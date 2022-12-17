@@ -161,8 +161,50 @@ main {
 }
 
 .instructions-content {
-  padding: 200px;
+  padding-top: 100px;
+  padding-left: 200px;
+  margin-bottom: 400px;
+  margin-right: 200px;
+  text-align: right;
+  position: relative;
 }
+
+.strategy-img-div {
+  position: absolute;
+  left: 150px;
+  top: 100px;
+}
+
+.boss-container {
+  padding-left: 150px;
+  position: relative;
+}
+
+
+.title3 {
+  font-size: 50px;
+  margin-bottom: 50px;
+  font-weight: bold;
+}
+
+.rogue-description {
+  width: 400px;
+  font-size: 18px;
+  position: absolute;
+  right: 0;
+}
+
+.boss-description {
+  width: 500px;
+  font-size: 18px;
+}
+
+.boss-img-div {
+  position: absolute;
+  right: 300px;
+  bottom: -200px;
+}
+
 
 .end-section {
   height: 100%;
@@ -171,6 +213,8 @@ main {
   background: radial-gradient(#43425f, 20%,#36346E);
   color: white;
 }
+
+
 
 /* Leaderboard Page */
 
@@ -190,7 +234,6 @@ main {
 .leaderboard-img-div {
   position: relative;
   left: 370px;
-  bottom: 30px;
 }
 
 .leaderboard-table {
@@ -314,6 +357,23 @@ footer {
 
 /* Media queries */
 
+@media (max-width: 1700px) {
+  .boss-img-div {
+    right: 50px;
+  }
+}
+
+@media (max-width: 1350px) {
+  .boss-img-div {
+    position: relative;
+    right:0;
+    bottom: 0;
+    margin-bottom: 30px;
+  }
+  .zombieBossImage {
+    height: 400px;
+  }
+}
 
 
 @media (max-width: 1300px) {
@@ -327,6 +387,9 @@ footer {
   }
   .how-to-play-section {
     min-height: 650px;
+  }
+  .end-question {
+    margin-left: 50px;
   }
 }
 
@@ -344,6 +407,14 @@ footer {
   .box-row {
     padding-left: 80px;
     padding-right: 80px;
+  }
+}
+
+@media (max-width: 1115px) {
+  .strategy-img-div {
+    position: relative;
+    left: 0;
+    top: 0;
   }
 }
 
@@ -383,6 +454,26 @@ footer {
 
 }
 
+@media (max-width: 900px) {
+  
+  .rogue-title {
+    position: relative;
+    right: -40px;
+  }
+  .rogue-description {
+    right: -40px;
+  }
+}
+
+
+@media (max-width: 806px) {
+  
+  .rogue-title {
+    width: 500px;;
+    right: 40px;
+  }
+}
+
 
 @media (max-width: 780px) {
   .home-content{
@@ -391,6 +482,17 @@ footer {
   .how-to-play-section {
     min-height: 950px;
   }
+  .rogue-title {
+    right: 40px;
+  }
+
+  .rogue-description {
+    right: -100px;
+  }
+
+  .strategy-img-div {
+    left: 80px;
+  }
 
 }
 
@@ -398,7 +500,43 @@ footer {
   .home-content{
     padding: 50px;
   }
+  .rogue-description {
+    right: -120px;
+  }
 
+  .boss-img-div { 
+    right: 40px;
+  }
+
+}
+
+@media (max-width: 680px) {
+  .rogue-title {
+    right: 100px;
+  }
+
+  .boss-title {
+    position: relative;
+    right: 40px;
+  }
+
+  .boss-description {
+    position: relative;
+    right: 40px;
+  }
+  .boss-img-div { 
+    right: 90px;
+  }
+}
+
+@media (max-width: 620px) {
+  .strategy-img-div {
+    left: 10px;
+  }
+  .rogue-title {
+    right: 150px;
+  }
+   
 }
 
 
@@ -410,11 +548,42 @@ footer {
   .home-content{
     padding: 20px;
   }
+  .rogue-title {
+    right: 150px;
+  }
 }
 
 @media (max-width: 579px) {
   .how-to-play-section {
     min-height: 1000px;
+  }
+  .strategy-img-div {
+    left: -60px;
+  }
+  .rogue-title {
+    right: 200px;
+  }
+  .boss-title {
+    right: 80px;
+  }
+
+  .boss-description {
+    right: 80px;
+  }
+  .boss-img-div { 
+    right: 100px;
+  }
+}
+
+@media (max-width: 550px) {
+  .how-to-play-section {
+    min-height: 1000px;
+  }
+  .strategy-img-div {
+    left: -60px;
+  }
+  .rogue-title {
+    right: 200px;
   }
 }
 
