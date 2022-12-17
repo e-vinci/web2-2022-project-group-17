@@ -8,8 +8,6 @@ export default class UIGameOver extends Phaser.Scene {
         super("game-over");
     }
 
-
-
     create() {
         const centerX = this.scale.width * 0.5;
         const centerY = this.scale.height * 0.5;
@@ -23,7 +21,7 @@ export default class UIGameOver extends Phaser.Scene {
         ).setOrigin(0.5);
 
         // Button to restart the game
-        const button = this.add.text(centerX, centerY + 100, 'Restart',
+        const button = this.add.text(centerX, centerY + 140, 'Restart',
             {
                 fontFamily: 'Candara, Arial',
                 fontSize: '32px',
@@ -38,7 +36,11 @@ export default class UIGameOver extends Phaser.Scene {
             this.scene.start('game-scene');
         });
         this.printScores();
-        
+
+        // Message for unconnected user
+        if(!isAuthenticated()){
+            this.add.text(centerX, centerY + 100, 'Your score was not saved ! Make sure to connect next time.').setOrigin(0.5);
+        }
     }
 
     

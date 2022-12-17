@@ -400,7 +400,7 @@ class GameScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    const maincharacter = this.physics.add.sprite(400, 400, 'maincharacter');
+    const maincharacter = this.physics.add.sprite(700, 600, 'maincharacter');
     maincharacter.setBounce(0.2);
     maincharacter.setCollideWorldBounds(true);
     maincharacter.direction = 'down';
