@@ -6,7 +6,7 @@ const rateLimit = require('express-rate-limit')
 const cors = require('cors');
 
 const corsOptions = {
-  origin: 'http://localhost:8080'
+  origin: ['http://localhost:8080','https://tqueguin.github.io']
 };
 
 const usersRouter = require('./routes/users');
