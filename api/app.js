@@ -6,7 +6,7 @@ const rateLimit = require('express-rate-limit')
 const cors = require('cors');
 
 const corsOptions = {
-  origin: ['http://localhost:8080','https://tqueguin.github.io']
+  origin: ['http://localhost:8080','https://tqueguin.github.io','localhost:8080']
 };
 
 const usersRouter = require('./routes/users');
@@ -46,7 +46,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/users', cors(corsOptions), usersRouter);
-app.use('/auths', authsRouter);
+app.use('/auths', cors(corsOptions), authsRouter);
 app.use('/scores', cors(corsOptions), scoresRouter)
 
 module.exports = app;
