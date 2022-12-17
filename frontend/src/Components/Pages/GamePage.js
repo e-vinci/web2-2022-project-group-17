@@ -24,7 +24,7 @@ const GamePage = () => {
       default: 'arcade',
       arcade: {
         gravity: { y: 0 },
-        debug: true,
+        debug: false,
       },
     },
     scene: [UIStart, GameScene, UIGameOver],

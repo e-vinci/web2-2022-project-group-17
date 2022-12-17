@@ -6,7 +6,6 @@ import BulletSpawner from './BulletSpawner';
 import BossSpawner from './BossSpawner';
 import GemSpawner from './GemSpawner';
 import bonusAsset from '../../assets/bonus.png';
-// import zombieAsset from '../../assets/zombie.png';
 import bossAsset from '../../assets/boss.png';
 import bulletAsset from '../../assets/bullet.png';
 import maincharacterAsset from '../../assets/maincharacter.png';
@@ -59,7 +58,6 @@ class GameScene extends Phaser.Scene {
   preload() {
     this.load.image('background', tilesAssets);
     this.load.tilemapTiledJSON('map', mapJSON);
-    // this.load.image(ZOMBIE_KEY, zombieAsset);
     this.load.image(BOSS_KEY, bossAsset);
     this.load.image(BULLET_KEY, bulletAsset);
     this.load.image(BONUS_KEY, bonusAsset);
@@ -90,10 +88,6 @@ class GameScene extends Phaser.Scene {
 
     backgroundLayer2.setCollisionByProperty({ collides: true });
     this.physics.world.setBounds(0, 0, 2302, 2302);
-    // const map = this.make.tilemap({ key: 'map', tileHeight: 16, tileWidth: 16});
-    // const tileset = map.addTilesetImage('tileset ', 'tiles', 16, 16);
-    // eslint-disable-next-line no-unused-vars
-    // const layer = map.createLayer('top', tileset, 0, 0);
     this.player = this.createPlayer();
     this.physics.add.collider(this.player, backgroundLayer2);
     this.zombieSpawner = new ZombieSpawner(this, ZOMBIE_KEY);
@@ -124,15 +118,15 @@ class GameScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
       .setScrollFactor(0);
-    this.levelUpText.setVisible(false);
+    this.levelUpText.setVisible(false).setDepth(1);
 
     // Level up options
     this.option1Image = this.add.image(250, 300, 'option1').setScrollFactor(0);
-    this.option1Image.setVisible(false);
+    this.option1Image.setVisible(false).setDepth(1);
     this.option2Image = this.add.image(400, 300, 'option2').setScrollFactor(0);
-    this.option2Image.setVisible(false);
+    this.option2Image.setVisible(false).setDepth(1);
     this.option3Image = this.add.image(550, 300, 'option3').setScrollFactor(0);
-    this.option3Image.setVisible(false);
+    this.option3Image.setVisible(false).setDepth(1);
 
     this.playerStats = {
       health: 100,
@@ -213,15 +207,6 @@ class GameScene extends Phaser.Scene {
       this.player.anims.stop();
     }
 
-    
-      
-    
-    
-
-    // FOR TESTING PURPOSES
-    if (this.cursors.space.isDown) {
-      this.gainXP();
-    }
 
     Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
       this.physics.moveToObject(zombie, this.player, 25),
@@ -308,19 +293,19 @@ class GameScene extends Phaser.Scene {
       callbackScope: this,
     });
     const bossSpawnEvent = new Phaser.Time.TimerEvent({
-      delay: 7500,
+      delay: 45000,
       loop: true,
       callback: this.spawnBoss,
       callbackScope: this,
     });
     const fireBulletEvent = new Phaser.Time.TimerEvent({
-      delay: 3500,
+      delay: 5000,
       loop: true,
       callback: this.fireBullet,
       callbackScope: this,
     });
     const bonusSpawnEvent = new Phaser.Time.TimerEvent({
-      delay: 15000,
+      delay: 20000,
       loop: true,
       callback: this.spawnBonus,
       callbackScope: this,
@@ -353,7 +338,7 @@ class GameScene extends Phaser.Scene {
   }
 
   spawnBonus() {
-    this.bonusSpawner.spawn();
+    this.bonusSpawner.spawn(this.player.x, this.player.y);
   }
 
   updateHealthBar() {
@@ -615,7 +600,7 @@ class GameScene extends Phaser.Scene {
   }
 
   gainXP() {
-    this.XPbar.x += 60 / 1.1 ** this.playerStats.level;
+    this.XPbar.x += 60 / 1.5 ** this.playerStats.level;
     this.playerStats.xp += 60 / 1.1 ** this.playerStats.level;
     if (this.playerStats.xp >= 240) {
       this.playerStats.xp -= 240;
@@ -636,6 +621,7 @@ class GameScene extends Phaser.Scene {
     this.levelDisplay.setText(`LEVEL ${this.playerStats.level}`);
     this.physics.pause();
     this.time.paused = true;
+    this.anims.pauseAll();
 
     // Display level up options
     this.levelUpText.setVisible(true);
@@ -669,6 +655,7 @@ class GameScene extends Phaser.Scene {
     this.levelUpText.setVisible(false);
     this.physics.resume();
     this.time.paused = false;
+    this.anims.resumeAll();
   }
 
   bulletHitZombie(zombie, bullet) {
@@ -691,16 +678,18 @@ class GameScene extends Phaser.Scene {
     bullet.destroy();
   }
 
+  // Flame attack, alternating sides
   flameAttack() {
+    const flame = this.createFlame();
+    flame.setOrigin(0, 0.5);
+    flame.setY(flame.y - 20);
     if (this.directionLastFlameAttack === 'left') {
       Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
         this.player.x - zombie.x > -200 && this.player.x - zombie.x < 0 && Math.abs(zombie.y - this.player.y) < 50
           ? zombie.destroy(this.gemSpawner.spawn(zombie.x, zombie.y))
           : null
       );
-      const flame = this.createFlame();
-      flame.setOrigin(0, 0.5);
-      flame.setX(flame.x + 40);
+      flame.setX(flame.x + 20);
       flame.anims.play({ key: 'right', repeat: false, hideOnComplete: true });
       this.directionLastFlameAttack = 'right';
     }
@@ -710,9 +699,7 @@ class GameScene extends Phaser.Scene {
           ? zombie.destroy(this.gemSpawner.spawn(zombie.x, zombie.y))
           : null
       );
-      const flame = this.createFlame();
-      flame.setOrigin(0, 0.5);
-      flame.setX(flame.x - 300);
+      flame.setX(flame.x - 310);
       flame.anims.play({ key: 'left', repeat: false, hideOnComplete: true });
       this.directionLastFlameAttack = 'left';
     }

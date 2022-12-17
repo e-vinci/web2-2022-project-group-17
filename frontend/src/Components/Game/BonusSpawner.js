@@ -16,12 +16,16 @@ export default class BonusSpawner {
     return this._group;
   }
 
-  spawn() {
-    const x = Phaser.Math.Between(20,800);
-    const y = Phaser.Math.Between(75,600);
+  spawn(playerX, playerY) {
+    const random = Phaser.Math.Between(0,3);
+    const possibleSpawns = [[playerX-500, Phaser.Math.Between(playerY-500,playerY+500)],
+                            [playerX+500, Phaser.Math.Between(playerY-500,playerY+500)],
+                            [Phaser.Math.Between(playerX-500,playerX+500),playerY+500],
+                            [Phaser.Math.Between(playerX-500,playerX+500),playerY-500]];
 
-    const bonus = this._group.create(x, y, this.key);
-
+    const bonus = this._group.create(possibleSpawns[random][0], possibleSpawns[random][1], this.key);
+    bonus.setBounce(1);
+    bonus.setCollideWorldBounds(true);
   
     return bonus;
   }
