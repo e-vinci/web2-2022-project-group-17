@@ -1,4 +1,9 @@
 @baseUrl = http://localhost:3000
 
-### Read all users
-GET {{baseUrl}}/users
+
+
+### Read admin user
+GET {{baseUrl}}/users/admin
+
+### Read jackie user (not registered)
+GET {{baseUrl}}/users/jackie

@@ -6,7 +6,7 @@ const rateLimit = require('express-rate-limit')
 const cors = require('cors');
 
 const corsOptions = {
-  origin: 'http://localhost:8080',
+  origin: 'http://localhost:8080'
 };
 
 const usersRouter = require('./routes/users');
@@ -45,7 +45,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/users', usersRouter);
+app.use('/users', cors(corsOptions), usersRouter);
 app.use('/auths', authsRouter);
 app.use('/scores', cors(corsOptions), scoresRouter)
 

@@ -59,6 +59,15 @@ async function register(username, password) {
   return authenticatedUser;
 }
 
+function readOneUserFromId(id) {
+  const users = parse(jsonDbPath, defaultUsers);
+  const idInt = parseInt(id, 10);
+  const indexOfUserFound = users.findIndex((user) => user.id === idInt);
+  if (indexOfUserFound < 0) return undefined;
+
+  return users[indexOfUserFound];
+}
+
 function readOneUserFromUsername(username) {
   const users = parse(jsonDbPath, defaultUsers);
   const indexOfUserFound = users.findIndex((user) => user.username === username);
@@ -98,4 +107,5 @@ module.exports = {
   login,
   register,
   readOneUserFromUsername,
+  readOneUserFromId,
 };
