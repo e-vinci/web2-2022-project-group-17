@@ -446,68 +446,6 @@ class GameScene extends Phaser.Scene {
       frameRate: 15,
       repeat: -1,
     });
-    this.anims.create({
-      key: 'standing',
-      frames: this.anims.generateFrameNames('maincharacter', {
-        prefix: 'standing',
-        end: 0,
-        zeroPad: 2,
-      }),
-      frameRate: 15,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: 'sword-swing-up',
-      frames: this.anims.generateFrameNames('maincharacter', {
-        prefix: 'swordup',
-        end: 5,
-        zeroPad: 2,
-      }),
-      frameRate: 15,
-      repeat: 0,
-    });
-    this.anims.create({
-      key: 'sword-swing-left',
-      frames: this.anims.generateFrameNames('maincharacter', {
-        prefix: 'swordleft',
-        start: 0,
-        end: 5,
-        zeroPad: 2,
-      }),
-      frameRate: 15,
-      repeat: 0,
-    });
-
-    this.anims.create({
-      key: 'sword-swing-right',
-      frames: this.anims.generateFrameNames('maincharacter', {
-        prefix: 'swordright',
-        end: 5,
-        zeroPad: 2,
-      }),
-      frameRate: 15,
-      repeat: 0,
-    });
-    this.anims.create({
-      key: 'sword-swing-down',
-      frames: this.anims.generateFrameNames('maincharacter', {
-        prefix: 'sworddown',
-        end: 5,
-        zeroPad: 2,
-      }),
-      frameRate: 15,
-      repeat: 0,
-    });
-    this.anims.create({
-      key: 'death',
-      frames: this.anims.generateFrameNames('maincharacter', {
-        prefix: 'dead',
-        end: 5,
-        zeroPad: 2,
-      }),
-      frameRate: 15,
-      repeat: -1,
-    });
 
     return maincharacter;
   }
