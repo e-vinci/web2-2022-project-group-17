@@ -7,6 +7,8 @@ import zombieImage from '../../img/zombie.png';
 import arrowKeysImage from '../../img/arrowkeys.png'
 import gemImage from '../../img/gems.png';
 import zombie2Image from '../../img/zombie2.png'
+import zombieBossImage from '../../img/boss.png';
+import stragegyImage from '../../img/strategy.png';
 
 const HomePage = () => {
   clearPage();
@@ -69,20 +71,21 @@ const HomePage = () => {
 
   </section>
   <section class="instructions-section">
-    <div class="instructions-content text-end" data-aos="fade-left" data-aos-offset="300" data-aos-easing="ease-in-sine">
-      <h1 class="title3 mb-3">Conseils : </h1>
-        <ul>
-          <li>
-            <h6 class="title4 mb-5">Prenez votre temps pour ramasser les gemmes, ils ne disapparaitront pas</h6>
-          </li>
-          
-        </ul>  
+    <div class="instructions-content" data-aos="fade-left" data-aos-mirror="true" data-aos-easing="ease-in-sine">
+      <div class="strategy-img-div"></div>
+      <h1 class="title3 rogue-title">Un jeu rogue-like</h1>
+      <h6 class="rogue-description">Réfléchissez bien au moment de choisir vos améliorations! Chacune d'entre elles apporte un avantage unique, soyez stratégiques.</h6>
+    </div>
+    <div class="boss-container" data-aos="fade-right" data-aos-mirror="true" data-aos-easing="ease-in-sine">
+      <h1 class="title3 boss-title">Des bosses très coriaces</h1>
+      <h6 class="boss-description">Des boss apparaitront occasionnellement. Ils se déplacent plus rapidement et ont plus de points de vie que les zombies.</h6>
+      <div class="boss-img-div"></div>   
     </div>
   </section>
 
   <section class="end-section d-flex">
     <div class="flex-grow-1 d-flex justify-content-around align-items-center">
-      <h1 class="title3 mb-3">Arriverez-vous à survivre à cet enfer? </h1>
+      <h1 class="mb-3 end-question">Arriverez-vous à survivre à cet enfer? </h1>
       <button href="#" class=" btn btn-warning bottom-play-now-btn me-4"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</button>
     </div>
   </section>
@@ -93,6 +96,8 @@ const HomePage = () => {
   renderImage(arrowKeysImage , 'arrowKeyImage', 50, '.arrow-rules-img-div');
   renderImage(gemImage, 'gemImage', 50, '.gem-rules-img-div');
   renderImage(zombie2Image, 'zombie2Image', 60, '.zombie2-img-div');
+  renderImage(zombieBossImage, 'zombieBossImage', 500, '.boss-img-div');
+  renderImage(stragegyImage, 'strategyImage', 300, '.strategy-img-div');
 
 
   const playNowButton = document.querySelector('.play-now-btn');
