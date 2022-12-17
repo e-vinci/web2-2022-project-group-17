@@ -49,21 +49,17 @@ function addOneScore(username, score) {
   return newScore;
 }
 
-/*
-function updateOneScore(nickname, scoreToBeUpdated) {
-  const scores = parse(jsonDbPath, defaultScores);
-  const foundIndex = scores.findIndex((score) => score.nickname === nickname);
-  if (!scoreFound) {
-    return undefined;
-  }
-  if (scoreFound?.score) {
-    scoreFound.score = scoreToBeUpdated;
-  }
-
+function deleteOneScore(id) {
+  const idAsNumber = parseInt(id, 10);
+  const scores = parse(jsonDbPath);
+  const foundIndex = scores.findIndex((score) => score.id === idAsNumber);
+  if (foundIndex < 0) return undefined;
+  const deletedScores = scores.splice(foundIndex, 1);
+  const deletedScore = deletedScores[0];
   serialize(jsonDbPath, scores);
-  return;
+
+  return deletedScore;
 }
-*/
 
 function getNextId() {
   const scores = parse(jsonDbPath, defaultScores);
@@ -76,5 +72,6 @@ function getNextId() {
 
 module.exports = {
   readAllScores,
-  addOneScore
+  addOneScore,
+  deleteOneScore
 }

@@ -1,8 +1,8 @@
 const express = require('express');
 // const path = require('node:path');
-const { authorize } = require('../utils/auths'); 
+const { authorize, isAdmin } = require('../utils/auths'); 
 
-const { readAllScores, addOneScore } = require('../models/scores');
+const { readAllScores, addOneScore, deleteOneScore } = require('../models/scores');
 
 
 const router = express.Router();
@@ -38,9 +38,6 @@ router.get('/:user', (req, res) => {
   return res.json(orderedLeaderboard);
 });
 
-module.exports = router;
-
-
 // add score
 router.post('/', authorize, (req, res) => {
   const { username } = req.body;
@@ -49,3 +46,18 @@ router.post('/', authorize, (req, res) => {
   const addedScore = addOneScore(username, score);
   return res.json(addedScore);
 })
+
+
+router.delete('/:id', authorize, isAdmin, (req, res) => {
+  const deletedScore = deleteOneScore(req?.params?.id);
+
+  if (!deletedScore) return res.sendStatus(404);
+
+  return res.json(deletedScore);
+});
+
+
+
+
+
+module.exports = router;

@@ -3,6 +3,10 @@ const { readOneUserFromUsername} = require('../models/users');
 
 const router = express.Router();
 
+/* GET users listing. */
+router.get('/', (req, res) => {
+  res.json({ users: [{ name: 'e-baron' }] });
+});
 
 // GET user by username
 router.get('/:username', (req, res) => {
@@ -14,3 +18,5 @@ router.get('/:username', (req, res) => {
 });
 
 module.exports = router;
+
+

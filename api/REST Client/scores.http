@@ -29,3 +29,10 @@ Content-Type: application/json
   "username": "Jaques",
   "score": 600
 }
+
+
+
+### Delete the score with id=2
+DELETE {{baseUrl}}/scores/2
+
+
