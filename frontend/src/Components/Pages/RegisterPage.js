@@ -133,7 +133,7 @@ function renderRegisterForm() {
 
 
   const submitDiv = document.createElement('div');
-  submitDiv.className = 'submitDiv text-center';
+  submitDiv.className = 'submitDiv text-center mt-3';
   const submit = document.createElement('input');
   submit.value = "S'inscrire";
   submit.type = 'submit';
@@ -307,7 +307,7 @@ async function onRegister(e) {
 
   if (!usernameValid || !passwordValid || !password2Valid) {
     const errorDiv = document.querySelector('.validation-error-div').firstChild;
-    errorDiv.className = "error-div text-center txt-danger"
+    errorDiv.className = "text-center"
     errorDiv.innerHTML = `Veuillez valider tous les champs`;
     return;
   }

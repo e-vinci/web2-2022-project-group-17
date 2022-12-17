@@ -20,7 +20,7 @@ function renderLoginForm() {
   const formTopDiv = document.createElement('div');
   const formTopTitle = document.createElement('h1');
   formTopDiv.className = 'text-center p-3';
-  formTopTitle.innerHTML = 'Connectez-vous pour jouer';
+  formTopTitle.innerHTML = 'Connexion';
 
   const formBottom = document.createElement('div');
   formBottom.className = 'form-bottom border-top w-100 p-3';
@@ -35,7 +35,7 @@ function renderLoginForm() {
   usernameLabel.innerHTML = "Nom d'utilisateur";
 
   const inputGroup1 = document.createElement('div');
-  inputGroup1.className = 'input-group mb-3 px-4';
+  inputGroup1.className = 'input-group mb-4 px-4';
   const inputGroup1Span = document.createElement('span');
   inputGroup1Span.className = 'input-group-text';
   const inputGroup1I = document.createElement('i');
@@ -57,7 +57,7 @@ function renderLoginForm() {
   passwordLabel.innerHTML = 'Mot de passe';
 
   const inputGroup2 = document.createElement('div');
-  inputGroup2.className = 'input-group mb-3 px-4';
+  inputGroup2.className = 'input-group mb-4 px-4';
   const inputGroup2Span = document.createElement('span');
   inputGroup2Span.className = 'input-group-text';
   const inputGroup2I = document.createElement('i');
@@ -71,15 +71,22 @@ function renderLoginForm() {
   password.className = 'form-control';
 
   const submitDiv = document.createElement('div');
-  submitDiv.className = 'submitDiv text-center';
+  submitDiv.className = 'submitDiv text-center mb-4';
   const submit = document.createElement('input');
   submit.value = 'Se connecter';
   submit.type = 'submit';
   submit.className = 'btn btn-success';
 
   const alreadyHasDiv = document.createElement('div');
+  const alreadyHasP = document.createElement('p');
   alreadyHasDiv.className = 'text-center mb-2';
-  alreadyHasDiv.innerHTML = `<p>Pas encore de compte? <a href="#">Inscrivez-vous maintenant.</a></p>`
+  alreadyHasDiv.innerHTML = `Pas encore de compte? <a href="#">Inscrivez-vous maintenant.</a>`
+
+  const loginErrorDiv = document.createElement('div');
+  loginErrorDiv.className = "login-error-div";
+  const loginErrorP = document.createElement('p');
+  loginErrorP.className = "login-error-p";
+  
   
   inputGroup1Span.appendChild(inputGroup1I);
   inputGroup1.appendChild(inputGroup1Span);
@@ -94,6 +101,8 @@ function renderLoginForm() {
   formGroup2.appendChild(inputGroup2);
 
   submitDiv.appendChild(submit);
+  alreadyHasDiv.appendChild(alreadyHasP);
+  loginErrorDiv.appendChild(loginErrorP);
 
   form.appendChild(formGroup1);
   form.appendChild(formGroup2);
@@ -101,6 +110,7 @@ function renderLoginForm() {
 
   formBottom.appendChild(form);
   formBottom.appendChild(alreadyHasDiv);
+  formBottom.appendChild(loginErrorDiv);
 
   formTopDiv.appendChild(formTopTitle);
   formTop.appendChild(formTopDiv);
@@ -138,7 +148,9 @@ async function onLogin(e) {
 
   const response = await fetch('/api/auths/login', options);
   if (!response.ok) {
-    throw new Error(`fetch error::auths/login : ${response.status} : ${response.statusText}`);
+    const errorP = document.querySelector('.login-error-p');
+    errorP.classList.add('text-center');
+    errorP.innerHTML = "Nom d'utilisateur ou mot de passe incorrect"
   }
   const authenticatedUser = await response.json();
 

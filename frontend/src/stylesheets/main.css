@@ -209,6 +209,7 @@ main {
 .register-form-group p {
   min-height: 24px;
   margin-left: 70px;
+  margin-bottom: 5px;
 }
 
 .register-form-group small {
@@ -232,14 +233,10 @@ main {
   visibility: hidden;
 }
 
-.validation-error-div {
-  min-height: 24px;
-}
-
-.error-div {
+.validation-error-div, .login-error-div {
+  min-height: 25px;
   color: #da3826;
 }
-
 
 
 /* footer */
