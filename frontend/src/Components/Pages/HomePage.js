@@ -27,27 +27,29 @@ const HomePage = () => {
     
   </section>
   <section id="how-to-play-section" class="how-to-play-section">
-    <h1 class="text-center mb-3 py-5">Règles</h1>
+    <h1 class="text-center mb-3 py-5">Instructions</h1>
     <h5 class="title2 text-center" data-aos="fade-in" data-aos-offset=90 data-aos-delay=200 data-aos-duration=1500 data-aos-mirror="true">Il n'y a nulle part où se cacher. Essayez de survivre toute la nuit 
       parmi des hordes de zombies qui arrivent en continue sur vous...  <br> jusqu'à ce que la mort vous rattrape.</h5>
     <div class="how-to-play-content container my-5">
       <div class="row justify-content-around">
         <div class="col-3 box1 rounded shadow" data-aos="flip-right" data-aos-mirror="true">
-          <div class="arrow-rules-img-div text-center mt-3">
+          <div class="arrow-rules-img-div text-center h-25 mt-3">
           </div>
+          <h3 class="text-center">Déplacement</h3>
           <div class="text-center my-3">
             <p class="fw-bold">Utiliser les flèches directionnelles pour vous déplacer.<br> Le personnage s'occupera de tirer automatiquement.</p>
           </div>
         </div>
         <div class="col-3 box2 rounded shadow" data-aos="flip-down" data-aos-mirror="true">
-          <div class="zombie2-img-div text-center mt-3">
+          <div class="zombie2-img-div text-center h-25 mt-3">
           </div>
+          <h3 class="text-center">Tuer les zombies</h3> 
           <div class="text-center mt-3">
-            <p>Tuer les zombies pour augmenter votre score.</p>
+            <p>Tuer les zombies augmentera votre score.</p>
           </div>
         </div>
         <div class="col-3 box3 rounded shadow" data-aos="flip-left" data-aos-mirror="true">
-          <div class="gem-rules-img-div text-center mt-3">
+          <div class="gem-rules-img-div text-center h-25 mt-3">
           </div>
           <div class="text-center mt-3">
             <p>Ramasser les crystaux laissés par les zombies vaincus pour améliorer votre arme une fois la barre chargée.</p>
@@ -73,8 +75,6 @@ const HomePage = () => {
   renderImage(arrowKeysImage , 'arrowKeyImage', 50, '.arrow-rules-img-div');
   renderImage(gemImage, 'gemImage', 50, '.gem-rules-img-div');
   renderImage(zombie2Image, 'zombie2Image', 60, '.zombie2-img-div');
-
-
 
   /*
   
