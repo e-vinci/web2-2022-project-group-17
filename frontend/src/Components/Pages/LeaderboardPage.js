@@ -1,5 +1,5 @@
 import { clearPage, renderImage } from '../../utils/render';
-import mainCharacterImage from '../../img/maincharacter.png';
+import leaderboardImage from '../../img/leaderboard.png';
 import { get20BestScores, getScoresFromUser } from '../../models/scores';
 import crownImage from '../../img/crown.png';
 import { getAuthenticatedUser, isAuthenticated } from '../../utils/auths';
@@ -8,7 +8,7 @@ const LeaderboardPage = async () => {
   clearPage();
   const main = document.querySelector('main');
   const rankingsWrapper = document.createElement('div');
-  rankingsWrapper.classList.add('intro-section', 'd-flex', 'flex-row', 'align-items-center');
+  rankingsWrapper.className ="intro-section d-flex flex-row";
 
   const scores = await get20BestScores();
 
@@ -21,7 +21,7 @@ const LeaderboardPage = async () => {
   rankingsWrapper.innerHTML = scoresAsHtmlTable;
   main.appendChild(rankingsWrapper);
 
-  renderImage(mainCharacterImage, 'main-character-div', 200, '.leaderboard-header');
+  renderImage(leaderboardImage, 'leaderboard-img-div', 200, '.leaderboard-header');
   renderImage(crownImage, 'crown-img-div', 50, '.rank1');
 
   const generalButton = document.querySelector('.general-btn');
@@ -30,16 +30,22 @@ const LeaderboardPage = async () => {
 
   generalButton.addEventListener('click', (e) => {
     e.preventDefault();
+    generalButton.classList.toggle('active');
+    myScoresButton.classList.toggle('active');
     tbody.innerHTML = '';
     tbody.innerHTML = getAllLinesForGeneralScores(scores);
     renderImage(crownImage, 'crown-img-div', 50, '.rank1');
+    
   })
 
   myScoresButton.addEventListener('click', (e) => {
     e.preventDefault();
+    generalButton.classList.toggle('active');
+    myScoresButton.classList.toggle('active');
     tbody.innerHTML = '';
     tbody.innerHTML = getAllLinesForMyScores(myScores);
     renderImage(crownImage, 'crown-img-div', 50, '.rank1');
+    
   })
   
 };
@@ -50,13 +56,13 @@ function getScoresAsString(scores) {
   let htmlScoresTable = 
   `<div class="leaderboard table-responsive mx-auto rounded shadow-sm my-5">
     <header class="leaderboard-header rounded-top">
-      <h1 class="text-uppercase text-center">Classement</h1>
-      <ul class="${authenticated ? 'nav justify-content-center' : 'd-none'}">
+      <h1 class="leaderboard-title text-uppercase text-center">Classement</h1>
+      <ul class="${authenticated ? 'nav justify-content-center leaderboard-options text-uppercase fw-bold' : 'd-none'}">
         <li class="nav-item">
-          <a href="#" class="nav-link general-btn">Général</a>
+          <a href="#" class="nav-link leaderboard-tab general-btn text-white active">General</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link myscores-btn">Mes scores</a>
+          <a href="#" class="nav-link leaderboard-tab myscores-btn text-white">Mes scores</a>
         </li>
       </ul>
     </header>

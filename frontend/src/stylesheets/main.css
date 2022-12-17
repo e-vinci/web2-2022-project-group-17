@@ -62,6 +62,14 @@ main {
   color: white;
 }
 
+.navbar-nav:nth-child(3) {
+  margin-left: 150px;
+}
+
+.logout-btn-mobile {
+  display: none;
+}
+
 /* HomePage */
 .intro-section {
   height: 100%;
@@ -77,9 +85,7 @@ main {
 }
 
 
-.navbar-nav:nth-child(3) {
-  margin-left: 150px;
-}
+
 
 .play-now-btn:hover, .how-to-play-button:hover {
   transform: scale(1.1);
@@ -146,14 +152,21 @@ main {
 
 
 .leaderboard {
-  height: 90%;
-  width: 500px;
+  height: 100%;
+  width: 600px;
   border: 1px solid;
 }
 
 .leaderboard-header {
   background-color: #ff7500;
   color: white;
+  height: 250px;
+}
+
+.leaderboard-img-div {
+  position: relative;
+  left: 370px;
+  bottom: 30px;
 }
 
 .leaderboard-table {
@@ -164,6 +177,28 @@ main {
 .leaderboard-tbody tr:nth-child(2n) {
   background-color: #1f232c;
 }
+
+.leaderboard-options {
+  position: relative;
+  top: 150px;
+  right: 130px;
+}
+
+.leaderboard-tab {
+  padding: 0;
+  margin-right: 30px;
+}
+
+.leaderboard-title {
+  position: relative;
+  top: 10px;
+}
+
+.leaderboard-tab.active {
+  border-bottom: 4px solid #ffffff;
+}
+
+/* Register page and login page */
 
 
 .formWrapper {
@@ -256,6 +291,18 @@ footer {
       padding: 100px;
   }
 }
+
+@media (max-width: 990px) {
+  .logout-btn-mobile {
+    display: block;
+  }
+
+  .profile-button {
+    display: none;
+  }
+
+}
+
 
 @media (max-width: 600px) {
   .home-content{
