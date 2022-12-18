@@ -7,6 +7,7 @@ import medalImage from '../../img/medal.png'
 
 let myBestScore;
 let myRank;
+let isGeneralTab = true;
 
 const LeaderboardPage = async () => {
   clearPage();
@@ -59,24 +60,54 @@ const LeaderboardPage = async () => {
 
   const deleteButtons = document.querySelectorAll('.delete-btn');
 
+  const operation = document.querySelector('.operation');
+
   generalButton.addEventListener('click', (e) => {
     e.preventDefault();
-    generalButton.classList.toggle('active');
-    myScoresButton.classList.toggle('active');
-    tbody.innerHTML = '';
-    tbody.innerHTML = getAllLinesForGeneralScores(scores);
-    renderImage(crownImage, 'crown-img-div', 50, '.rank1');
-    
+    if (!isGeneralTab) {
+      tbody.innerHTML = '';
+      tbody.innerHTML = getAllLinesForGeneralScores(scores);
+      renderImage(crownImage, 'crown-img-div', 50, '.rank1');
+      generalButton.classList.toggle('active');
+      myScoresButton.classList.toggle('active');
+      operation.classList.remove('d-none');
+      isGeneralTab = true;
+    } else {
+      generalButton.classList.toggle('active');
+      myScoresButton.classList.toggle('active');
+      tbody.innerHTML = '';
+      tbody.innerHTML = getAllLinesForMyScores(myScores);
+      operation.classList.add('d-none');
+      if (!isEmpty(myScores)) {
+        renderImage(crownImage, 'crown-img-div', 50, '.rank1');
+      }
+      isGeneralTab = false;
+    }
+  
   })
 
   myScoresButton.addEventListener('click', (e) => {
     e.preventDefault();
-    generalButton.classList.toggle('active');
-    myScoresButton.classList.toggle('active');
-    tbody.innerHTML = '';
-    tbody.innerHTML = getAllLinesForMyScores(myScores);
-    renderImage(crownImage, 'crown-img-div', 50, '.rank1');
-    
+    if (isGeneralTab) {
+      
+      generalButton.classList.toggle('active');
+      myScoresButton.classList.toggle('active');
+      tbody.innerHTML = '';
+      tbody.innerHTML = getAllLinesForMyScores(myScores);
+      operation.classList.add('d-none');
+      if (!isEmpty(myScores)) {
+        renderImage(crownImage, 'crown-img-div', 50, '.rank1');
+      }
+      isGeneralTab = false;
+    } else {
+      tbody.innerHTML = '';
+      tbody.innerHTML = getAllLinesForGeneralScores(scores);
+      operation.classList.remove('d-none');
+      renderImage(crownImage, 'crown-img-div', 50, '.rank1');
+      generalButton.classList.toggle('active');
+      myScoresButton.classList.toggle('active');
+      isGeneralTab = true;
+    }
   })
 
   deleteButtons.forEach((button) => {
@@ -112,7 +143,10 @@ function getScoresAsString(scores) {
         <th class="rank-header text-info text-center">Rang</th>
         <th class="username-header text-info" scope="col">Nom d'utilisateur</th>
         <th class="score-header text-info text-end" scope="col">Score</th>
-        <th class="${authenticated && isAdmin() ? 'operation text-info text-end' : 'd-none'}">Opération</th>
+        ${authenticated && isAdmin() ? 
+          '<th class="operation text-info text-end">Opération</th>'
+         : ''
+        }
       </tr>
     </thead>
     <tbody class="leaderboard-tbody">`;
@@ -168,7 +202,7 @@ function getAllLinesForGeneralScores(scores) {
 function getAllLinesForMyScores(scores) {
   let rank = 1;
   let htmlScoresAsLines = '';
-  if (Object.keys(scores).length === 0) {
+  if (isEmpty(scores)) {
     htmlScoresAsLines += `
     <tr>
       <td class="text-center align-middle m-0 p-0">-</td>
@@ -199,6 +233,10 @@ function getAllLinesForMyScores(scores) {
 
 function isRank1(rank) {
   return rank === 1;
+}
+
+function isEmpty(scores) {
+  return Object.keys(scores).length === 0
 }
 
 
