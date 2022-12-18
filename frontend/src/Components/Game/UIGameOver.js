@@ -21,7 +21,7 @@ export default class UIGameOver extends Phaser.Scene {
         ).setOrigin(0.5);
 
         // Button to restart the game
-        const button = this.add.text(centerX, centerY + 140, 'Restart',
+        const button = this.add.text(centerX, centerY + 140, 'NOUVELLE PARTIE',
             {
                 fontFamily: 'Candara, Arial',
                 fontSize: '32px',

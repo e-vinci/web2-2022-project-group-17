@@ -14,7 +14,7 @@ export default class StartUI extends Phaser.Scene {
 
 
     create() {
-        const button = this.add.text(this.scale.width * 0.5, this.scale.height * 0.5, 'START',
+        const button = this.add.text(this.scale.width * 0.5, this.scale.height * 0.5, 'COMMENCER',
             {
                 fontFamily: 'Candara, Arial',
                 fontSize: '48px',

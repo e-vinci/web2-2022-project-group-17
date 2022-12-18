@@ -194,7 +194,7 @@ class GameScene extends Phaser.Scene {
     this.levelDisplay.setDepth(4);
 
     // Display player's name if connected
-    const text = isAuthenticated() ? `Player : ${getAuthenticatedUser().username}` : "You are not connected";
+    const text = isAuthenticated() ? `Joueur : ${getAuthenticatedUser().username}` : "Non connecté";
     this.nameDisplay = this.add
       .text(635, 25, text, { fontSize: '14px', fontFamily: 'Candara, Arial', fill: '#fff' })
       .setScrollFactor(0);
