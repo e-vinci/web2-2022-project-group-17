@@ -2,13 +2,15 @@ import Phaser from 'phaser';
 import GameScene from '../Game/GameScene';
 import UIStart from '../Game/UIStart';
 import UIGameOver from '../Game/UIGameOver';
+import { isAuthenticated } from '../../utils/auths';
 
 
 let game;
 
 const GamePage = () => {
   const phaserGame = `
-  <div class="gameWrapper intro-section d-flex justify-content-center align-items-center">
+  <div class="gameWrapper intro-section d-flex flex-column justify-content-center align-items-center">
+    ${!isAuthenticated()? `<div class="login-reminder">Connectez-vous pour pouvoir enregistrer un score</div>` : ''}
     <div id="gameDiv" class="d-flex justify-content-center mb-5">
     </div>
   </div>`;

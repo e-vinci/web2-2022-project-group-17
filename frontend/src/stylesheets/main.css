@@ -75,6 +75,10 @@ main {
   display: none;
 }
 
+.dropdown-menu-end {
+  width: 200px;
+}
+
 /* HomePage */
 .intro-section {
   height: 100%;
@@ -221,7 +225,7 @@ main {
 
 .leaderboard {
   height: 100%;
-  width: 600px;
+  width: 650px;
   border: 1px solid;
 }
 
@@ -268,6 +272,35 @@ main {
 .rank-header {
   width: 90px;
 }
+
+.delete-btn-rank1 {
+  margin-top: 12px;
+}
+
+.my-rank-score-div {
+  height: 11vh;
+  background-color: #1F1E3D;
+  color: white;
+}
+
+.my-rank-score-div div {
+  font-size: 20px;
+}
+
+.my-points {
+  position: relative;
+  bottom: 18px;
+}
+
+/* Game page */
+
+.login-reminder {
+  font-size: large;
+  padding-bottom: 20px;
+  color: #FFE500;
+}
+
+
 
 /* Register page and login page */
 
@@ -348,7 +381,7 @@ main {
 /* footer */
 
 footer {
-  min-height: 10vh;
+  height: 10vh;
   background-color: #1F1E3D;
   color: white;
   text-align: center;

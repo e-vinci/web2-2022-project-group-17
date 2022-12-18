@@ -28,6 +28,10 @@ async function getScoresFromUser(username) {
   }
 }
 
+
+
+
+
 async function deleteOneScore(id) {
   if (!id) return undefined;
 
