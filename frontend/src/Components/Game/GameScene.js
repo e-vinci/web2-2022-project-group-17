@@ -160,7 +160,7 @@ class GameScene extends Phaser.Scene {
   }
 
   createUI() {
-    this.scoreLabel = this.createScoreLabel(40, 20, 0).setScrollFactor(0);
+    this.scoreLabel = this.createScoreLabel(35, 20, 0).setScrollFactor(0);
     this.scoreLabel.setDepth(2);
     // Display XP bar
     const XPcontainer = this.add.sprite(400, 20, 'XPcontainer').setScrollFactor(0);
