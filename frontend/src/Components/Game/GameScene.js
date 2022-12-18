@@ -133,8 +133,8 @@ class GameScene extends Phaser.Scene {
       level: 0,
       xp: 0,
       numberOfBullets: 0,
-      pointsOfRegeneration: 0,
       speed: 100,
+      armor: 0
     };
     this.zombiesInLastWave = 0;
 
@@ -213,14 +213,14 @@ class GameScene extends Phaser.Scene {
     );
 
     Phaser.Actions.Call(this.bossSpawner.group.getChildren(), (boss) =>
-      this.physics.moveToObject(boss, this.player, 60),
+      this.physics.moveToObject(boss, this.player, 80),
     );
 
 
 
 
     const zombieArray = this.zombieSpawner.group.getChildren();
-    for (let i = 0; i < zombieArray.length; i+=1) {
+    for (let i = 0; i < zombieArray.length; i += 1) {
 
       if (zombieArray[i].body.velocity.x < 0) {
         zombieArray[i].anims.play('zombie-walk-left', true);
@@ -233,8 +233,8 @@ class GameScene extends Phaser.Scene {
       } else if (zombieArray[i].body.velocity.x === 0 && zombieArray[i].body.velocity.y === 0) {
         zombieArray[i].anims.play('zombie-standing');
       }
-      
-    }   
+
+    }
   }
 
   createUI() {
@@ -280,12 +280,6 @@ class GameScene extends Phaser.Scene {
   }
 
   createEvents() {
-    const healthRegenEvent = new Phaser.Time.TimerEvent({
-      delay: 1000,
-      loop: true,
-      callback: this.regenHealth,
-      callbackScope: this,
-    });
     const zombieSpawnEvent = new Phaser.Time.TimerEvent({
       delay: 7500,
       loop: true,
@@ -317,7 +311,6 @@ class GameScene extends Phaser.Scene {
       callbackScope: this,
     });
 
-    this.time.addEvent(healthRegenEvent);
     this.time.addEvent(zombieSpawnEvent);
     this.time.addEvent(bossSpawnEvent);
     this.time.addEvent(fireBulletEvent);
@@ -326,15 +319,18 @@ class GameScene extends Phaser.Scene {
   }
 
   spawnZombies() {
-    this.zombiesInLastWave += 1;
-    for (let i = 0; i < this.zombiesInLastWave; i += 1) {
+    this.zombiesInLastWave += 0.75;
+    for (let i = 0; i < Math.floor(this.zombiesInLastWave); i += 1) {
       this.zombieSpawner.spawn(this.player.x, this.player.y);
     }
   }
 
   spawnBoss() {
-    const boss = this.bossSpawner.spawn(this.player.x, this.player.y);
-    boss.HP = 5;
+    for (let i = 0; i < Math.floor(this.playerStats.level / 3); i += 1) {
+      const boss = this.bossSpawner.spawn(this.player.x, this.player.y);
+      boss.HP = 5;
+    }
+
   }
 
   spawnBonus() {
@@ -538,18 +534,11 @@ class GameScene extends Phaser.Scene {
   }
 
   gainXP() {
-    this.XPbar.x += 60 / 1.5 ** this.playerStats.level;
-    this.playerStats.xp += 60 / 1.1 ** this.playerStats.level;
+    this.XPbar.x += 60 / (1.5 ** this.playerStats.level);
+    this.playerStats.xp += 60 / (1.5 ** this.playerStats.level);
     if (this.playerStats.xp >= 240) {
       this.playerStats.xp -= 240;
       this.levelUp();
-    }
-  }
-
-  regenHealth() {
-    this.playerStats.health += this.playerStats.pointsOfRegeneration;
-    if (this.playerStats.health > 100) {
-      this.playerStats.health = 100;
     }
   }
 
@@ -564,24 +553,30 @@ class GameScene extends Phaser.Scene {
     // Display level up options
     this.levelUpText.setVisible(true);
     // First option : gain 1 fireball
-    this.option1Image.setVisible(true);
-    this.option1Image.setInteractive();
-    this.option1Image.on('pointerdown', () => {
-      this.playerStats.numberOfBullets += 1;
-      this.resumeGame();
-    });
-    // Second option : increase health regeneration
-    this.option2Image.setVisible(true);
-    this.option2Image.setInteractive();
-    this.option2Image.on('pointerdown', () => {
-      this.playerStats.pointsOfRegeneration += 1;
-      this.resumeGame();
-    });
-    // Third option : increase speed by 10
+    if (this.playerStats.numberOfBullets < 10) {
+      this.option1Image.setVisible(true);
+      this.option1Image.setInteractive();
+      this.option1Image.on('pointerdown', () => {
+        this.playerStats.numberOfBullets += 1;
+        this.resumeGame();
+      });
+    }
+
+    // Second option : increase armor protection
+    if (this.playerStats.armor < 10) {
+      this.option2Image.setVisible(true);
+      this.option2Image.setInteractive();
+      this.option2Image.on('pointerdown', () => {
+        this.playerStats.armor += 1;
+        this.resumeGame();
+      });
+    }
+
+    // Third option : increase speed by 5
     this.option3Image.setVisible(true);
     this.option3Image.setInteractive();
     this.option3Image.on('pointerdown', () => {
-      this.playerStats.speed += 10;
+      this.playerStats.speed += 5;
       this.resumeGame();
     });
   }
@@ -624,7 +619,7 @@ class GameScene extends Phaser.Scene {
     if (this.directionLastFlameAttack === 'left') {
       Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
         this.player.x - zombie.x > -200 && this.player.x - zombie.x < 0 && Math.abs(zombie.y - this.player.y) < 50
-          ? zombie.destroy(this.gemSpawner.spawn(zombie.x, zombie.y))
+          ? zombie.destroy(this.gemSpawner.spawn(zombie.x, zombie.y)) && this.scoreLabel.add(50)
           : null
       );
       flame.setX(flame.x + 20);
@@ -634,7 +629,7 @@ class GameScene extends Phaser.Scene {
     else {
       Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
         this.player.x - zombie.x < 200 && this.player.x - zombie.x > 0 && Math.abs(zombie.y - this.player.y) < 50
-          ? zombie.destroy(this.gemSpawner.spawn(zombie.x, zombie.y))
+          ? zombie.destroy(this.gemSpawner.spawn(zombie.x, zombie.y)) && this.scoreLabel.add(50)
           : null
       );
       flame.setX(flame.x - 310);
@@ -655,7 +650,7 @@ class GameScene extends Phaser.Scene {
       this.damageSound.play();
     }
 
-    this.playerStats.health -= 1;
+    this.playerStats.health -= (1 - (this.playerStats.armor / 20));
 
     if (this.playerStats.health <= 0) {
       this.gameOver();
