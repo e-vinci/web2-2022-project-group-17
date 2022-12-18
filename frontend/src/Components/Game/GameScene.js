@@ -245,7 +245,7 @@ class GameScene extends Phaser.Scene {
       callbackScope: this,
     });
     const bossSpawnEvent = new Phaser.Time.TimerEvent({
-      delay: 40000,
+      delay: 30000,
       loop: true,
       callback: this.spawnBoss,
       callbackScope: this,
