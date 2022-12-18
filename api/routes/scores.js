@@ -32,9 +32,13 @@ router.get('/:user', (req, res) => {
   const scores = parse(jsonDbPath, SCORES);
   orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
   */
+  const top = req?.query?.top;
   const scores = readAllScores();
   let orderedLeaderboard = [...scores].sort((a, b) => b.score - a.score);
   orderedLeaderboard = orderedLeaderboard.filter(score => score.username === req.params.user);
+  if (top) {
+    orderedLeaderboard = orderedLeaderboard.slice(0,top);
+  }
   return res.json(orderedLeaderboard);
 });
 

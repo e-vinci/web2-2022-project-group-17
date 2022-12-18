@@ -18,8 +18,24 @@ Content-Type: application/json
   "score": 500
 }
 
-### read Jason's scores
+### add Jason's score
+POST {{baseUrl}}/scores
+Content-Type: application/json
+
+{
+  "username": "Jason",
+  "score": 600
+}
+
+
+### read all Jason's scores
 GET {{baseUrl}}/scores/Jason
+
+### read Jason's best score
+GET {{baseUrl}}/scores/Jason?top=1
+
+
+
 
 ### add Jaques's score
 POST {{baseUrl}}/scores
@@ -29,6 +45,9 @@ Content-Type: application/json
   "username": "Jaques",
   "score": 600
 }
+
+
+
 
 
 
