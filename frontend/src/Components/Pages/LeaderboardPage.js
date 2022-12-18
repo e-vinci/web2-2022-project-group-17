@@ -30,7 +30,7 @@ const LeaderboardPage = async () => {
       <div class="ps-5 d-flex justify-content-center align-items-center">
         <div class="medal-img-div me-3"></div>
         <div class="my-rank-div d-flex flex-column justify-content-center">
-          <p class=" pt-3">Mon rang :</p>
+          <p class="pt-3">Mon rang :</p>
           <p class="my-points"> ${myRank !== undefined ? myRank : '-'} </p>
         </div> 
       </div>

@@ -1,6 +1,5 @@
 // import anime from 'animejs/lib/anime.es';
 import { clearPage, renderImage } from '../../utils/render';
-import { isAuthenticated } from '../../utils/auths';
 import Navigate from '../Router/Navigate';
 
 import zombieImage from '../../img/zombie.png';
@@ -86,7 +85,7 @@ const HomePage = () => {
   <section class="end-section d-flex">
     <div class="flex-grow-1 d-flex justify-content-around align-items-center">
       <h1 class="mb-3 end-question">Arriverez-vous à survivre à cet enfer? </h1>
-      <button href="#" class=" btn btn-warning bottom-play-now-btn me-4"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</button>
+      <button href="#" class=" btn btn-warning play-now-btn me-4"><i class="fa-solid fa-play me-2"></i> Jouer maintenant</button>
     </div>
   </section>
   `
@@ -100,26 +99,13 @@ const HomePage = () => {
   renderImage(stragegyImage, 'strategyImage', 300, '.strategy-img-div');
 
 
-  const playNowButton = document.querySelector('.play-now-btn');
-  playNowButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (isAuthenticated()) {
+  const playNowButtons = document.querySelectorAll('.play-now-btn');
+  playNowButtons.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
       Navigate('/game');
-    } else {
-      Navigate('/login');
-    }
-  });
-
-  const bottomPlayNowButton = document.querySelector('.bottom-play-now-btn');
-  bottomPlayNowButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (isAuthenticated()) {
-      Navigate('/game');
-    } else {
-      Navigate('/login');
-    }
-  });
-
+    })
+  })
 
   const button = document.querySelector('#how-to-play-button');
   const howToPlaySection = document.querySelector('#how-to-play-section');
