@@ -1,9 +1,12 @@
-# Projet Web2 2022
+# Zombie Survivors
+
 ## Frontend
-npm install
+`npm install`
+`npm start`
 
-npm start
 ## API
-npm install
+`npm install`
+`npm start`
 
-npm start
+## Link to Github Project
+https://github.com/orgs/e-vinci/projects/16
