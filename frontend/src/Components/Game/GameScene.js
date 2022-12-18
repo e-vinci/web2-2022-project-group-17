@@ -79,7 +79,55 @@ class GameScene extends Phaser.Scene {
     this.load.atlas(ZOMBIE_KEY, zombiesprites, zombieJSON);
   }
 
+
   create() {
+
+    this.createWorld();
+    this.createUI();
+    this.createEvents();
+
+    this.playerStats = {
+      health: 100,
+      level: 0,
+      xp: 0,
+      numberOfBullets: 0,
+      speed: 100,
+      armor: 0
+    };
+    this.zombiesInLastWave = 0;
+
+
+    this.cursors = this.input.keyboard.createCursorKeys();
+
+    this.damageSound = this.sound.add(DAMAGE_SOUND_KEY);
+    this.fireballSound = this.sound.add('fireballSound');
+    this.themeMusic = this.sound.add('themeMusic');
+    this.themeMusic.play({ loop: true });
+
+    this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
+    this.cameras.main.startFollow(this.player, true, 0.09, 0.09);
+    this.cameras.main.setZoom(1);
+
+    this.createAnimsZombie();
+  }
+
+  // Main game loop : executed between every frame
+  update() {
+    this.updateHealthBar();
+    this.updateZombieAnims();
+    this.updatePlayerAnims();
+
+    // Move enemies towards player
+    Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
+      this.physics.moveToObject(zombie, this.player, 25),
+    );
+    Phaser.Actions.Call(this.bossSpawner.group.getChildren(), (boss) =>
+      this.physics.moveToObject(boss, this.player, 80),
+    );
+  }
+
+
+  createWorld() {
     const mapLevel = this.add.tilemap('map');
     const tileset = mapLevel.addTilesetImage('tileset', 'background');
     const backgroundLayer = mapLevel.createLayer('Tile Layer 1', tileset);
@@ -103,9 +151,54 @@ class GameScene extends Phaser.Scene {
     this.healthBar = this.add.graphics();
     this.physics.add.collider(this.zombieSpawner.group, backgroundLayer2);
     this.physics.add.collider(this.bossSpawner.group, backgroundLayer2);
+    this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
+    this.physics.add.collider(this.player, bossGroup, this.receiveDamage, null, this);
+    this.physics.add.overlap(zombiesGroup, bulletsGroup, this.bulletHitZombie, null, this);
+    this.physics.add.overlap(bossGroup, bulletsGroup, this.bulletHitBoss, null, this);
+    this.physics.add.overlap(this.player, bonusGroup, this.collectBonus, null, this);
+    this.physics.add.overlap(this.player, gemsGroup, this.collectGem, null, this);
+  }
 
-    this.createUI();
-    this.createEvents();
+  createUI() {
+    this.scoreLabel = this.createScoreLabel(40, 20, 0).setScrollFactor(0);
+    this.scoreLabel.setDepth(2);
+    // Display XP bar
+    const XPcontainer = this.add.sprite(400, 20, 'XPcontainer').setScrollFactor(0);
+    XPcontainer.setDepth(2);
+    this.XPbar = this.add.sprite(XPcontainer.x, XPcontainer.y, 'XPbar').setScrollFactor(0);
+    this.XPMask = this.add.sprite(this.XPbar.x, this.XPbar.y, 'XPbar').setScrollFactor(0);
+    this.XPMask.visible = false;
+    this.XPbar.mask = new Phaser.Display.Masks.BitmapMask(this, this.XPMask);
+    this.XPbar.x -= 240;
+    this.XPbar.setDepth(3);
+    this.XPMask.setDepth(3);
+
+    // Display score background
+    this.add
+      .sprite(110, 36, 'scoreBackground')
+      .setScrollFactor(0)
+      .setDepth(1);
+    this.add
+      .sprite(700, 36, 'scoreBackground')
+      .setScrollFactor(0)
+      .setDepth(1);
+
+    // Display current XP level
+    const styleLevelDisplay = {
+      fontSize: '19px',
+      fontStyle: 'bold',
+      fontFamily: 'Candara, Arial',
+      fill: '#FFFFFF',
+    };
+    this.levelDisplay = this.add.text(375, 11, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
+    this.levelDisplay.setDepth(4);
+
+    // Display player's name if connected
+    const text = isAuthenticated() ? `Player : ${getAuthenticatedUser().username}` : "You are not connected";
+    this.nameDisplay = this.add
+      .text(635, 25, text, { fontSize: '14px', fontFamily: 'Candara, Arial', fill: '#fff' })
+      .setScrollFactor(0);
+    this.nameDisplay.setDepth(2);
 
     // Level up text
     const centerX = this.scale.width * 0.5;
@@ -123,46 +216,125 @@ class GameScene extends Phaser.Scene {
     // Level up options
     this.option1Image = this.add.image(250, 300, 'option1').setScrollFactor(0);
     this.option1Image.setVisible(false).setDepth(1);
+    this.option1Image.setInteractive();
+    this.option1Image.on('pointerdown', () => {
+      this.playerStats.numberOfBullets += 1;
+      this.resumeGame();
+    });
     this.option2Image = this.add.image(400, 300, 'option2').setScrollFactor(0);
     this.option2Image.setVisible(false).setDepth(1);
+    this.option2Image.setInteractive();
+    this.option2Image.on('pointerdown', () => {
+      this.playerStats.armor += 1;
+      this.resumeGame();
+    });
     this.option3Image = this.add.image(550, 300, 'option3').setScrollFactor(0);
     this.option3Image.setVisible(false).setDepth(1);
-
-    this.playerStats = {
-      health: 100,
-      level: 0,
-      xp: 0,
-      numberOfBullets: 0,
-      speed: 100,
-      armor: 0
-    };
-    this.zombiesInLastWave = 0;
-
-    this.physics.add.collider(this.player, zombiesGroup, this.receiveDamage, null, this);
-    this.physics.add.collider(this.player, bossGroup, this.receiveDamage, null, this);
-    this.physics.add.overlap(zombiesGroup, bulletsGroup, this.bulletHitZombie, null, this);
-    this.physics.add.overlap(bossGroup, bulletsGroup, this.bulletHitBoss, null, this);
-    this.physics.add.overlap(this.player, bonusGroup, this.collectBonus, null, this);
-    this.physics.add.overlap(this.player, gemsGroup, this.collectGem, null, this);
-    this.cursors = this.input.keyboard.createCursorKeys();
-
-    this.damageSound = this.sound.add(DAMAGE_SOUND_KEY);
-    this.fireballSound = this.sound.add('fireballSound');
-    this.themeMusic = this.sound.add('themeMusic');
-    this.themeMusic.play({ loop: true });
-
-    this.cameras.main.setSize(this.game.scale.width, this.game.scale.height);
-    this.cameras.main.startFollow(this.player, true, 0.09, 0.09);
-    this.cameras.main.setZoom(1);
-
-    this.createAnimsZombie();
+    this.option3Image.setInteractive();
+    this.option3Image.on('pointerdown', () => {
+      this.playerStats.speed += 5;
+      this.resumeGame();
+    });
   }
 
-  update() {
-    this.updateHealthBar();
+  createEvents() {
+    this.zombieSpawnEvent = new Phaser.Time.TimerEvent({
+      delay: 10000,
+      loop: true,
+      callback: this.spawnZombies,
+      callbackScope: this,
+    });
+    const bossSpawnEvent = new Phaser.Time.TimerEvent({
+      delay: 40000,
+      loop: true,
+      callback: this.spawnBoss,
+      callbackScope: this,
+    });
+    const fireBulletEvent = new Phaser.Time.TimerEvent({
+      delay: 5000,
+      loop: true,
+      callback: this.fireBullet,
+      callbackScope: this,
+    });
+    const bonusSpawnEvent = new Phaser.Time.TimerEvent({
+      delay: 15000,
+      loop: true,
+      callback: this.spawnBonus,
+      callbackScope: this,
+    });
+    const flameEvent = new Phaser.Time.TimerEvent({
+      delay: 2000,
+      loop: true,
+      callback: this.flameAttack,
+      callbackScope: this,
+    });
 
+    this.time.addEvent(this.zombieSpawnEvent);
+    this.time.addEvent(bossSpawnEvent);
+    this.time.addEvent(fireBulletEvent);
+    this.time.addEvent(bonusSpawnEvent);
+    this.time.addEvent(flameEvent);
+  }
+
+  spawnZombies() {
+    this.zombiesInLastWave += 3;
+    this.zombieSpawnEvent.delay += 2000;
+    for (let i = 0; i < this.zombiesInLastWave; i += 1) {
+      this.zombieSpawner.spawn(this.player.x, this.player.y);
+    }
+  }
+
+  spawnBoss() {
+    for (let i = 0; i < Math.floor(this.playerStats.level / 3); i += 1) {
+      const boss = this.bossSpawner.spawn(this.player.x, this.player.y);
+      boss.HP = 5;
+    }
+
+  }
+
+  spawnBonus() {
+    this.bonusSpawner.spawn(this.player.x, this.player.y);
+  }
+
+  updateHealthBar() {
+    let barColor = 0x00ff00;
+    if (this.playerStats.health < 66 && this.playerStats.health > 33) {
+      barColor = 0xffaa00;
+    } else if (this.playerStats.health <= 33) {
+      barColor = 0xff0d00;
+    }
+    const barLength = (40 * this.playerStats.health) / 100;
+    this.healthBar.clear();
+    this.healthBar.lineStyle(1, 0x000000, 1);
+    this.healthBar.strokeRoundedRect(this.player.x - 20, this.player.y + 30, 40, 11, 3);
+    this.healthBar.fillStyle(barColor, 1);
+    this.healthBar.fillRect(this.player.x - 19, this.player.y + 31, barLength - 2, 9);
+  }
+
+
+
+  updateZombieAnims() {
+    const zombieArray = this.zombieSpawner.group.getChildren();
+    for (let i = 0; i < zombieArray.length; i += 1) {
+      if (zombieArray[i].body.velocity.x < 0) {
+        zombieArray[i].anims.play('zombie-walk-left', true);
+      } else if (zombieArray[i].body.velocity.x > 0) {
+        zombieArray[i].anims.play('zombie-walk-right', true);
+      } else if (zombieArray[i].body.velocity.y > 0) {
+        zombieArray[i].anims.play('zombie-walk-down', true);
+      } else if (zombieArray[i].body.velocity.y < 0) {
+        zombieArray[i].anims.play('zombie-walk-up', true);
+      } else if (zombieArray[i].body.velocity.x === 0 && zombieArray[i].body.velocity.y === 0) {
+        zombieArray[i].anims.play('zombie-standing');
+      }
+
+    }
+  }
+
+
+
+  updatePlayerAnims() {
     this.player.setVelocity(0);
-
     let moving = false;
 
     if (this.cursors.left.isDown) {
@@ -206,151 +378,9 @@ class GameScene extends Phaser.Scene {
     if (!moving) {
       this.player.anims.stop();
     }
-
-
-    Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
-      this.physics.moveToObject(zombie, this.player, 25),
-    );
-
-    Phaser.Actions.Call(this.bossSpawner.group.getChildren(), (boss) =>
-      this.physics.moveToObject(boss, this.player, 80),
-    );
-
-
-
-
-    const zombieArray = this.zombieSpawner.group.getChildren();
-    for (let i = 0; i < zombieArray.length; i += 1) {
-
-      if (zombieArray[i].body.velocity.x < 0) {
-        zombieArray[i].anims.play('zombie-walk-left', true);
-      } else if (zombieArray[i].body.velocity.x > 0) {
-        zombieArray[i].anims.play('zombie-walk-right', true);
-      } else if (zombieArray[i].body.velocity.y > 0) {
-        zombieArray[i].anims.play('zombie-walk-down', true);
-      } else if (zombieArray[i].body.velocity.y < 0) {
-        zombieArray[i].anims.play('zombie-walk-up', true);
-      } else if (zombieArray[i].body.velocity.x === 0 && zombieArray[i].body.velocity.y === 0) {
-        zombieArray[i].anims.play('zombie-standing');
-      }
-
-    }
   }
 
-  createUI() {
-    this.scoreLabel = this.createScoreLabel(40, 20, 0).setScrollFactor(0);
-    this.scoreLabel.setDepth(2);
-    // Display XP bar
-    const XPcontainer = this.add.sprite(400, 20, 'XPcontainer').setScrollFactor(0);
-    XPcontainer.setDepth(2);
-    this.XPbar = this.add.sprite(XPcontainer.x, XPcontainer.y, 'XPbar').setScrollFactor(0);
-    this.XPMask = this.add.sprite(this.XPbar.x, this.XPbar.y, 'XPbar').setScrollFactor(0);
-    this.XPMask.visible = false;
-    this.XPbar.mask = new Phaser.Display.Masks.BitmapMask(this, this.XPMask);
-    this.XPbar.x -= 240;
-    this.XPbar.setDepth(3);
-    this.XPMask.setDepth(3);
 
-    // Display score background
-    this.add
-      .sprite(110, 36, 'scoreBackground')
-      .setScrollFactor(0)
-      .setDepth(1);
-    this.add
-      .sprite(700, 36, 'scoreBackground')
-      .setScrollFactor(0)
-      .setDepth(1);
-
-    // Display current XP level
-    const styleLevelDisplay = {
-      fontSize: '19px',
-      fontStyle: 'bold',
-      fontFamily: 'Candara, Arial',
-      fill: '#FFFFFF',
-    };
-    this.levelDisplay = this.add.text(375, 11, 'LEVEL 0', styleLevelDisplay).setScrollFactor(0);
-    this.levelDisplay.setDepth(4);
-
-    // Display player's name if connected
-    const text = isAuthenticated() ? `Player : ${getAuthenticatedUser().username}` : "You are not connected";
-    this.nameDisplay = this.add
-      .text(635, 25, text, { fontSize: '14px', fontFamily: 'Candara, Arial', fill: '#fff' })
-      .setScrollFactor(0);
-    this.nameDisplay.setDepth(2);
-  }
-
-  createEvents() {
-    const zombieSpawnEvent = new Phaser.Time.TimerEvent({
-      delay: 7500,
-      loop: true,
-      callback: this.spawnZombies,
-      callbackScope: this,
-    });
-    const bossSpawnEvent = new Phaser.Time.TimerEvent({
-      delay: 45000,
-      loop: true,
-      callback: this.spawnBoss,
-      callbackScope: this,
-    });
-    const fireBulletEvent = new Phaser.Time.TimerEvent({
-      delay: 5000,
-      loop: true,
-      callback: this.fireBullet,
-      callbackScope: this,
-    });
-    const bonusSpawnEvent = new Phaser.Time.TimerEvent({
-      delay: 20000,
-      loop: true,
-      callback: this.spawnBonus,
-      callbackScope: this,
-    });
-    const flameEvent = new Phaser.Time.TimerEvent({
-      delay: 3000,
-      loop: true,
-      callback: this.flameAttack,
-      callbackScope: this,
-    });
-
-    this.time.addEvent(zombieSpawnEvent);
-    this.time.addEvent(bossSpawnEvent);
-    this.time.addEvent(fireBulletEvent);
-    this.time.addEvent(bonusSpawnEvent);
-    this.time.addEvent(flameEvent);
-  }
-
-  spawnZombies() {
-    this.zombiesInLastWave += 0.75;
-    for (let i = 0; i < Math.floor(this.zombiesInLastWave); i += 1) {
-      this.zombieSpawner.spawn(this.player.x, this.player.y);
-    }
-  }
-
-  spawnBoss() {
-    for (let i = 0; i < Math.floor(this.playerStats.level / 3); i += 1) {
-      const boss = this.bossSpawner.spawn(this.player.x, this.player.y);
-      boss.HP = 5;
-    }
-
-  }
-
-  spawnBonus() {
-    this.bonusSpawner.spawn(this.player.x, this.player.y);
-  }
-
-  updateHealthBar() {
-    let barColor = 0x00ff00;
-    if (this.playerStats.health < 66 && this.playerStats.health > 33) {
-      barColor = 0xffaa00;
-    } else if (this.playerStats.health <= 33) {
-      barColor = 0xff0d00;
-    }
-    const barLength = (40 * this.playerStats.health) / 100;
-    this.healthBar.clear();
-    this.healthBar.lineStyle(1, 0x000000, 1);
-    this.healthBar.strokeRoundedRect(this.player.x - 20, this.player.y + 30, 40, 11, 3);
-    this.healthBar.fillStyle(barColor, 1);
-    this.healthBar.fillRect(this.player.x - 19, this.player.y + 31, barLength - 2, 9);
-  }
 
   createAnimsZombie() {
     this.anims.create({
@@ -499,26 +529,30 @@ class GameScene extends Phaser.Scene {
     return flame;
   }
 
+
+  // Fire bullets on enemies closest to the player
   fireBullet() {
+    let possibleTargets = this.zombieSpawner.group.getChildren();
+    possibleTargets = possibleTargets.concat(this.bossSpawner.group.getChildren());
+    possibleTargets.sort((target1, target2) => 
+                    (Phaser.Math.Distance.Between(target1.x, target1.y, this.player.x, this.player.y) >
+                    Phaser.Math.Distance.Between(target2.x, target2.y, this.player.x, this.player.y)));
     if (
-      this.zombieSpawner.group.getChildren().length !== 0 ||
-      this.bossSpawner.group.getChildren().length !== 0
+       possibleTargets.length !== 0
     ) {
       const bullets = this.bulletSpawner.spawn(
         this.player.x,
         this.player.y,
         this.playerStats.numberOfBullets,
       );
-      bullets.forEach((bullet) => {
-        let possibleTargets = this.zombieSpawner.group.getChildren();
-        possibleTargets = possibleTargets.concat(this.bossSpawner.group.getChildren());
+      for(let i = 0; i < bullets.length; i+=1){
         this.physics.moveToObject(
-          bullet,
-          possibleTargets[Phaser.Math.Between(0, possibleTargets.length - 1)],
+          bullets[i],
+          possibleTargets[i],
           300,
         );
         this.fireballSound.play();
-      });
+      }
     }
   }
 
@@ -555,30 +589,16 @@ class GameScene extends Phaser.Scene {
     // First option : gain 1 fireball
     if (this.playerStats.numberOfBullets < 10) {
       this.option1Image.setVisible(true);
-      this.option1Image.setInteractive();
-      this.option1Image.on('pointerdown', () => {
-        this.playerStats.numberOfBullets += 1;
-        this.resumeGame();
-      });
     }
 
     // Second option : increase armor protection
     if (this.playerStats.armor < 10) {
       this.option2Image.setVisible(true);
-      this.option2Image.setInteractive();
-      this.option2Image.on('pointerdown', () => {
-        this.playerStats.armor += 1;
-        this.resumeGame();
-      });
     }
 
     // Third option : increase speed by 5
     this.option3Image.setVisible(true);
-    this.option3Image.setInteractive();
-    this.option3Image.on('pointerdown', () => {
-      this.playerStats.speed += 5;
-      this.resumeGame();
-    });
+
   }
 
   resumeGame() {
@@ -593,9 +613,8 @@ class GameScene extends Phaser.Scene {
 
   bulletHitZombie(zombie, bullet) {
     this.scoreLabel.add(50);
-    zombie.destroy();
     bullet.destroy();
-    this.gemSpawner.spawn(zombie.x, zombie.y);
+    this.killZombie(zombie);
   }
 
   bulletHitBoss(boss, bullet) {
@@ -603,12 +622,19 @@ class GameScene extends Phaser.Scene {
     boss.HP -= 1;
     if (boss.HP === 0) {
       boss.destroy();
-      for (let i = 0; i < 5; i += 1) {
+      for (let i = 0; i < 4; i += 1) {
         this.gemSpawner.spawn(boss.x + Phaser.Math.Between(-15, 15), boss.y + Phaser.Math.Between(-15, 15));
       }
       this.scoreLabel.add(200);
     }
     bullet.destroy();
+  }
+
+
+  killZombie(zombie) {
+    zombie.destroy();
+    this.gemSpawner.spawn(zombie.x, zombie.y);
+    this.scoreLabel.add(50);
   }
 
   // Flame attack, alternating sides
@@ -619,8 +645,7 @@ class GameScene extends Phaser.Scene {
     if (this.directionLastFlameAttack === 'left') {
       Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
         this.player.x - zombie.x > -200 && this.player.x - zombie.x < 0 && Math.abs(zombie.y - this.player.y) < 50
-          ? zombie.destroy(this.gemSpawner.spawn(zombie.x, zombie.y)) && this.scoreLabel.add(50)
-          : null
+          ? this.killZombie(zombie) : null
       );
       flame.setX(flame.x + 20);
       flame.anims.play({ key: 'right', repeat: false, hideOnComplete: true });
@@ -629,8 +654,7 @@ class GameScene extends Phaser.Scene {
     else {
       Phaser.Actions.Call(this.zombieSpawner.group.getChildren(), (zombie) =>
         this.player.x - zombie.x < 200 && this.player.x - zombie.x > 0 && Math.abs(zombie.y - this.player.y) < 50
-          ? zombie.destroy(this.gemSpawner.spawn(zombie.x, zombie.y)) && this.scoreLabel.add(50)
-          : null
+          ? this.killZombie(zombie) : null
       );
       flame.setX(flame.x - 310);
       flame.anims.play({ key: 'left', repeat: false, hideOnComplete: true });
