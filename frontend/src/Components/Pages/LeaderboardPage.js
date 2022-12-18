@@ -7,10 +7,10 @@ import medalImage from '../../img/medal.png'
 
 let myBestScore;
 let myRank;
-let isGeneralTab = true;
 
 const LeaderboardPage = async () => {
   clearPage();
+  
   const main = document.querySelector('main');
   const rankingsWrapper = document.createElement('div');
   rankingsWrapper.className ="intro-section d-flex flex-row";
@@ -52,71 +52,47 @@ const LeaderboardPage = async () => {
     renderImage(medalImage, 'medal-img', 50, '.medal-img-div');
   }
   
-  
 
   const generalButton = document.querySelector('.general-btn');
   const myScoresButton = document.querySelector('.myscores-btn');
   const tbody = document.querySelector('.leaderboard-tbody');
-
   const deleteButtons = document.querySelectorAll('.delete-btn');
-
   const operation = document.querySelector('.operation');
+  let isGeneralTab = true;
 
   generalButton.addEventListener('click', (e) => {
     e.preventDefault();
-    if (!isGeneralTab) {
-      tbody.innerHTML = '';
-      tbody.innerHTML = getAllLinesForGeneralScores(scores);
-      renderImage(crownImage, 'crown-img-div', 50, '.rank1');
-      generalButton.classList.toggle('active');
-      myScoresButton.classList.toggle('active');
-      if (isAuthenticated() && isAdmin()) {
-        operation.classList.remove('d-none');
-      }
-      isGeneralTab = true;
-    } else {
-      generalButton.classList.toggle('active');
-      myScoresButton.classList.toggle('active');
-      tbody.innerHTML = '';
-      tbody.innerHTML = getAllLinesForMyScores(myScores);
-      if (isAuthenticated() && isAdmin()) {
-        operation.classList.add('d-none');
-      }
-      if (!isEmpty(myScores)) {
-        renderImage(crownImage, 'crown-img-div', 50, '.rank1');
-      }
-      isGeneralTab = false;
+    tbody.innerHTML = '';
+    tbody.innerHTML = getAllLinesForGeneralScores(scores);
+    renderImage(crownImage, 'crown-img-div', 50, '.rank1');
+    
+    if (isAuthenticated() && isAdmin()) {
+      operation.classList.remove('d-none');
     }
-  
+
+    if (!isGeneralTab) {
+      generalButton.classList.toggle('active');
+      myScoresButton.classList.toggle('active');
+    }
+    isGeneralTab = true;
+    
   })
 
   myScoresButton.addEventListener('click', (e) => {
     e.preventDefault();
-    if (isGeneralTab) {
-      
-      generalButton.classList.toggle('active');
-      myScoresButton.classList.toggle('active');
-      tbody.innerHTML = '';
-      tbody.innerHTML = getAllLinesForMyScores(myScores);
-      if (isAuthenticated() && isAdmin()) {
-        operation.classList.add('d-none');
-      }
-      
-      if (!isEmpty(myScores)) {
-        renderImage(crownImage, 'crown-img-div', 50, '.rank1');
-      }
-      isGeneralTab = false;
-    } else {
-      tbody.innerHTML = '';
-      tbody.innerHTML = getAllLinesForGeneralScores(scores);
-      if (isAuthenticated() && isAdmin()) {
-        operation.classList.remove('d-none');
-      }
-      renderImage(crownImage, 'crown-img-div', 50, '.rank1');
-      generalButton.classList.toggle('active');
-      myScoresButton.classList.toggle('active');
-      isGeneralTab = true;
+    tbody.innerHTML = '';
+    tbody.innerHTML = getAllLinesForMyScores(myScores);
+    if (isAuthenticated() && isAdmin()) {
+      operation.classList.add('d-none');
     }
+    if (!isEmpty(myScores)) {
+      renderImage(crownImage, 'crown-img-div', 50, '.rank1');
+    }
+    if (isGeneralTab) {
+      generalButton.classList.toggle('active');
+      myScoresButton.classList.toggle('active');
+    }
+    isGeneralTab = false;
   })
 
   deleteButtons.forEach((button) => {
