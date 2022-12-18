@@ -70,14 +70,18 @@ const LeaderboardPage = async () => {
       renderImage(crownImage, 'crown-img-div', 50, '.rank1');
       generalButton.classList.toggle('active');
       myScoresButton.classList.toggle('active');
-      operation.classList.remove('d-none');
+      if (isAuthenticated() && isAdmin()) {
+        operation.classList.remove('d-none');
+      }
       isGeneralTab = true;
     } else {
       generalButton.classList.toggle('active');
       myScoresButton.classList.toggle('active');
       tbody.innerHTML = '';
       tbody.innerHTML = getAllLinesForMyScores(myScores);
-      operation.classList.add('d-none');
+      if (isAuthenticated() && isAdmin()) {
+        operation.classList.add('d-none');
+      }
       if (!isEmpty(myScores)) {
         renderImage(crownImage, 'crown-img-div', 50, '.rank1');
       }
@@ -94,7 +98,10 @@ const LeaderboardPage = async () => {
       myScoresButton.classList.toggle('active');
       tbody.innerHTML = '';
       tbody.innerHTML = getAllLinesForMyScores(myScores);
-      operation.classList.add('d-none');
+      if (isAuthenticated() && isAdmin()) {
+        operation.classList.add('d-none');
+      }
+      
       if (!isEmpty(myScores)) {
         renderImage(crownImage, 'crown-img-div', 50, '.rank1');
       }
@@ -102,7 +109,9 @@ const LeaderboardPage = async () => {
     } else {
       tbody.innerHTML = '';
       tbody.innerHTML = getAllLinesForGeneralScores(scores);
-      operation.classList.remove('d-none');
+      if (isAuthenticated() && isAdmin()) {
+        operation.classList.remove('d-none');
+      }
       renderImage(crownImage, 'crown-img-div', 50, '.rank1');
       generalButton.classList.toggle('active');
       myScoresButton.classList.toggle('active');
