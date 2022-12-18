@@ -143,11 +143,11 @@ main {
 }
 
 .box2 {
-  background-color: green;
+  background-color: #14ca60;
 }
 
 .box3 {
-  background-color: red;
+  background-color: #e68d19;
 }
 
 
@@ -171,7 +171,7 @@ main {
 
 .strategy-img-div {
   position: absolute;
-  left: 150px;
+  left: 350px;
   top: 100px;
 }
 
@@ -391,6 +391,15 @@ footer {
   .end-question {
     margin-left: 50px;
   }
+  .strategy-img-div {
+    position: relative;
+    left: 0;
+    top: 0;
+  }
+  .instructions-content {
+    margin-bottom: 200px;
+    
+  }
 }
 
 @media (max-width: 1200px) {
@@ -407,14 +416,6 @@ footer {
   .box-row {
     padding-left: 80px;
     padding-right: 80px;
-  }
-}
-
-@media (max-width: 1115px) {
-  .strategy-img-div {
-    position: relative;
-    left: 0;
-    top: 0;
   }
 }
 

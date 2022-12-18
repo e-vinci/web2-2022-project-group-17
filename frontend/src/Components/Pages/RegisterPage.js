@@ -293,6 +293,16 @@ function renderRegisterForm() {
 
 }
 
+
+/** *************************************************************************************
+*    Title: How do you debounce in JavaScript?
+*    Author: Fredrik Söderström
+*    Date: 2022-02-07
+*    Code version: <code version>
+*    Availability: https://writingjavascript.com/how-do-you-debounce-in-javascript
+*
+************************************************************************************** */
+
 function debounce(callback, delay) {
   let timeout;
   return (...args) => {
@@ -325,7 +335,8 @@ async function onRegister(e) {
     }),
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
+    credentials : 'include'
   }
 
   const response = await fetch(`${process.env.API_BASE_URL}/auths/register`, options);

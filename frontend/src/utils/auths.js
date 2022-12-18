@@ -22,10 +22,12 @@ const setAuthenticatedUser = (authenticatedUser) => {
 
 const isAuthenticated = () => currentUser !== undefined;
 
+const isAdmin = () => currentUser.username === "admin"; 
+
 const clearAuthenticatedUser = () => {
   localStorage.removeItem(STORE_NAME);
   currentUser = undefined;
 };
 
 // eslint-disable-next-line object-curly-newline
-export { getAuthenticatedUser, setAuthenticatedUser, isAuthenticated, clearAuthenticatedUser };
+export { getAuthenticatedUser, setAuthenticatedUser, isAuthenticated, clearAuthenticatedUser, isAdmin };

@@ -1,3 +1,5 @@
+
+
 async function get20BestScores() {
   try {
     const response = await fetch(`${process.env.API_BASE_URL}/scores?top=20`);
@@ -26,7 +28,33 @@ async function getScoresFromUser(username) {
   }
 }
 
+async function deleteOneScore(id) {
+  if (!id) return undefined;
+
+  try {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = await fetch(`/api/scores/${id}`, options);
+
+    if (!response.ok) {
+      throw new Error(`deleteOneScore:: fetch error : ${response.status} : ${response.statusText}`);
+    }
+    const deletedScore = await response.json();
+    return deletedScore;
+  } catch (err) {
+    console.error('deleteOneScore::error: ', err);
+    throw err;
+  }
+}
+
+
 module.exports = {
   get20BestScores,
   getScoresFromUser,
+  deleteOneScore,
 }

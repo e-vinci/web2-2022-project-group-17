@@ -675,7 +675,7 @@ class GameScene extends Phaser.Scene {
 
   async registerScore() {
     const { score } = this.scoreLabel;
-    const { username } = this;
+    const { username } = getAuthenticatedUser();
     const options = {
       method: 'POST',
       body: JSON.stringify({

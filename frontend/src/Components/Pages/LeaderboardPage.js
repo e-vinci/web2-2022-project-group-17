@@ -1,8 +1,8 @@
 import { clearPage, renderImage } from '../../utils/render';
 import leaderboardImage from '../../img/leaderboard.png';
-import { get20BestScores, getScoresFromUser } from '../../models/scores';
+import { deleteOneScore, get20BestScores, getScoresFromUser } from '../../models/scores';
 import crownImage from '../../img/crown.png';
-import { getAuthenticatedUser, isAuthenticated } from '../../utils/auths';
+import { getAuthenticatedUser, isAuthenticated, isAdmin } from '../../utils/auths';
 
 const LeaderboardPage = async () => {
   clearPage();
@@ -28,6 +28,8 @@ const LeaderboardPage = async () => {
   const myScoresButton = document.querySelector('.myscores-btn');
   const tbody = document.querySelector('.leaderboard-tbody');
 
+  const deleteButtons = document.querySelectorAll('.delete-btn');
+
   generalButton.addEventListener('click', (e) => {
     e.preventDefault();
     generalButton.classList.toggle('active');
@@ -47,6 +49,15 @@ const LeaderboardPage = async () => {
     renderImage(crownImage, 'crown-img-div', 50, '.rank1');
     
   })
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener('click', async (e) =>  {
+      const { elementId } = e.target.dataset;
+      await deleteOneScore(elementId);
+      LeaderboardPage();
+    })
+  })
+
   
 };
 
@@ -72,6 +83,7 @@ function getScoresAsString(scores) {
         <th class="rank-header text-info text-center">Rang</th>
         <th class="username-header text-info" scope="col">Nom d'utilisateur</th>
         <th class="score-header text-info text-end" scope="col">Score</th>
+        <th class="${isAdmin() ? 'operation text-info text-end' : 'd-none'}">Opération</th>
       </tr>
     </thead>
     <tbody class="leaderboard-tbody">`;
@@ -99,6 +111,7 @@ function getAllLinesForGeneralScores(scores) {
         
       </td>  
       <td class="${isRank1(rank) ? 'score text-white text-break text-end align-middle fs-1' : 'score text-white text-break text-end align-middle'}"> ${element.score}</a></td>
+      ${isAdmin() ? `<td class="text-end"><button type="button" class="btn btn-danger delete-btn" data-element-id="${element.id}">Supprimer</button></td>` : '' }
     </tr>
     `;
     rank += 1;
@@ -116,7 +129,7 @@ function getAllLinesForMyScores(scores) {
       <td class="nickname fw-bold text-white">
         <div>${getAuthenticatedUser().username}</div>  
       </td>  
-      <td class="score text-white text-break text-end align-middle">-</a></td>
+      <td class="score text-white text-break text-end align-middle">-</td>
     </tr>
     `;
   } else {
@@ -128,7 +141,7 @@ function getAllLinesForMyScores(scores) {
           <div class=${isRank1(rank) ? "fs-1" : ""}>${element.username}<span class="rank1 ms-2"></span></div> 
           
         </td>  
-        <td class="${isRank1(rank) ? 'score text-white text-break text-end align-middle fs-1' : 'score text-white text-break text-end align-middle'}"> ${element.score}</a></td>
+        <td class="${isRank1(rank) ? 'score text-white text-break text-end align-middle fs-1' : 'score text-white text-break text-end align-middle'}"> ${element.score}</td>
       </tr>
       `;
       rank += 1;
@@ -141,5 +154,6 @@ function getAllLinesForMyScores(scores) {
 function isRank1(rank) {
   return rank === 1;
 }
+
 
 export default LeaderboardPage;
