@@ -27,7 +27,7 @@ const loginRateLimiter = rateLimit({
 });
 
 // Apply the rate limiting middleware to all requests
-app.use('/auths/login', loginRateLimiter);
+app.use('/auths/register', loginRateLimiter);
 
 const expiryDateIn3Months = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30 * 3);
 const cookieSecreteKey = 'YouWouldnot!not!like!mypizza';
