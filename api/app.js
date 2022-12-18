@@ -6,7 +6,10 @@ const rateLimit = require('express-rate-limit')
 const cors = require('cors');
 
 const corsOptions = {
-  origin: ['http://localhost:8080','https://tqueguin.github.io','localhost:8080']
+  origin: ['http://localhost:8080','https://tqueguin.github.io','localhost:8080'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 const usersRouter = require('./routes/users');
@@ -34,7 +37,10 @@ app.use(
     keys: [cookieSecreteKey],
     cookie: {
       httpOnly: true,
+      secure: true,
+      sameSite: 'none',
       expires: expiryDateIn3Months,
+      credentials : true,
     },
   }),
 );

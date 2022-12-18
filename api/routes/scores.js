@@ -39,7 +39,7 @@ router.get('/:user', (req, res) => {
 });
 
 // add score
-router.post('/', authorize, (req, res) => {
+router.post('/', (req, res) => {
   const { username } = req.body;
   const { score } = req.body;
 

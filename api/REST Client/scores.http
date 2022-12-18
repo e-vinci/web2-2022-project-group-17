@@ -33,6 +33,6 @@ Content-Type: application/json
 
 
 ### Delete the score with id=2
-DELETE {{baseUrl}}/scores/2
+DELETE {{baseUrl}}/scores/5
 
 

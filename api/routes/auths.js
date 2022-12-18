@@ -21,7 +21,6 @@ router.post('/register', async (req, res) => {
 
   createCookieSessionData(req, authenticatedUser);
 
-
   return res.json({ username: authenticatedUser.username });
 });
 
@@ -53,7 +52,6 @@ router.get('/logout', (req, res) => {
 function createCookieSessionData(req, authenticatedUser) {
   req.session.username = authenticatedUser.username;
   req.session.token = authenticatedUser.token;
-
 }
 
 module.exports = router;
