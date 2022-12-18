@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "myJScourse's modern frontend boilerplate to build a phaser game",
   "scripts": {
+    "deploy": "npm run build && gh-pages -d dist",
     "dev": "webpack --mode development --config webpack.config.base.js",
     "build": "webpack --mode production --config webpack.config.prod.js",
     "start": "webpack serve --mode development --config webpack.config.base.js"
@@ -18,6 +19,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-webpack-plugin": "^3.2.0",
+    "file-loader": "^6.2.0",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.1",
     "prettier-airbnb-config": "^1.0.0",
@@ -27,11 +29,17 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.2.1",
     "@popperjs/core": "^2.9.2",
+    "animejs": "^3.2.1",
+    "aos": "^3.0.0-beta.6",
     "bootstrap": "^5.0.1",
+    "bootstrap-icons": "^1.10.2",
     "clean-webpack-plugin": "^4.0.0",
+    "gh-pages": "^4.0.0",
     "phaser": "^3.55.2",
     "terser-webpack-plugin": "^5.3.6",
+    "validator": "^13.7.0",
     "webpack-merge": "^5.8.0"
   }
 }

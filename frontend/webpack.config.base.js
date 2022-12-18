@@ -4,18 +4,36 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
+
+const DEVELOPMENT_API_BASE_URL = 'http://localhost:3000'; // base URL of your local API. Use /api if you want to use webpack proxy, else use http://localhost:3000 (frontend origin http://localhost:8080 shall then be authorized by the API cors)
+const PRODUCTION_API_BASE_URL = 'https://api-zombie-survivor.azurewebsites.net'; // to be changed to point to the URL of your API
+const DEVELOPMENT_PATH_PREFIX = '/'; // normally not to be changed, your assets should be provided directly within /dist/ (and not /dist/mymovies/ e.g.)
+const PRODUCTION_PATH_PREFIX = '/'; // e.g. '/mymovies/' if you deploy to GitHub Pages as a Project site : mymovies would be the repo name
+
+const buildMode = process.argv[process.argv.indexOf('--mode') + 1];
+const isProductionBuild = buildMode === 'production';
+
+const API_BASE_URL = isProductionBuild ? PRODUCTION_API_BASE_URL : DEVELOPMENT_API_BASE_URL;
+const PATH_PREFIX = isProductionBuild ? PRODUCTION_PATH_PREFIX : DEVELOPMENT_PATH_PREFIX;
+
 module.exports = {
   mode: 'none',
   entry: './src/index.js',
   output: {
     path: `${__dirname}/dist`,
     filename: 'bundle.js',
-    publicPath: '/',
+    publicPath: PATH_PREFIX,
   },
   devtool: 'eval-source-map',
   devServer: {
     static: {
-      directory: path.join(__dirname, 'dist')
+      directory: path.join(__dirname, 'dist'),
+    },
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
     },
     port: 8080,
     host: 'localhost',
@@ -76,6 +94,18 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        include: path.resolve(__dirname, './node_modules/bootstrap-icons/font/fonts'),
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'webfonts',
+            publicPath: '../webfonts',
+          },
+        },
+      },
     ],
   },
   plugins: [
@@ -96,5 +126,21 @@ module.exports = {
       WEBGL_RENDERER: JSON.stringify(true),
     }),
     new ESLintPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.BUILD_MODE': JSON.stringify(buildMode),
+      'process.env.API_BASE_URL': JSON.stringify(API_BASE_URL),
+      'process.env.PATH_PREFIX': JSON.stringify(PATH_PREFIX),
+    }),
   ],
+  resolve: {
+    alias: {
+        "TweenLite": path.resolve('node_modules', 'gsap/src/uncompressed/TweenLite.js'),
+        "TweenMax": path.resolve('node_modules', 'gsap/src/uncompressed/TweenMax.js'),
+        "TimelineLite": path.resolve('node_modules', 'gsap/src/uncompressed/TimelineLite.js'),
+        "TimelineMax": path.resolve('node_modules', 'gsap/src/uncompressed/TimelineMax.js'),
+        "ScrollMagic": path.resolve('node_modules', 'scrollmagic/scrollmagic/uncompressed/ScrollMagic.js'),
+        "animation.gsap": path.resolve('node_modules', 'scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap.js'),
+        "debug.addIndicators": path.resolve('node_modules', 'scrollmagic/scrollmagic/uncompressed/plugins/debug.addIndicators.js')
+    },
+  },
 };

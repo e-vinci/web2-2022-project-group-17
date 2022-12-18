@@ -1,0 +1,629 @@
+@import url("https://fonts.googleapis.com/css2?family=Proxima+Nova");
+
+main {
+  height: 100%;
+  min-height:100vh;
+  background: radial-gradient(#43425f, 20%,#292849);
+}
+/* Navbar */
+.navbar, .navbar-container {
+  padding: 0;
+  background-color: #1F1E3D;
+}
+
+.navbar-brand {
+  margin: 10px;
+  color:#FFE500;
+  font-weight: bolder;
+  font-family: "Proxima Nova";
+  font-style: italic;
+  font-size: 1.5em;
+  text-shadow: 0px 1px;
+}
+
+.navbar-brand:hover, .navbar-brand:visited, .navbar-brand:focus {
+  color: #FFE500;
+}
+
+.left-item {
+  
+  color: white;
+  position: relative;
+   
+}
+
+.left-item:hover, .left-item:visited, .left-item:active, .left-item:focus {
+  color: white;
+}
+
+.left-item::after {
+  content: "";
+  position: absolute;
+  height: 0;
+  width: 100%;
+  left: 0;
+  bottom: -20px;
+  background-color: #FFE500;
+  transition: 0.1s;
+  
+}
+
+.left-item:hover::after {
+  height: 3px;
+}
+
+.auth-btn {
+  border: 1px solid black;
+  border-radius: 20px;
+  color: white;
+  width: 8em;
+}
+
+.auth-btn:hover, .auth-btn:visited, .auth-btn:active, .auth-btn:focus {
+  color: white;
+}
+
+.navbar-nav:nth-child(3) {
+  margin-left: 150px;
+}
+
+.auth-btn-mobile {
+  display: none;
+}
+
+.logout-btn-mobile {
+  display: none;
+}
+
+.dropdown-menu-end {
+  width: 200px;
+}
+
+/* HomePage */
+.intro-section {
+  height: 100%;
+  width: 100%;
+  min-height: 100vh;
+  background: radial-gradient(#43425f, 20%,#292849);
+  
+  color: white;
+}
+
+.home-content {
+  padding-left: 350px;
+  padding-top: 270px;
+}
+
+.play-now-content h1 {
+  font-size: 60px;
+}
+
+.play-now-btn {
+  min-width: 100px;
+}
+
+
+
+.play-now-btn:hover, .how-to-play-button:hover {
+  transform: scale(1.1);
+  transition: 0.4s;
+}
+
+.zombie-img-div {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.zombieImage {
+  height: 100%;
+}
+
+
+
+.how-to-play-section {
+  height: 100%;
+  width: 100%;
+  min-height: 600px;
+  background: radial-gradient(#42425e, 20%,#1F1E3D);
+  color: white;
+}
+
+.title2 {
+  padding-top: 40px;
+  padding-left: 50px;
+  padding-right: 50px;
+  text-align: center;
+  
+}
+
+.box-row {
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.box1 {
+  background-color: #69668b;
+}
+
+.box2 {
+  background-color: #14ca60;
+}
+
+.box3 {
+  background-color: #e68d19;
+}
+
+
+
+.instructions-section {
+  height: 100%;
+  width: 100%;
+  min-height: 1000px;
+  background: radial-gradient(#43425f, 20%,#292849);
+  color: white;
+}
+
+.instructions-content {
+  padding-top: 100px;
+  padding-left: 200px;
+  margin-bottom: 400px;
+  margin-right: 200px;
+  text-align: right;
+  position: relative;
+}
+
+.strategy-img-div {
+  position: absolute;
+  left: 350px;
+  top: 100px;
+}
+
+.boss-container {
+  padding-left: 150px;
+  position: relative;
+}
+
+
+.title3 {
+  font-size: 50px;
+  margin-bottom: 50px;
+  font-weight: bold;
+}
+
+.rogue-description {
+  width: 400px;
+  font-size: 18px;
+  position: absolute;
+  right: 0;
+}
+
+.boss-description {
+  width: 500px;
+  font-size: 18px;
+}
+
+.boss-img-div {
+  position: absolute;
+  right: 300px;
+  bottom: -200px;
+}
+
+
+.end-section {
+  height: 100%;
+  width: 100%;
+  min-height: 15vh;
+  background: radial-gradient(#43425f, 20%,#36346E);
+  color: white;
+}
+
+
+
+/* Leaderboard Page */
+
+
+.leaderboard {
+  height: 100%;
+  width: 650px;
+  border: 1px solid;
+}
+
+.leaderboard-header {
+  background-color: #ff7500;
+  color: white;
+  height: 250px;
+}
+
+.leaderboard-img-div {
+  position: relative;
+  left: 370px;
+}
+
+.leaderboard-table {
+  background-color: #16181e;
+  color: white;
+}
+
+.leaderboard-tbody tr:nth-child(2n) {
+  background-color: #1f232c;
+}
+
+.leaderboard-options {
+  position: relative;
+  top: 150px;
+  right: 130px;
+}
+
+.leaderboard-tab {
+  padding: 0;
+  margin-right: 30px;
+}
+
+.leaderboard-title {
+  position: relative;
+  top: 10px;
+}
+
+.leaderboard-tab.active {
+  border-bottom: 4px solid #ffffff;
+}
+
+.rank-header {
+  width: 90px;
+}
+
+.delete-btn-rank1 {
+  margin-top: 12px;
+}
+
+.my-rank-score-div {
+  height: 11vh;
+  background-color: #1F1E3D;
+  color: white;
+}
+
+.my-rank-score-div div {
+  font-size: 20px;
+}
+
+.my-points {
+  position: relative;
+  bottom: 18px;
+}
+
+/* Game page */
+
+.login-reminder {
+  font-size: large;
+  padding-bottom: 20px;
+  color: #FFE500;
+}
+
+
+
+/* Register page and login page */
+
+
+.formWrapper {
+  background-color: white;
+}
+
+.formWrapper > * {
+  color: black;
+}
+
+.register-form-group {
+  position: relative;
+}
+
+.register-form-group.success input {
+  border-color: #17b458;
+}
+
+.register-form-group.success .form-control:focus {
+  border-color: #17b458;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.register-form-group.failure input {
+  border-color: #da3826;
+}
+
+.register-form-group.failure .form-control:focus {
+  border-color: #da3826;
+  box-shadow: 0 0 0 0.2rem rgba(204, 11, 11, 0.25);
+}
+
+.register-form-group.success i.success-icon {
+  visibility: visible;
+  color: #17b458;
+}
+
+.register-form-group.failure i.failure-icon {
+  visibility: visible;
+  color: #da3826;
+}
+
+.register-form-group p {
+  min-height: 24px;
+  margin-left: 70px;
+  margin-bottom: 5px;
+}
+
+.register-form-group small {
+  visibility: hidden;
+}
+
+.register-form-group.success small {
+  visibility: visible;
+  color: #17b458;
+}
+
+.register-form-group.failure small {
+  visibility: visible;
+  color: #da3826;
+}
+
+.validation-icons {
+  position: absolute;
+  top: 38px;
+  right: 40px;
+  visibility: hidden;
+}
+
+.validation-error-div, .login-error-div {
+  min-height: 25px;
+  color: #da3826;
+}
+
+
+/* footer */
+
+footer {
+  height: 10vh;
+  background-color: #1F1E3D;
+  color: white;
+  text-align: center;
+}
+
+
+/* Media queries */
+
+@media (max-width: 1700px) {
+  .boss-img-div {
+    right: 50px;
+  }
+}
+
+@media (max-width: 1350px) {
+  .boss-img-div {
+    position: relative;
+    right:0;
+    bottom: 0;
+    margin-bottom: 30px;
+  }
+  .zombieBossImage {
+    height: 400px;
+  }
+}
+
+
+@media (max-width: 1300px) {
+  .zombie-img-div {
+    bottom: 30px;
+    right: 30px;
+  }
+  .home-content {
+    padding-left: 300px;
+    padding-top: 250px;
+  }
+  .how-to-play-section {
+    min-height: 650px;
+  }
+  .end-question {
+    margin-left: 50px;
+  }
+  .strategy-img-div {
+    position: relative;
+    left: 0;
+    top: 0;
+  }
+  .instructions-content {
+    margin-bottom: 200px;
+    
+  }
+}
+
+@media (max-width: 1200px) {
+  .zombie-img-div {
+    position: relative;
+    top: 20px;
+    right: 0;
+  }
+  .home-content {
+    padding-left: 250px;
+    padding-top: 100px;
+  }
+
+  .box-row {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .home-content{
+      padding: 200px;
+  }
+}
+
+@media (max-width: 991px) {
+  .box-text {
+    text-align: center;
+  }
+  .how-to-play-section {
+    min-height: 900px;
+  }
+}
+
+@media (max-width: 990px) {
+  .auth-btn-mobile {
+    display: block;
+  }
+  .logout-btn-mobile {
+    display: block;
+  }
+
+  .profile-button {
+    display: none;
+  }
+  .auth-btn {
+    display: none;
+  }
+
+  .home-content{
+    padding: 150px;
+  }
+
+}
+
+@media (max-width: 900px) {
+  
+  .rogue-title {
+    position: relative;
+    right: -40px;
+  }
+  .rogue-description {
+    right: -40px;
+  }
+}
+
+
+@media (max-width: 806px) {
+  
+  .rogue-title {
+    width: 500px;;
+    right: 40px;
+  }
+}
+
+
+@media (max-width: 780px) {
+  .home-content{
+    padding: 100px;
+  }
+  .how-to-play-section {
+    min-height: 950px;
+  }
+  .rogue-title {
+    right: 40px;
+  }
+
+  .rogue-description {
+    right: -100px;
+  }
+
+  .strategy-img-div {
+    left: 80px;
+  }
+
+}
+
+@media (max-width: 720px) {
+  .home-content{
+    padding: 50px;
+  }
+  .rogue-description {
+    right: -120px;
+  }
+
+  .boss-img-div { 
+    right: 40px;
+  }
+
+}
+
+@media (max-width: 680px) {
+  .rogue-title {
+    right: 100px;
+  }
+
+  .boss-title {
+    position: relative;
+    right: 40px;
+  }
+
+  .boss-description {
+    position: relative;
+    right: 40px;
+  }
+  .boss-img-div { 
+    right: 90px;
+  }
+}
+
+@media (max-width: 620px) {
+  .strategy-img-div {
+    left: 10px;
+  }
+  .rogue-title {
+    right: 150px;
+  }
+   
+}
+
+
+@media (max-width: 600px) {
+  .zombie-img-div {
+    top: 10px;
+    right: 0;
+  }
+  .home-content{
+    padding: 20px;
+  }
+  .rogue-title {
+    right: 150px;
+  }
+}
+
+@media (max-width: 579px) {
+  .how-to-play-section {
+    min-height: 1000px;
+  }
+  .strategy-img-div {
+    left: -60px;
+  }
+  .rogue-title {
+    right: 200px;
+  }
+  .boss-title {
+    right: 80px;
+  }
+
+  .boss-description {
+    right: 80px;
+  }
+  .boss-img-div { 
+    right: 100px;
+  }
+}
+
+@media (max-width: 550px) {
+  .how-to-play-section {
+    min-height: 1000px;
+  }
+  .strategy-img-div {
+    left: -60px;
+  }
+  .rogue-title {
+    right: 200px;
+  }
+}
+
+
+@media (min-width: 768px) {
+  .formWrapper{
+      max-width: 500px;
+  }
+}

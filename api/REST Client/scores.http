@@ -1,0 +1,57 @@
+@baseUrl = http://localhost:3000
+
+### read top 3 scores
+GET {{baseUrl}}/scores?top=3
+
+
+
+### read all scores
+GET {{baseUrl}}/scores
+
+
+### add Jason's score
+POST {{baseUrl}}/scores
+Content-Type: application/json
+
+{
+  "username": "Jason",
+  "score": 500
+}
+
+### add Jason's score
+POST {{baseUrl}}/scores
+Content-Type: application/json
+
+{
+  "username": "Jason",
+  "score": 600
+}
+
+
+### read all Jason's scores
+GET {{baseUrl}}/scores/Jason
+
+### read Jason's best score
+GET {{baseUrl}}/scores/Jason?top=1
+
+
+
+
+### add Jaques's score
+POST {{baseUrl}}/scores
+Content-Type: application/json
+
+{
+  "username": "Jaques",
+  "score": 600
+}
+
+
+
+
+
+
+### Delete the score with id=2
+DELETE {{baseUrl}}/scores/5
+
+
