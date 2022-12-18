@@ -104,6 +104,7 @@ const HomePage = () => {
     button.addEventListener('click', (e) => {
       e.preventDefault();
       Navigate('/game');
+      window.scrollTo(0,0);
     })
   })
 
